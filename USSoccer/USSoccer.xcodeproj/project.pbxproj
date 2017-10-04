@@ -12,6 +12,7 @@
 		BF3ABD7C1F8483CC00D46DD3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BF3ABD7A1F8483CC00D46DD3 /* Main.storyboard */; };
 		BF3ABD7E1F8483CC00D46DD3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BF3ABD7D1F8483CC00D46DD3 /* Assets.xcassets */; };
 		BF3ABD811F8483CC00D46DD3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BF3ABD7F1F8483CC00D46DD3 /* LaunchScreen.storyboard */; };
+		BF3ABD8C1F8538E500D46DD3 /* SoccerGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3ABD8B1F8538E500D46DD3 /* SoccerGame.swift */; };
 		CD6C63086E2C220EA84D8967 /* Pods_USSoccer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 570DE21D74C2822D0662D8ED /* Pods_USSoccer.framework */; };
 /* End PBXBuildFile section */
 
@@ -26,6 +27,7 @@
 		BF3ABD7D1F8483CC00D46DD3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BF3ABD801F8483CC00D46DD3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BF3ABD821F8483CC00D46DD3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BF3ABD8B1F8538E500D46DD3 /* SoccerGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoccerGame.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +80,7 @@
 		BF3ABD751F8483CC00D46DD3 /* USSoccer */ = {
 			isa = PBXGroup;
 			children = (
+				BF3ABD881F85382C00D46DD3 /* Model */,
 				BF3ABD761F8483CC00D46DD3 /* AppDelegate.swift */,
 				BF3ABD781F8483CC00D46DD3 /* ViewController.swift */,
 				BF3ABD7A1F8483CC00D46DD3 /* Main.storyboard */,
@@ -86,6 +89,14 @@
 				BF3ABD821F8483CC00D46DD3 /* Info.plist */,
 			);
 			path = USSoccer;
+			sourceTree = "<group>";
+		};
+		BF3ABD881F85382C00D46DD3 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				BF3ABD8B1F8538E500D46DD3 /* SoccerGame.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -185,12 +196,10 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-USSoccer/Pods-USSoccer-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
-				"${BUILT_PRODUCTS_DIR}/Kanna/Kanna.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Kanna.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -220,6 +229,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BF3ABD791F8483CC00D46DD3 /* ViewController.swift in Sources */,
+				BF3ABD8C1F8538E500D46DD3 /* SoccerGame.swift in Sources */,
 				BF3ABD771F8483CC00D46DD3 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
