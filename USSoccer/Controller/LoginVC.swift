@@ -31,6 +31,11 @@ class LoginVC: UIViewController {
         let trimmedEmail = stringTrimmer(stringToTrim: emailTextField.text)
         let trimmedPassword = stringTrimmer(stringToTrim: passwordTxtField.text)
         
+        if(trimmedPassword?.isEmpty)! && (trimmedEmail?.isEmpty)! {
+            let emptyEmailAndPassAlert = loginAuthAlertMaker(alertTitle: "Empty Email & Password", alertMessage: "Please enter your Email & Password")
+            self.present(emptyEmailAndPassAlert, animated: true, completion: nil)
+        }
+        
         if (trimmedEmail?.isEmpty)! {
             //see utility function loginAuthAlertMaker
             let emptyEmailAlert = loginAuthAlertMaker(alertTitle: "Empty Email", alertMessage: "Please enter your Email")
