@@ -27,7 +27,8 @@ class LoginVC: UIViewController {
     }
     
     @IBAction func loginBtnClicked(_ sender: Any) {
-        firebaseAuthErrorHandling(emailString: emailTextField.text, passString: passwordTxtField.text)
+        let cleanedupStrings = trimmedandUnwrappedUserPass(email: emailTextField.text, password: passwordTxtField.text)
+        firebaseAuthErrorHandling(emailString: cleanedupStrings.0, passString: cleanedupStrings.1)
 
     }
     
@@ -35,16 +36,13 @@ class LoginVC: UIViewController {
     }
     
     @IBAction func signUpBtnClicked(_ sender: Any) {
-        firebaseAuthErrorHandling(emailString: emailTextField.text, passString: passwordTxtField.text)
+        let cleanedupStrings = trimmedandUnwrappedUserPass(email: emailTextField.text, password: passwordTxtField.text)
+        firebaseAuthErrorHandling(emailString: cleanedupStrings.0, passString: cleanedupStrings.1)
 
     }
     
-    func firebaseAuthErrorHandling(emailString: String?, passString: String?) {
-        let trimmedEmail = stringTrimmer(stringToTrim: emailTextField.text)
-        let trimmedPassword = stringTrimmer(stringToTrim: passwordTxtField.text)
-        guard let unwrappedTrimmedEmail = trimmedEmail else {return}
-        guard let unwrappedTrimmedPassword = trimmedPassword else {return}
-        let stringTuple = (unwrappedTrimmedEmail, unwrappedTrimmedPassword)
+    func firebaseAuthErrorHandling(emailString: String, passString: String) {
+        let stringTuple = (emailString, passString)
 
         switch stringTuple {
         case (let x, let y) where x.isEmpty && y.isEmpty:
@@ -57,10 +55,17 @@ class LoginVC: UIViewController {
             let emptyPasswordAlert = loginAuthAlertMaker(alertTitle: "Empty Password", alertMessage: "Please enter your Password")
             self.present(emptyPasswordAlert, animated: true, completion: nil)
         default:
-                print("Sorry")
+            print("sorry")
         }
     }
     
+    func trimmedandUnwrappedUserPass(email: String?, password: String?) -> (String,String) {
+        let trimmedEmail = stringTrimmer(stringToTrim: email)
+        let trimmedPassword = stringTrimmer(stringToTrim: password)
+        guard let unwrappedTrimmedEmail = trimmedEmail else {return ("","")}
+        guard let unwrappedTrimmedPassword = trimmedPassword else {return ("","")}
+        return (unwrappedTrimmedEmail, unwrappedTrimmedPassword)
+    }
     
     /*
     // MARK: - Navigation
@@ -73,3 +78,4 @@ class LoginVC: UIViewController {
     */
 
 }
+
