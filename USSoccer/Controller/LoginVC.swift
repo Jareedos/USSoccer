@@ -26,11 +26,17 @@ class LoginVC: UIViewController {
     }
     
     @IBAction func loginBtnClicked(_ sender: Any) {
+        Auth.auth().createUser(withEmail: email, password: password) { (user, error) in
+        }
     }
     
     @IBAction func fogotPasswordBtnClicked(_ sender: Any) {
     }
     
+    @IBAction func signUpBtnClicked(_ sender: Any) {
+        Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
+        }
+    }
     
     
     /*
