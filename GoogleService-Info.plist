@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AD_UNIT_ID_FOR_BANNER_TEST</key>
+	<string>ca-app-pub-3940256099942544/2934735716</string>
+	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
+	<string>ca-app-pub-3940256099942544/4411468910</string>
+	<key>CLIENT_ID</key>
+	<string>142823775153-9g0rsvkjg75v6vpp0h31j181c18trdcp.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.142823775153-9g0rsvkjg75v6vpp0h31j181c18trdcp</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDBoLVS8gAq6zTsr7cBNureM-ug7e-LZwM</string>
+	<key>GCM_SENDER_ID</key>
+	<string>142823775153</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.JaredSobol.USSoccer</string>
+	<key>PROJECT_ID</key>
+	<string>ussoccer-96dd3</string>
+	<key>STORAGE_BUCKET</key>
+	<string>ussoccer-96dd3.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<true></true>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<false></false>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:142823775153:ios:d31c476fe1093c83</string>
+	<key>DATABASE_URL</key>
+	<string>https://ussoccer-96dd3.firebaseio.com</string>
+</dict>
+</plist>

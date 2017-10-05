@@ -49,9 +49,25 @@ class LoginVC: UIViewController {
     }
     
     @IBAction func signUpBtnClicked(_ sender: Any) {
+        let trimmedEmail = stringTrimmer(stringToTrim: emailTextField.text)
+        let trimmedPassword = stringTrimmer(stringToTrim: passwordTxtField.text)
+        
+        if (trimmedEmail?.isEmpty)! {
+            //see utility function loginAuthAlertMaker
+            let emptyEmailAlert = loginAuthAlertMaker(alertTitle: "Empty Email", alertMessage: "Please enter your Email")
+            self.present(emptyEmailAlert, animated: true, completion: nil)
+        }
+        
+        if (trimmedPassword?.isEmpty)! {
+            let emptyPasswordAlert = loginAuthAlertMaker(alertTitle: "Empty Password", alertMessage: "Please enter your Password")
+            self.present(emptyPasswordAlert, animated: true, completion: nil)
+        }
+        
 //        Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
 //        }
     }
+    
+//    func 
     
     
     /*
