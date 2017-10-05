@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class LoginVC: UIViewController {
     @IBOutlet weak var emailTextField: UITextField!
@@ -26,16 +27,30 @@ class LoginVC: UIViewController {
     }
     
     @IBAction func loginBtnClicked(_ sender: Any) {
-        Auth.auth().createUser(withEmail: email, password: password) { (user, error) in
+        // see utility function stringTimmer
+        let trimmedEmail = stringTrimmer(stringToTrim: emailTextField.text)
+        let trimmedPassword = stringTrimmer(stringToTrim: passwordTxtField.text)
+        
+        if (trimmedEmail?.isEmpty)! {
+            //see utility function loginAuthAlertMaker
+            let emptyEmailAlert = loginAuthAlertMaker(alertTitle: "Empty Email", alertMessage: "Please enter your Email")
+            self.present(emptyEmailAlert, animated: true, completion: nil)
         }
+        
+        if (trimmedPassword?.isEmpty)! {
+            let emptyPasswordAlert = loginAuthAlertMaker(alertTitle: "Empty Password", alertMessage: "Please enter your Password")
+            self.present(emptyPasswordAlert, animated: true, completion: nil)
+        }
+//        Auth.auth().createUser(withEmail: email, password: password) { (user, error) in
+//        }
     }
     
     @IBAction func fogotPasswordBtnClicked(_ sender: Any) {
     }
     
     @IBAction func signUpBtnClicked(_ sender: Any) {
-        Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
-        }
+//        Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
+//        }
     }
     
     
