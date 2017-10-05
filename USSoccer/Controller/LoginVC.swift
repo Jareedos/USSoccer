@@ -27,52 +27,39 @@ class LoginVC: UIViewController {
     }
     
     @IBAction func loginBtnClicked(_ sender: Any) {
-        // see utility function stringTimmer
-        let trimmedEmail = stringTrimmer(stringToTrim: emailTextField.text)
-        let trimmedPassword = stringTrimmer(stringToTrim: passwordTxtField.text)
-        
-        if(trimmedPassword?.isEmpty)! && (trimmedEmail?.isEmpty)! {
-            let emptyEmailAndPassAlert = loginAuthAlertMaker(alertTitle: "Empty Email & Password", alertMessage: "Please enter your Email & Password")
-            self.present(emptyEmailAndPassAlert, animated: true, completion: nil)
-        }
-        
-        if (trimmedEmail?.isEmpty)! {
-            //see utility function loginAuthAlertMaker
-            let emptyEmailAlert = loginAuthAlertMaker(alertTitle: "Empty Email", alertMessage: "Please enter your Email")
-            self.present(emptyEmailAlert, animated: true, completion: nil)
-        }
-        
-        if (trimmedPassword?.isEmpty)! {
-            let emptyPasswordAlert = loginAuthAlertMaker(alertTitle: "Empty Password", alertMessage: "Please enter your Password")
-            self.present(emptyPasswordAlert, animated: true, completion: nil)
-        }
-//        Auth.auth().createUser(withEmail: email, password: password) { (user, error) in
-//        }
+        firebaseAuthErrorHandling(emailString: emailTextField.text, passString: passwordTxtField.text)
+
     }
     
     @IBAction func fogotPasswordBtnClicked(_ sender: Any) {
     }
     
     @IBAction func signUpBtnClicked(_ sender: Any) {
-        let trimmedEmail = stringTrimmer(stringToTrim: emailTextField.text)
-        let trimmedPassword = stringTrimmer(stringToTrim: passwordTxtField.text)
-        
-        if (trimmedEmail?.isEmpty)! {
-            //see utility function loginAuthAlertMaker
-            let emptyEmailAlert = loginAuthAlertMaker(alertTitle: "Empty Email", alertMessage: "Please enter your Email")
-            self.present(emptyEmailAlert, animated: true, completion: nil)
-        }
-        
-        if (trimmedPassword?.isEmpty)! {
-            let emptyPasswordAlert = loginAuthAlertMaker(alertTitle: "Empty Password", alertMessage: "Please enter your Password")
-            self.present(emptyPasswordAlert, animated: true, completion: nil)
-        }
-        
-//        Auth.auth().signIn(withEmail: email, password: password) { (user, error) in
-//        }
+        firebaseAuthErrorHandling(emailString: emailTextField.text, passString: passwordTxtField.text)
+
     }
     
-//    func 
+    func firebaseAuthErrorHandling(emailString: String?, passString: String?) {
+        let trimmedEmail = stringTrimmer(stringToTrim: emailTextField.text)
+        let trimmedPassword = stringTrimmer(stringToTrim: passwordTxtField.text)
+        guard let unwrappedTrimmedEmail = trimmedEmail else {return}
+        guard let unwrappedTrimmedPassword = trimmedPassword else {return}
+        let stringTuple = (unwrappedTrimmedEmail, unwrappedTrimmedPassword)
+
+        switch stringTuple {
+        case (let x, let y) where x.isEmpty && y.isEmpty:
+            let emptyEmailAndPassAlert = loginAuthAlertMaker(alertTitle: "Empty Email & Password", alertMessage: "Please enter your Email & Password")
+            self.present(emptyEmailAndPassAlert, animated: true, completion: nil)
+        case (let x,_) where x.isEmpty:
+            let emptyEmailAlert = loginAuthAlertMaker(alertTitle: "Empty Email", alertMessage: "Please enter your Email")
+            self.present(emptyEmailAlert, animated: true, completion: nil)
+        case (_, let y) where y.isEmpty:
+            let emptyPasswordAlert = loginAuthAlertMaker(alertTitle: "Empty Password", alertMessage: "Please enter your Password")
+            self.present(emptyPasswordAlert, animated: true, completion: nil)
+        default:
+                print("Sorry")
+        }
+    }
     
     
     /*
