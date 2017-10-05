@@ -1,0 +1,422 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 48;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		BF3ABD771F8483CC00D46DD3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3ABD761F8483CC00D46DD3 /* AppDelegate.swift */; };
+		BF3ABD791F8483CC00D46DD3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3ABD781F8483CC00D46DD3 /* ViewController.swift */; };
+		BF3ABD7C1F8483CC00D46DD3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BF3ABD7A1F8483CC00D46DD3 /* Main.storyboard */; };
+		BF3ABD7E1F8483CC00D46DD3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BF3ABD7D1F8483CC00D46DD3 /* Assets.xcassets */; };
+		BF3ABD811F8483CC00D46DD3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BF3ABD7F1F8483CC00D46DD3 /* LaunchScreen.storyboard */; };
+		BF3ABD8C1F8538E500D46DD3 /* SoccerGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3ABD8B1F8538E500D46DD3 /* SoccerGame.swift */; };
+		CD6C63086E2C220EA84D8967 /* Pods_USSoccer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 570DE21D74C2822D0662D8ED /* Pods_USSoccer.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		3097B29D3005A3B5804D9F8A /* Pods-USSoccer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-USSoccer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-USSoccer/Pods-USSoccer.debug.xcconfig"; sourceTree = "<group>"; };
+		39895979E6EF2F0585E73F94 /* Pods-USSoccer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-USSoccer.release.xcconfig"; path = "Pods/Target Support Files/Pods-USSoccer/Pods-USSoccer.release.xcconfig"; sourceTree = "<group>"; };
+		570DE21D74C2822D0662D8ED /* Pods_USSoccer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_USSoccer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BF3ABD731F8483CC00D46DD3 /* USSoccer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = USSoccer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BF3ABD761F8483CC00D46DD3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		BF3ABD781F8483CC00D46DD3 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		BF3ABD7B1F8483CC00D46DD3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		BF3ABD7D1F8483CC00D46DD3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		BF3ABD801F8483CC00D46DD3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		BF3ABD821F8483CC00D46DD3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BF3ABD8B1F8538E500D46DD3 /* SoccerGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoccerGame.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		BF3ABD701F8483CC00D46DD3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CD6C63086E2C220EA84D8967 /* Pods_USSoccer.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4529C4478EFD9BA4FF8EE44D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				570DE21D74C2822D0662D8ED /* Pods_USSoccer.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4C48E9A4DF56D05400A3A998 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				3097B29D3005A3B5804D9F8A /* Pods-USSoccer.debug.xcconfig */,
+				39895979E6EF2F0585E73F94 /* Pods-USSoccer.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		BF3ABD6A1F8483CC00D46DD3 = {
+			isa = PBXGroup;
+			children = (
+				BF3ABD751F8483CC00D46DD3 /* USSoccer */,
+				BF3ABD741F8483CC00D46DD3 /* Products */,
+				4C48E9A4DF56D05400A3A998 /* Pods */,
+				4529C4478EFD9BA4FF8EE44D /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		BF3ABD741F8483CC00D46DD3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BF3ABD731F8483CC00D46DD3 /* USSoccer.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		BF3ABD751F8483CC00D46DD3 /* USSoccer */ = {
+			isa = PBXGroup;
+			children = (
+				BF3ABD881F85382C00D46DD3 /* Model */,
+				BF3ABD761F8483CC00D46DD3 /* AppDelegate.swift */,
+				BF3ABD781F8483CC00D46DD3 /* ViewController.swift */,
+				BF3ABD7A1F8483CC00D46DD3 /* Main.storyboard */,
+				BF3ABD7D1F8483CC00D46DD3 /* Assets.xcassets */,
+				BF3ABD7F1F8483CC00D46DD3 /* LaunchScreen.storyboard */,
+				BF3ABD821F8483CC00D46DD3 /* Info.plist */,
+			);
+			path = USSoccer;
+			sourceTree = "<group>";
+		};
+		BF3ABD881F85382C00D46DD3 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				BF3ABD8B1F8538E500D46DD3 /* SoccerGame.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		BF3ABD721F8483CC00D46DD3 /* USSoccer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BF3ABD851F8483CC00D46DD3 /* Build configuration list for PBXNativeTarget "USSoccer" */;
+			buildPhases = (
+				2A2DADD0F5A8B06A036FC666 /* [CP] Check Pods Manifest.lock */,
+				BF3ABD6F1F8483CC00D46DD3 /* Sources */,
+				BF3ABD701F8483CC00D46DD3 /* Frameworks */,
+				BF3ABD711F8483CC00D46DD3 /* Resources */,
+				59A31FA75BBFD8C1C09CDE99 /* [CP] Embed Pods Frameworks */,
+				C3AABDFDECF4D31F2C69A90B /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = USSoccer;
+			productName = USSoccer;
+			productReference = BF3ABD731F8483CC00D46DD3 /* USSoccer.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BF3ABD6B1F8483CC00D46DD3 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0900;
+				LastUpgradeCheck = 0900;
+				ORGANIZATIONNAME = Appmaker;
+				TargetAttributes = {
+					BF3ABD721F8483CC00D46DD3 = {
+						CreatedOnToolsVersion = 9.0;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = BF3ABD6E1F8483CC00D46DD3 /* Build configuration list for PBXProject "USSoccer" */;
+			compatibilityVersion = "Xcode 8.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = BF3ABD6A1F8483CC00D46DD3;
+			productRefGroup = BF3ABD741F8483CC00D46DD3 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				BF3ABD721F8483CC00D46DD3 /* USSoccer */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		BF3ABD711F8483CC00D46DD3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BF3ABD811F8483CC00D46DD3 /* LaunchScreen.storyboard in Resources */,
+				BF3ABD7E1F8483CC00D46DD3 /* Assets.xcassets in Resources */,
+				BF3ABD7C1F8483CC00D46DD3 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2A2DADD0F5A8B06A036FC666 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-USSoccer-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		59A31FA75BBFD8C1C09CDE99 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-USSoccer/Pods-USSoccer-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-USSoccer/Pods-USSoccer-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C3AABDFDECF4D31F2C69A90B /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-USSoccer/Pods-USSoccer-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		BF3ABD6F1F8483CC00D46DD3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BF3ABD791F8483CC00D46DD3 /* ViewController.swift in Sources */,
+				BF3ABD8C1F8538E500D46DD3 /* SoccerGame.swift in Sources */,
+				BF3ABD771F8483CC00D46DD3 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		BF3ABD7A1F8483CC00D46DD3 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				BF3ABD7B1F8483CC00D46DD3 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		BF3ABD7F1F8483CC00D46DD3 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				BF3ABD801F8483CC00D46DD3 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		BF3ABD831F8483CC00D46DD3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		BF3ABD841F8483CC00D46DD3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		BF3ABD861F8483CC00D46DD3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3097B29D3005A3B5804D9F8A /* Pods-USSoccer.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = J69W6VP8JF;
+				INFOPLIST_FILE = USSoccer/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.JaredSobol.USSoccer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		BF3ABD871F8483CC00D46DD3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 39895979E6EF2F0585E73F94 /* Pods-USSoccer.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = J69W6VP8JF;
+				INFOPLIST_FILE = USSoccer/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.JaredSobol.USSoccer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		BF3ABD6E1F8483CC00D46DD3 /* Build configuration list for PBXProject "USSoccer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BF3ABD831F8483CC00D46DD3 /* Debug */,
+				BF3ABD841F8483CC00D46DD3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BF3ABD851F8483CC00D46DD3 /* Build configuration list for PBXNativeTarget "USSoccer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BF3ABD861F8483CC00D46DD3 /* Debug */,
+				BF3ABD871F8483CC00D46DD3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = BF3ABD6B1F8483CC00D46DD3 /* Project object */;
+}
