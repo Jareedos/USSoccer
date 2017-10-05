@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Avenir.ttc">
+            <string>Avenir-Heavy</string>
+        </array>
+    </customFonts>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="USSoccer" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Enter Password" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Vqq-6U-Zpd">
+                                <rect key="frame" x="62" y="196" width="250" height="80"/>
+                                <color key="textColor" red="0.0" green="0.2470588235" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="21"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" secureTextEntry="YES" textContentType="password"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KcX-Hd-wnW">
+                                <rect key="frame" x="145" y="318" width="86" height="58"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="58" id="sDZ-bf-zya"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="33"/>
+                                <state key="normal" title="Login">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qsS-ZH-tTv">
+                                <rect key="frame" x="227" y="384" width="105" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="Ufo-dP-Hy0"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="12"/>
+                                <state key="normal" title="Forgot Password ?">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                            </button>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Enter Email" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Yv0-Pi-Uey">
+                                <rect key="frame" x="62" y="91" width="250" height="80"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="250" id="ZTx-Qa-QXp"/>
+                                    <constraint firstAttribute="height" constant="80" id="slE-Qd-qFb"/>
+                                </constraints>
+                                <color key="textColor" red="0.0" green="0.2470588235" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" name="Avenir-Heavy" family="Avenir" pointSize="21"/>
+                                <textInputTraits key="textInputTraits" textContentType="email"/>
+                            </textField>
+                        </subviews>
+                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Vqq-6U-Zpd" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="0sB-y0-2oo"/>
+                            <constraint firstItem="Yv0-Pi-Uey" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="3FE-uL-CpF"/>
+                            <constraint firstItem="KcX-Hd-wnW" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="775-vz-gUi"/>
+                            <constraint firstItem="Yv0-Pi-Uey" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="71" id="8aa-e1-0PB"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="qsS-ZH-tTv" secondAttribute="trailing" constant="43" id="8nS-ox-kew"/>
+                            <constraint firstItem="Vqq-6U-Zpd" firstAttribute="height" secondItem="Yv0-Pi-Uey" secondAttribute="height" id="A2V-St-Nl0"/>
+                            <constraint firstItem="Vqq-6U-Zpd" firstAttribute="top" secondItem="Yv0-Pi-Uey" secondAttribute="bottom" constant="25" id="aTF-8f-Dez"/>
+                            <constraint firstItem="Vqq-6U-Zpd" firstAttribute="width" secondItem="Yv0-Pi-Uey" secondAttribute="width" id="dhO-0h-WJW"/>
+                            <constraint firstItem="KcX-Hd-wnW" firstAttribute="top" secondItem="Vqq-6U-Zpd" secondAttribute="bottom" constant="42" id="gUN-du-mhK"/>
+                            <constraint firstItem="qsS-ZH-tTv" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" symbolic="YES" id="mmt-1Z-l8Y"/>
+                            <constraint firstItem="qsS-ZH-tTv" firstAttribute="top" secondItem="KcX-Hd-wnW" secondAttribute="bottom" constant="8" id="rCc-76-9sH"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="177" y="2"/>
+        </scene>
+    </scenes>
+</document>
