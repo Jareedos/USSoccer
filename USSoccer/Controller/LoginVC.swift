@@ -46,13 +46,14 @@ class LoginVC: UIViewController {
                 let firebaseError = error! as NSError
                     switch firebaseError.code {
                     case AuthErrorCodesFirebase.Error_Invalid_Email.rawValue:
-                        print(firebaseError.code)
-                        print(error)
                         let invalidEmailAlert = loginAuthAlertMaker(alertTitle: "Invalid Email", alertMessage: "Please enter a valid Email Address")
                         self.present(invalidEmailAlert, animated: true, completion: nil)
                     case AuthErrorCodesFirebase.Error_Email_Already_In_Use.rawValue:
                         let emailAlreadyInUseAlert = loginAuthAlertMaker(alertTitle: "Email is Already in Use", alertMessage: "This email is already in use")
                         self.present(emailAlreadyInUseAlert, animated: true, completion: nil)
+                    case AuthErrorCodesFirebase.Error_Weak_Password.rawValue:
+                        let weakPasswordAlert = loginAuthAlertMaker(alertTitle: "Weak Password", alertMessage: " Password Must Be atleast 6 characters long")
+                        self.present(weakPasswordAlert, animated: true, completion: nil)
                     default:
                         print(firebaseError.code)
                         print(error)
