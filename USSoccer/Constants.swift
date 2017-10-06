@@ -10,4 +10,5 @@ import Foundation
 
 enum AuthErrorCodesFirebase: Int {
     case Error_Invalid_Email = 17008
+    case Error_Email_Already_In_Use = 17007
 }

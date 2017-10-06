@@ -46,11 +46,16 @@ class LoginVC: UIViewController {
                 let firebaseError = error! as NSError
                     switch firebaseError.code {
                     case AuthErrorCodesFirebase.Error_Invalid_Email.rawValue:
-                        let invalidEmailAlert = loginAuthAlertMaker(alertTitle: "Invalid Email", alertMessage: "Please enter a valid Email Address" )
+                        print(firebaseError.code)
+                        print(error)
+                        let invalidEmailAlert = loginAuthAlertMaker(alertTitle: "Invalid Email", alertMessage: "Please enter a valid Email Address")
                         self.present(invalidEmailAlert, animated: true, completion: nil)
-                        
+                    case AuthErrorCodesFirebase.Error_Email_Already_In_Use.rawValue:
+                        let emailAlreadyInUseAlert = loginAuthAlertMaker(alertTitle: "Email is Already in Use", alertMessage: "This email is already in use")
+                        self.present(emailAlreadyInUseAlert, animated: true, completion: nil)
                     default:
-                        print("sorry")
+                        print(firebaseError.code)
+                        print(error)
                     }
 //                var firebaseError = error! as NSError
 //                if firebaseError.code == AuthErrorCodesFirebase.Error_Invalid_Email.rawValue  {
