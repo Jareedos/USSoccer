@@ -27,7 +27,9 @@ class LoginVC: UIViewController {
     }
     
     @IBAction func loginBtnClicked(_ sender: Any) {
-        let cleanedupStrings = trimmedandUnwrappedUserPass(email: emailTextField.text, password: passwordTxtField.text)
+        // Look below in utility section for trimmedAndUnwrappedUserPass func
+        let cleanedupStrings = trimmedAndUnwrappedUserPass(email: emailTextField.text, password: passwordTxtField.text)
+        // Look in Utility file for firebaseAuthErrorHangling func
         firebaseAuthErrorHandling(emailString: cleanedupStrings.0, passString: cleanedupStrings.1)
         
     }
@@ -36,7 +38,9 @@ class LoginVC: UIViewController {
     }
     
     @IBAction func signUpBtnClicked(_ sender: Any) {
-        let cleanedupStrings = trimmedandUnwrappedUserPass(email: emailTextField.text, password: passwordTxtField.text)
+        // Look below in utility section for trimmedAndUnwrappedUserPass func
+        let cleanedupStrings = trimmedAndUnwrappedUserPass(email: emailTextField.text, password: passwordTxtField.text)
+        // Look in Utility file for firebaseAuthErrorHangling func
         let isvalid = firebaseAuthErrorHandling(emailString: cleanedupStrings.0, passString: cleanedupStrings.1)
         if isvalid {
             Auth.auth().createUser(withEmail: cleanedupStrings.0, password: cleanedupStrings.1) { (user, error) in
@@ -45,46 +49,25 @@ class LoginVC: UIViewController {
                 }
                 let firebaseError = error! as NSError
                     switch firebaseError.code {
-                    case AuthErrorCodesFirebase.Error_Invalid_Email.rawValue:
+                    case AuthErrorCodesFirebase.error_Invalid_Email.rawValue:
                         let invalidEmailAlert = loginAuthAlertMaker(alertTitle: "Invalid Email", alertMessage: "Please enter a valid Email Address")
                         self.present(invalidEmailAlert, animated: true, completion: nil)
-                    case AuthErrorCodesFirebase.Error_Email_Already_In_Use.rawValue:
+                    case AuthErrorCodesFirebase.error_Email_Already_In_Use.rawValue:
                         let emailAlreadyInUseAlert = loginAuthAlertMaker(alertTitle: "Email is Already in Use", alertMessage: "This email is already in use")
                         self.present(emailAlreadyInUseAlert, animated: true, completion: nil)
-                    case AuthErrorCodesFirebase.Error_Weak_Password.rawValue:
+                    case AuthErrorCodesFirebase.error_Weak_Password.rawValue:
                         let weakPasswordAlert = loginAuthAlertMaker(alertTitle: "Weak Password", alertMessage: " Password Must Be atleast 6 characters long")
                         self.present(weakPasswordAlert, animated: true, completion: nil)
                     default:
                         print(firebaseError.code)
                         print(error)
                     }
-//                var firebaseError = error! as NSError
-//                if firebaseError.code == AuthErrorCodesFirebase.Error_Invalid_Email.rawValue  {
-//
-//                }
-//                if let error = error {
-//                    let firebaseError = error as NSError
-//                    if firebaseError.code == AuthErrorCodesFirebase.Error_Invalid_Email.rawValue  {
-//
-//                    }
-//                    print(firebaseError.userInfo["error_name"])
-//                } else {
-//                    print("Created Valid User")
-//                }
-                /*
-                if error == nil {
-                    print("Created Valid User")
-                } else if error.code == "ERROR_INVALID_EMAIL" {
-                    let invaildEmailAlert = loginAuthAlertMaker(alertTitle: "Invaild Email", alertMessage: "Please Enter a valid Email")
-                    self.present(invaildEmailAlert, animated: true, completion: nil)
-                }
-                print(error) */
             }
         }
-//        print(cleanedupStrings.0)
-//        print(cleanedupStrings.1)
     }
       
+//UTILITY FUNCS FOR LOGINVC
+//*************************
     
     func firebaseAuthErrorHandling(emailString: String, passString: String) -> Bool {
         let stringTuple = (emailString, passString)
@@ -107,7 +90,9 @@ class LoginVC: UIViewController {
         }
     }
     
-    func trimmedandUnwrappedUserPass(email: String?, password: String?) -> (String,String) {
+    
+    func trimmedAndUnwrappedUserPass(email: String?, password: String?) -> (String,String) {
+        //look in Utility file for stringTrimmer Func
         let trimmedEmail = stringTrimmer(stringToTrim: email)
         let trimmedPassword = stringTrimmer(stringToTrim: password)
         guard let unwrappedTrimmedEmail = trimmedEmail else {return ("","")}
