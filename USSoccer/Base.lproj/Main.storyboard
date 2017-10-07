@@ -22,6 +22,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="USSoccer" translatesAutoresizingMaskIntoConstraints="NO" id="idt-ZS-X7b">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Enter Email" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Yv0-Pi-Uey">
                                 <rect key="frame" x="62" y="91" width="250" height="80"/>
                                 <constraints>
@@ -104,4 +108,7 @@
             <point key="canvasLocation" x="176.80000000000001" y="1.3493253373313345"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="USSoccer" width="3966" height="3624"/>
+    </resources>
 </document>
