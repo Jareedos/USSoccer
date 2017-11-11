@@ -12,6 +12,7 @@
 		BF3ABD7E1F8483CC00D46DD3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BF3ABD7D1F8483CC00D46DD3 /* Assets.xcassets */; };
 		BF3ABD811F8483CC00D46DD3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BF3ABD7F1F8483CC00D46DD3 /* LaunchScreen.storyboard */; };
 		BF3ABD8C1F8538E500D46DD3 /* SoccerGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3ABD8B1F8538E500D46DD3 /* SoccerGame.swift */; };
+		BF4A4AF91FB7AE0400E93E18 /* USSoccer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = BF4A4AF71FB7AE0400E93E18 /* USSoccer.xcdatamodeld */; };
 		BFD339141F85CD8700EEAB3F /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD339131F85CD8700EEAB3F /* LoginVC.swift */; };
 		BFD339191F85DEBE00EEAB3F /* Uitility.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD339181F85DEBE00EEAB3F /* Uitility.swift */; };
 		BFD3391D1F868FE000EEAB3F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BFD3391C1F868FE000EEAB3F /* GoogleService-Info.plist */; };
@@ -30,6 +31,7 @@
 		BF3ABD801F8483CC00D46DD3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BF3ABD821F8483CC00D46DD3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BF3ABD8B1F8538E500D46DD3 /* SoccerGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoccerGame.swift; sourceTree = "<group>"; };
+		BF4A4AF81FB7AE0400E93E18 /* USSoccer.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = USSoccer.xcdatamodel; sourceTree = "<group>"; };
 		BFD339131F85CD8700EEAB3F /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		BFD339181F85DEBE00EEAB3F /* Uitility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Uitility.swift; sourceTree = "<group>"; };
 		BFD3391C1F868FE000EEAB3F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
@@ -68,6 +70,7 @@
 		BF3ABD6A1F8483CC00D46DD3 = {
 			isa = PBXGroup;
 			children = (
+				BF4A4AF71FB7AE0400E93E18 /* USSoccer.xcdatamodeld */,
 				BF3ABD751F8483CC00D46DD3 /* USSoccer */,
 				BF3ABD741F8483CC00D46DD3 /* Products */,
 				4C48E9A4DF56D05400A3A998 /* Pods */,
@@ -260,6 +263,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BF4A4AF91FB7AE0400E93E18 /* USSoccer.xcdatamodeld in Sources */,
 				BFF710311F87E5110001EC0E /* Constants.swift in Sources */,
 				BF3ABD8C1F8538E500D46DD3 /* SoccerGame.swift in Sources */,
 				BF3ABD771F8483CC00D46DD3 /* AppDelegate.swift in Sources */,
@@ -451,6 +455,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		BF4A4AF71FB7AE0400E93E18 /* USSoccer.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				BF4A4AF81FB7AE0400E93E18 /* USSoccer.xcdatamodel */,
+			);
+			currentVersion = BF4A4AF81FB7AE0400E93E18 /* USSoccer.xcdatamodel */;
+			path = USSoccer.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = BF3ABD6B1F8483CC00D46DD3 /* Project object */;
 }

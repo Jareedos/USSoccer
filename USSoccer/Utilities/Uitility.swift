@@ -21,3 +21,13 @@ func loginAuthAlertMaker(alertTitle: String, alertMessage: String) -> UIAlertCon
     alert.addAction(UIAlertAction(title: "ok", style: UIAlertActionStyle.default, handler: nil))
     return alert
 }
+
+// func takes strings and unwrapps them
+func trimmedAndUnwrappedUserPass(email: String?, password: String?) -> (String,String) {
+    //look in Utility file for stringTrimmer Func
+    let trimmedEmail = stringTrimmer(stringToTrim: email)
+    let trimmedPassword = stringTrimmer(stringToTrim: password)
+    guard let unwrappedTrimmedEmail = trimmedEmail else {return ("","")}
+    guard let unwrappedTrimmedPassword = trimmedPassword else {return ("","")}
+    return (unwrappedTrimmedEmail, unwrappedTrimmedPassword)
+}

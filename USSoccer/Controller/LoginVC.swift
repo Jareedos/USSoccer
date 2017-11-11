@@ -60,7 +60,6 @@ class LoginVC: UIViewController {
                         self.present(weakPasswordAlert, animated: true, completion: nil)
                     default:
                         print(firebaseError.code)
-                        print(error)
                     }
             }
         }
