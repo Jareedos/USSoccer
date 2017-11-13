@@ -31,7 +31,23 @@ class HomeVC: UIViewController {
 
 }
 
+extension HomeVC: UITableViewDelegate, UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "GameTVCell", for: indexPath) as? GamesTVCell else {
+            fatalError("The Cell Failed to Deque")
+        }
+        
+        return cell
+    }
+}
+
 extension HomeVC: UIPickerViewDelegate, UIPickerViewDataSource {
+    
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
@@ -39,16 +55,10 @@ extension HomeVC: UIPickerViewDelegate, UIPickerViewDataSource {
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return pickerTeamsArray.count
     }
-    
-//    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-//        return pickerTeamsArray[row]
-//    }
-    
-    
+
     func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
         return customHeight
     }
-    
     
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: customWidth, height: customHeight))
@@ -61,6 +71,5 @@ extension HomeVC: UIPickerViewDelegate, UIPickerViewDataSource {
         view.transform = CGAffineTransform(rotationAngle: (150 * (.pi/100)))
         return view
     }
-    
-    
 }
+

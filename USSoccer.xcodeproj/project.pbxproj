@@ -15,6 +15,7 @@
 		BF4A4AF91FB7AE0400E93E18 /* USSoccer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = BF4A4AF71FB7AE0400E93E18 /* USSoccer.xcdatamodeld */; };
 		BF4A4AFB1FB7AF6500E93E18 /* LoadingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4A4AFA1FB7AF6500E93E18 /* LoadingVC.swift */; };
 		BF4A4AFD1FB7AFD100E93E18 /* HomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4A4AFC1FB7AFD100E93E18 /* HomeVC.swift */; };
+		BF4A4B001FBA2CF100E93E18 /* GamesTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4A4AFF1FBA2CF100E93E18 /* GamesTVCell.swift */; };
 		BFD339141F85CD8700EEAB3F /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD339131F85CD8700EEAB3F /* LoginVC.swift */; };
 		BFD339191F85DEBE00EEAB3F /* Uitility.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD339181F85DEBE00EEAB3F /* Uitility.swift */; };
 		BFD3391D1F868FE000EEAB3F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BFD3391C1F868FE000EEAB3F /* GoogleService-Info.plist */; };
@@ -36,6 +37,7 @@
 		BF4A4AF81FB7AE0400E93E18 /* USSoccer.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = USSoccer.xcdatamodel; sourceTree = "<group>"; };
 		BF4A4AFA1FB7AF6500E93E18 /* LoadingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingVC.swift; sourceTree = "<group>"; };
 		BF4A4AFC1FB7AFD100E93E18 /* HomeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeVC.swift; sourceTree = "<group>"; };
+		BF4A4AFF1FBA2CF100E93E18 /* GamesTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamesTVCell.swift; sourceTree = "<group>"; };
 		BFD339131F85CD8700EEAB3F /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		BFD339181F85DEBE00EEAB3F /* Uitility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Uitility.swift; sourceTree = "<group>"; };
 		BFD3391C1F868FE000EEAB3F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
@@ -93,16 +95,13 @@
 		BF3ABD751F8483CC00D46DD3 /* USSoccer */ = {
 			isa = PBXGroup;
 			children = (
+				BF4A4AFE1FBA2C3B00E93E18 /* View */,
 				BFD3391C1F868FE000EEAB3F /* GoogleService-Info.plist */,
 				BFD339171F85DE9D00EEAB3F /* Utilities */,
 				BFD339151F85CD8D00EEAB3F /* Controller */,
 				BF3ABD881F85382C00D46DD3 /* Model */,
-				BF3ABD761F8483CC00D46DD3 /* AppDelegate.swift */,
-				BF3ABD7A1F8483CC00D46DD3 /* Main.storyboard */,
 				BF3ABD7D1F8483CC00D46DD3 /* Assets.xcassets */,
-				BF3ABD7F1F8483CC00D46DD3 /* LaunchScreen.storyboard */,
 				BF3ABD821F8483CC00D46DD3 /* Info.plist */,
-				BFF710301F87E5110001EC0E /* Constants.swift */,
 			);
 			path = USSoccer;
 			sourceTree = "<group>";
@@ -113,6 +112,16 @@
 				BF3ABD8B1F8538E500D46DD3 /* SoccerGame.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		BF4A4AFE1FBA2C3B00E93E18 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				BF3ABD7F1F8483CC00D46DD3 /* LaunchScreen.storyboard */,
+				BF3ABD7A1F8483CC00D46DD3 /* Main.storyboard */,
+				BF4A4AFF1FBA2CF100E93E18 /* GamesTVCell.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		BFD339151F85CD8D00EEAB3F /* Controller */ = {
@@ -129,6 +138,8 @@
 			isa = PBXGroup;
 			children = (
 				BFD339181F85DEBE00EEAB3F /* Uitility.swift */,
+				BF3ABD761F8483CC00D46DD3 /* AppDelegate.swift */,
+				BFF710301F87E5110001EC0E /* Constants.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -272,6 +283,7 @@
 				BF4A4AF91FB7AE0400E93E18 /* USSoccer.xcdatamodeld in Sources */,
 				BF4A4AFD1FB7AFD100E93E18 /* HomeVC.swift in Sources */,
 				BFF710311F87E5110001EC0E /* Constants.swift in Sources */,
+				BF4A4B001FBA2CF100E93E18 /* GamesTVCell.swift in Sources */,
 				BF3ABD8C1F8538E500D46DD3 /* SoccerGame.swift in Sources */,
 				BF3ABD771F8483CC00D46DD3 /* AppDelegate.swift in Sources */,
 				BFD339191F85DEBE00EEAB3F /* Uitility.swift in Sources */,
