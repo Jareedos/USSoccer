@@ -9,27 +9,58 @@
 import UIKit
 
 class HomeVC: UIViewController {
+    
+    @IBOutlet weak var teamPicker: UIPickerView!
+    let pickerTeamsArray = ["U-23 MNT", "MNT", "ALL TEAMS", "WNT", "U-23 WNT"]
+    var rotaionAngle: CGFloat!
+    let customHeight: CGFloat = 100
+    let customWidth: CGFloat = 80
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        rotaionAngle = -150 * (.pi/100)
+        teamPicker.delegate = self
+        teamPicker.dataSource = self
+        
+        let y = teamPicker.frame.origin.y
+        teamPicker.transform = CGAffineTransform(rotationAngle: rotaionAngle)
+        teamPicker.frame = CGRect(x: -100, y: y, width: view.frame.width + 200, height: 50)
+        teamPicker.selectRow(2, inComponent: 0, animated: true)
         // Do any additional setup after loading the view.
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+}
+
+extension HomeVC: UIPickerViewDelegate, UIPickerViewDataSource {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return pickerTeamsArray.count
     }
-    */
-
+    
+//    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+//        return pickerTeamsArray[row]
+//    }
+    
+    
+    func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
+        return customHeight
+    }
+    
+    
+    func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
+        let view = UIView(frame: CGRect(x: 0, y: 0, width: customWidth, height: customHeight))
+        let nameLabel = UILabel(frame: CGRect(x: 0, y: 0, width: customWidth, height: customHeight))
+        nameLabel.text = pickerTeamsArray[row]
+        nameLabel.textAlignment = .center
+        nameLabel.textColor = UIColor(red:0.00, green:0.25, blue:0.53, alpha:1.0)
+        nameLabel.font = UIFont.systemFont(ofSize: 14, weight: .bold)
+        view.addSubview(nameLabel)
+        view.transform = CGAffineTransform(rotationAngle: (150 * (.pi/100)))
+        return view
+    }
+    
+    
 }
