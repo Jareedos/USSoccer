@@ -9,7 +9,10 @@
 import UIKit
 
 class GamesTVCell: UITableViewCell {
-
+    @IBOutlet weak var gameTitleLbl: UILabel!
+    @IBOutlet weak var gameDateLbl: UILabel!
+    @IBOutlet weak var gameTimeLbl: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

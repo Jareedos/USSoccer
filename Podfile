@@ -10,4 +10,5 @@ target 'USSoccer' do
 pod 'Alamofire', '~> 4.5'
 pod 'Firebase/Core'
 pod 'Firebase/Auth'
+pod 'Firebase/Database'
 end

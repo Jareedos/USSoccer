@@ -119,7 +119,6 @@
 			children = (
 				BF3ABD7F1F8483CC00D46DD3 /* LaunchScreen.storyboard */,
 				BF3ABD7A1F8483CC00D46DD3 /* Main.storyboard */,
-				BF4A4AFF1FBA2CF100E93E18 /* GamesTVCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -127,6 +126,7 @@
 		BFD339151F85CD8D00EEAB3F /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				BF4A4AFF1FBA2CF100E93E18 /* GamesTVCell.swift */,
 				BFD339131F85CD8700EEAB3F /* LoginVC.swift */,
 				BF4A4AFA1FB7AF6500E93E18 /* LoadingVC.swift */,
 				BF4A4AFC1FB7AFD100E93E18 /* HomeVC.swift */,
@@ -244,6 +244,7 @@
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -251,6 +252,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;

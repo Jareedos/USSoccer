@@ -5,12 +5,16 @@
     </device>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
         <array key="Avenir.ttc">
             <string>Avenir-Heavy</string>
+        </array>
+        <array key="HoeflerText.ttc">
+            <string>HoeflerText-Black</string>
         </array>
     </customFonts>
     <scenes>
@@ -143,13 +147,68 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="GamesTVCell" rowHeight="127" id="e5f-m2-1iP" customClass="GamesTVCell" customModule="USSoccer" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="375" height="127"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="GamesTVCell" rowHeight="181" id="e5f-m2-1iP" customClass="GamesTVCell" customModule="USSoccer" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="181"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="e5f-m2-1iP" id="MVB-8P-swN">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="126.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="180.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ruk-VA-TuF">
+                                                    <rect key="frame" x="0.0" y="0.0" width="375" height="181"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="181" id="XcN-Hl-TUM"/>
+                                                    </constraints>
+                                                </view>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f7n-YE-p9c">
+                                                    <rect key="frame" x="15" y="11" width="345" height="47"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="47" id="CUK-Ba-Imk"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="HoeflerText-Black" family="Hoefler Text" pointSize="17"/>
+                                                    <color key="textColor" red="0.0" green="0.2470588235" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0uy-Ri-2HO">
+                                                    <rect key="frame" x="15" y="68" width="345" height="40"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="40" id="LSK-dv-dGH"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="HoeflerText-Black" family="Hoefler Text" pointSize="17"/>
+                                                    <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QX5-KB-ESV">
+                                                    <rect key="frame" x="187.5" y="130.5" width="0.0" height="40"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="40" id="dXD-YS-Rb7"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="HoeflerText-Black" family="Hoefler Text" pointSize="17"/>
+                                                    <color key="textColor" red="0.0" green="0.2470588235" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="Ruk-VA-TuF" firstAttribute="top" secondItem="MVB-8P-swN" secondAttribute="top" id="0KT-4y-wPt"/>
+                                                <constraint firstItem="Ruk-VA-TuF" firstAttribute="leading" secondItem="MVB-8P-swN" secondAttribute="leading" id="5ff-Gz-SRG"/>
+                                                <constraint firstAttribute="bottom" secondItem="Ruk-VA-TuF" secondAttribute="bottom" id="77D-Sk-ekK"/>
+                                                <constraint firstItem="0uy-Ri-2HO" firstAttribute="leading" secondItem="MVB-8P-swN" secondAttribute="leadingMargin" id="IpW-yB-zG3"/>
+                                                <constraint firstItem="f7n-YE-p9c" firstAttribute="top" secondItem="MVB-8P-swN" secondAttribute="topMargin" id="LeZ-8p-dTS"/>
+                                                <constraint firstItem="f7n-YE-p9c" firstAttribute="leading" secondItem="MVB-8P-swN" secondAttribute="leadingMargin" id="Rig-ww-2eF"/>
+                                                <constraint firstAttribute="bottom" secondItem="QX5-KB-ESV" secondAttribute="bottom" constant="10" id="VNb-Je-at2"/>
+                                                <constraint firstAttribute="trailing" secondItem="Ruk-VA-TuF" secondAttribute="trailing" id="cFG-2c-bcZ"/>
+                                                <constraint firstItem="0uy-Ri-2HO" firstAttribute="top" secondItem="f7n-YE-p9c" secondAttribute="bottom" constant="10" id="djZ-Ii-QtL"/>
+                                                <constraint firstItem="f7n-YE-p9c" firstAttribute="trailing" secondItem="MVB-8P-swN" secondAttribute="trailingMargin" id="gPb-ay-Rgs"/>
+                                                <constraint firstItem="QX5-KB-ESV" firstAttribute="centerX" secondItem="MVB-8P-swN" secondAttribute="centerX" id="iqv-QG-48M"/>
+                                                <constraint firstItem="0uy-Ri-2HO" firstAttribute="trailing" secondItem="MVB-8P-swN" secondAttribute="trailingMargin" id="mIa-Hn-fq2"/>
+                                            </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="gameDateLbl" destination="0uy-Ri-2HO" id="BA7-hg-w7E"/>
+                                            <outlet property="gameTimeLbl" destination="QX5-KB-ESV" id="nwo-k3-a9V"/>
+                                            <outlet property="gameTitleLbl" destination="f7n-YE-p9c" id="gYs-uE-6MC"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
@@ -158,6 +217,7 @@
                         <viewLayoutGuide key="safeArea" id="fuk-bO-Jvu"/>
                     </view>
                     <connections>
+                        <outlet property="tableView" destination="h4C-pc-o0i" id="NUI-oM-p7P"/>
                         <outlet property="teamPicker" destination="9sp-UI-TnC" id="xRw-0P-vrr"/>
                     </connections>
                 </viewController>
