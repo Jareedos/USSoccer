@@ -16,6 +16,7 @@ class SoccerGame {
     let date: String!
     let time: String!
     let venue: String!
+    var timestamp: Date?
 //    var ref: DataReference?
     
     init(snapShot: DataSnapshot) {
@@ -25,6 +26,9 @@ class SoccerGame {
         date = snapShotValue["date"] as! String
         time = snapShotValue["time"] as! String
         venue = snapShotValue["venue"] as! String
+        if let ts = snapShotValue["timestamp"] as? Double {
+            timestamp = Date(timeIntervalSince1970: ts)
+        }
     }
     
     init(title: String, date: String, time: String, venue: String ) {

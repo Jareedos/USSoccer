@@ -41,9 +41,10 @@ class HomeVC: UIViewController {
         
 //        let y = teamPicker.frame.origin.y
 //        tableView.frame = CGRect(x: view.frame.width, y: view.frame.height - 90 , width: view.frame.width, height: view.frame.height)
+//        let navBarHeight: CGFloat =
         teamPicker.transform = CGAffineTransform(rotationAngle: rotationAngle)
         teamPicker.frame = CGRect(x: -100, y: view.frame.height - 85, width: view.frame.width + 200, height: 75)
-        
+//        tableView = UITableView(frame: CGRect(x: 0, y: barHeight, width: displayWidth, height: displayHeight - barHeight))
         print(teamPicker.frame.origin)
         print(view.frame.width)
         print(teamPicker.frame)
@@ -52,9 +53,42 @@ class HomeVC: UIViewController {
             for child in snapshot.children.allObjects as! [DataSnapshot] {
                 let game = SoccerGame(snapShot: child)
                 self.soccerGames.append(game)
+                
+                let formatter = DateFormatter()
+                // November 14, 2017
+                // 3:30 PM ET
+                
+                if game.timestamp == nil {
+                    let timeWithoutTimeZoneString = (game.time as NSString).substring(to: game.time.count - 2)
+                
+                    let dateAndTimeStringWithProperTimeZone = game.date + " " + timeWithoutTimeZoneString + self.timezoneFromTimeString(timeString: game.time)
+                    // Date parsing, Time parsing
+                    formatter.dateFormat = "MMMM dd, yyyy h:mm a ZZZ"
+                    let date = formatter.date(from: dateAndTimeStringWithProperTimeZone)
+                    print(date)
+                    gamesRef.child(child.key).child("timestamp").setValue(date?.timeIntervalSince1970)
+                }
             }
             self.tableView.reloadData()
         })
+    }
+    
+    func timezoneFromTimeString(timeString: String) -> String {
+        // -0500
+        let timeZoneString = (timeString as NSString).substring(from: timeString.count - 2)
+        
+        switch timeZoneString {
+        case "ET":
+            return "-0500"
+        case "CT":
+            return "-0600"
+        case "MT":
+            return "-0700"
+        case "PT":
+            return "-0800"
+        default:
+            return "-0500"
+        }
     }
 }
 
