@@ -213,7 +213,11 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <viewLayoutGuide key="safeArea" id="fuk-bO-Jvu"/>
                     </view>
-                    <navigationItem key="navigationItem" title="USA Soccer" id="eLJ-Ys-JLH"/>
+                    <navigationItem key="navigationItem" title="USA Soccer" id="eLJ-Ys-JLH">
+                        <barButtonItem key="rightBarButtonItem" title="Item" image="icons8-alarm-filled-50" id="hQo-rr-epG">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="h4C-pc-o0i" id="NUI-oM-p7P"/>
                         <outlet property="teamPicker" destination="9sp-UI-TnC" id="xRw-0P-vrr"/>
@@ -248,5 +252,6 @@
     </scenes>
     <resources>
         <image name="USSoccer" width="3966" height="3624"/>
+        <image name="icons8-alarm-filled-50" width="25" height="25"/>
     </resources>
 </document>
