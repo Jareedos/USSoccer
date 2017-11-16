@@ -15,24 +15,38 @@ class HomeVC: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var teamPicker: UIPickerView!
     let pickerTeamsArray = ["U-23 MNT", "MNT", "ALL TEAMS", "WNT", "U-23 WNT"]
-    var rotaionAngle: CGFloat!
+    var rotationAngle: CGFloat!
     let customHeight: CGFloat = 100
     let customWidth: CGFloat = 80
     var soccerGames = [SoccerGame]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        rotaionAngle = -150 * (.pi/100)
+        rotationAngle = -150 * (.pi/100)
         teamPicker.delegate = self
         teamPicker.dataSource = self
         tableView.delegate = self
         tableView.dataSource = self
         
-        let y = teamPicker.frame.origin.y
-        teamPicker.transform = CGAffineTransform(rotationAngle: rotaionAngle)
-        teamPicker.frame = CGRect(x: -100, y: y, width: view.frame.width + 200, height: 50)
+        
+//        teamPicker.translatesAutoresizingMaskIntoConstraints = false
+//        tableView.translatesAutoresizingMaskIntoConstraints = false
+//        let topConstraintTable = NSLayoutConstraint(item: tableView, attribute: .topMargin, relatedBy: .equal, toItem: view, attribute: .top, multiplier: 1, constant: 0)
+//        let bottomConstraintTable = NSLayoutConstraint(item: tableView, attribute: .bottomMargin, relatedBy: .equal, toItem: teamPicker, attribute: .top, multiplier: 1, constant: 0)
+//        let trailingConstraintTable = NSLayoutConstraint(item: tableView, attribute: .trailingMargin, relatedBy: .equal, toItem: view, attribute: .trailing, multiplier: 1, constant: 0)
+//        let leadingConstraintTable = NSLayoutConstraint(item: tableView, attribute: .leadingMargin, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: 1, constant: 0)
+//        let topConstraintPicker = NSLayoutConstraint(item: teamPicker, attribute: .topMargin, relatedBy: .equal, toItem: tableView, attribute: .bottom, multiplier: 1, constant: 0)
+//        let bottomConstraintPicker = NSLayoutConstraint(item: teamPicker, attribute: .bottomMargin, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1, constant: 5)
+        //NSLayoutConstraint.activate([topConstraintTable,bottomConstraintTable,bottomConstraintPicker,trailingConstraintTable,leadingConstraintTable,topConstraintPicker,bottomConstraintPicker])
+        
+//        let y = teamPicker.frame.origin.y
+        teamPicker.transform = CGAffineTransform(rotationAngle: rotationAngle)
+        teamPicker.frame = CGRect(x: -100, y: view.frame.height - 85, width: view.frame.width + 200, height: 75)
+        
+        print(teamPicker.frame.origin)
+        print(view.frame.width)
+        print(teamPicker.frame)
         teamPicker.selectRow(2, inComponent: 0, animated: true)
-        // Do any additional setup after loading the view.
         gamesRef.observe(.value, with: { snapshot in
             for child in snapshot.children.allObjects as! [DataSnapshot] {
                 let game = SoccerGame(snapShot: child)
