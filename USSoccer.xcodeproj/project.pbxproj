@@ -16,6 +16,7 @@
 		BF4A4AFB1FB7AF6500E93E18 /* LoadingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4A4AFA1FB7AF6500E93E18 /* LoadingVC.swift */; };
 		BF4A4AFD1FB7AFD100E93E18 /* HomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4A4AFC1FB7AFD100E93E18 /* HomeVC.swift */; };
 		BF4A4B001FBA2CF100E93E18 /* GamesTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4A4AFF1FBA2CF100E93E18 /* GamesTVCell.swift */; };
+		BF5F0E4A1FBD471C00AEA1BB /* NotificationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5F0E491FBD471C00AEA1BB /* NotificationVC.swift */; };
 		BFD339141F85CD8700EEAB3F /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD339131F85CD8700EEAB3F /* LoginVC.swift */; };
 		BFD339191F85DEBE00EEAB3F /* Uitility.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD339181F85DEBE00EEAB3F /* Uitility.swift */; };
 		BFD3391D1F868FE000EEAB3F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BFD3391C1F868FE000EEAB3F /* GoogleService-Info.plist */; };
@@ -38,6 +39,7 @@
 		BF4A4AFA1FB7AF6500E93E18 /* LoadingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingVC.swift; sourceTree = "<group>"; };
 		BF4A4AFC1FB7AFD100E93E18 /* HomeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeVC.swift; sourceTree = "<group>"; };
 		BF4A4AFF1FBA2CF100E93E18 /* GamesTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamesTVCell.swift; sourceTree = "<group>"; };
+		BF5F0E491FBD471C00AEA1BB /* NotificationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationVC.swift; sourceTree = "<group>"; };
 		BFD339131F85CD8700EEAB3F /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		BFD339181F85DEBE00EEAB3F /* Uitility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Uitility.swift; sourceTree = "<group>"; };
 		BFD3391C1F868FE000EEAB3F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
@@ -130,6 +132,7 @@
 				BFD339131F85CD8700EEAB3F /* LoginVC.swift */,
 				BF4A4AFA1FB7AF6500E93E18 /* LoadingVC.swift */,
 				BF4A4AFC1FB7AFD100E93E18 /* HomeVC.swift */,
+				BF5F0E491FBD471C00AEA1BB /* NotificationVC.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -283,6 +286,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BF4A4AF91FB7AE0400E93E18 /* USSoccer.xcdatamodeld in Sources */,
+				BF5F0E4A1FBD471C00AEA1BB /* NotificationVC.swift in Sources */,
 				BF4A4AFD1FB7AFD100E93E18 /* HomeVC.swift in Sources */,
 				BFF710311F87E5110001EC0E /* Constants.swift in Sources */,
 				BF4A4B001FBA2CF100E93E18 /* GamesTVCell.swift in Sources */,
