@@ -67,7 +67,6 @@ class HomeVC: UIViewController {
                     // Date parsing, Time parsing
                     formatter.dateFormat = "MMMM dd, yyyy h:mm a ZZZ"
                     let date = formatter.date(from: dateAndTimeStringWithProperTimeZone)
-                    print(date)
                     gamesRef.child(child.key).child("timestamp").setValue(date?.timeIntervalSince1970)
                 }
             }
@@ -104,23 +103,27 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "GamesTVCell", for: indexPath) as? GamesTVCell else {
             fatalError("The Cell Failed to Deque")
         }
-        cell.gameDateLbl.text = "NOV 14, 2017"
         cell.gameTimeLbl.text = "3:30PM ET"
         let usSoccerTitle = soccerGames[indexPath.row].title.components(separatedBy: " ")
         if usSoccerTitle[1] != "vs" {
-            cell.gameTitleLbl.text = "\(usSoccerTitle[0].uppercased())"
+            cell.gameTitleLbl.text = "\(usSoccerTitle[0].uppercased()) \(usSoccerTitle[1].uppercased())"
             cell.vsLbl.text = "\(usSoccerTitle[2].uppercased())"
             cell.opponentLbl.text = "\(usSoccerTitle[3].uppercased())"
         } else {
-            cell.gameDateLbl.text = "\(usSoccerTitle[0].uppercased())"
+            cell.gameTitleLbl.text = "\(usSoccerTitle[0].uppercased())"
             cell.vsLbl.text = "\(usSoccerTitle[1].uppercased())"
             cell.opponentLbl.text = "\(usSoccerTitle[2].uppercased())"
-            
         }
         let gameDate = soccerGames[indexPath.row].date.components(separatedBy: " ")
         let formatedMonth = gameDate[0].prefix(3)
         cell.gameDateLbl.text = "\(formatedMonth.uppercased()) \(gameDate[1]) \(gameDate[2])"
-       // cell.gameTimeLbl.text = soccerGames[indexPath.row].time
+        let date = soccerGames[indexPath.row].timestamp
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .none
+        dateFormatter.timeStyle = .short
+        let strDate = dateFormatter.string(from: date!)
+        cell.gameTimeLbl.text = strDate
+        
         return cell
     }
 }
