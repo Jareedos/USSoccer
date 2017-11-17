@@ -117,7 +117,9 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
             cell.opponentLbl.text = "\(usSoccerTitle[2].uppercased())"
             
         }
-        //cell.gameDateLbl.text = soccerGames[indexPath.row].date
+        let gameDate = soccerGames[indexPath.row].date.components(separatedBy: " ")
+        let formatedMonth = gameDate[0].prefix(3)
+        cell.gameDateLbl.text = "\(formatedMonth.uppercased()) \(gameDate[1]) \(gameDate[2])"
        // cell.gameTimeLbl.text = soccerGames[indexPath.row].time
         return cell
     }
