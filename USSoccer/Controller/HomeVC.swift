@@ -19,6 +19,7 @@ class HomeVC: UIViewController {
     let customHeight: CGFloat = 100
     let customWidth: CGFloat = 80
     var soccerGames = [SoccerGame]()
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,6 +28,7 @@ class HomeVC: UIViewController {
         teamPicker.dataSource = self
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.separatorStyle = .none
         
         
 //        teamPicker.translatesAutoresizingMaskIntoConstraints = false
@@ -43,7 +45,7 @@ class HomeVC: UIViewController {
 //        tableView.frame = CGRect(x: view.frame.width, y: view.frame.height - 90 , width: view.frame.width, height: view.frame.height)
 //        let navBarHeight: CGFloat =
         teamPicker.transform = CGAffineTransform(rotationAngle: rotationAngle)
-        teamPicker.frame = CGRect(x: -100, y: view.frame.height - 85, width: view.frame.width + 200, height: 75)
+        teamPicker.frame = CGRect(x: -100, y: view.frame.height - 73, width: view.frame.width + 200, height: 68)
 //        tableView = UITableView(frame: CGRect(x: 0, y: barHeight, width: displayWidth, height: displayHeight - barHeight))
         print(teamPicker.frame.origin)
         print(view.frame.width)
@@ -102,9 +104,21 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "GamesTVCell", for: indexPath) as? GamesTVCell else {
             fatalError("The Cell Failed to Deque")
         }
-        cell.gameTitleLbl.text = soccerGames[indexPath.row].title
-        cell.gameDateLbl.text = soccerGames[indexPath.row].date
-        cell.gameTimeLbl.text = soccerGames[indexPath.row].time
+        cell.gameDateLbl.text = "NOV 14, 2017"
+        cell.gameTimeLbl.text = "3:30PM ET"
+        let usSoccerTitle = soccerGames[indexPath.row].title.components(separatedBy: " ")
+        if usSoccerTitle[1] != "vs" {
+            cell.gameTitleLbl.text = "\(usSoccerTitle[0].uppercased())"
+            cell.vsLbl.text = "\(usSoccerTitle[2].uppercased())"
+            cell.opponentLbl.text = "\(usSoccerTitle[3].uppercased())"
+        } else {
+            cell.gameDateLbl.text = "\(usSoccerTitle[0].uppercased())"
+            cell.vsLbl.text = "\(usSoccerTitle[1].uppercased())"
+            cell.opponentLbl.text = "\(usSoccerTitle[2].uppercased())"
+            
+        }
+        //cell.gameDateLbl.text = soccerGames[indexPath.row].date
+       // cell.gameTimeLbl.text = soccerGames[indexPath.row].time
         return cell
     }
 }

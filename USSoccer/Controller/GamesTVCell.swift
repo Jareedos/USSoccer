@@ -10,6 +10,8 @@ import UIKit
 
 class GamesTVCell: UITableViewCell {
     @IBOutlet weak var gameTitleLbl: UILabel!
+    @IBOutlet weak var vsLbl: UILabel!
+    @IBOutlet weak var opponentLbl: UILabel!
     @IBOutlet weak var gameDateLbl: UILabel!
     @IBOutlet weak var gameTimeLbl: UILabel!
     
