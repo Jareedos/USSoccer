@@ -14,12 +14,20 @@ class HomeVC: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var teamPicker: UIPickerView!
-    let pickerTeamsArray = ["U-23 MNT", "MNT", "ALL TEAMS", "WNT", "U-23 WNT"]
+    var pickerTeamsArray = ["U-15 MNT", "U-16 MNT", "U-17 MNT", "U-18 MNT", "U-19 MNT", "U-20 MNT", "U-23 MNT", "MNT", "ALL TEAMS", "WNT", "U-23 WNT", "U-20 WNT", "U-19 WNT", "U-18 WNT", "U-17 WNT", "U-16 WNT", "U-15 WNT"]
     var rotationAngle: CGFloat!
     let customHeight: CGFloat = 100
     let customWidth: CGFloat = 80
+    var filterValue: String!
+    var sortedGames = [String: [SoccerGame]]()
+//    var filteredGamesDict = ["U-15 MNT": [SoccerGame](), "U-16 MNT": [SoccerGame](), "U-17 MNT": [SoccerGame](), "U-18 MNT": [SoccerGame](), "U-19 MNT": [SoccerGame](), "U-20 MNT": [SoccerGame](), "U-23 MNT": [SoccerGame](),"MNT": [SoccerGame](), "WNT": [SoccerGame](), "U-15 WNT": [SoccerGame](), "U-16 WNT": [SoccerGame](), "U-17 WNT": [SoccerGame](), "U-18 WNT": [SoccerGame](), "U-19 WNT": [SoccerGame](), "U-20 WNT": [SoccerGame](), "U-23 WNT": [SoccerGame]()]
+    var filteredGames = [SoccerGame]()
     var soccerGames = [SoccerGame]()
     
+    
+    override func viewDidAppear(_ animated: Bool) {
+        filteredGames = soccerGames
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,49 +37,35 @@ class HomeVC: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.separatorStyle = .none
-        
-        
-//        teamPicker.translatesAutoresizingMaskIntoConstraints = false
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        let topConstraintTable = NSLayoutConstraint(item: tableView, attribute: .topMargin, relatedBy: .equal, toItem: view, attribute: .top, multiplier: 1, constant: 0)
-        let bottomConstraintTable = NSLayoutConstraint(item: tableView, attribute: .bottomMargin, relatedBy: .equal, toItem: teamPicker, attribute: .top, multiplier: 1, constant: 0)
-        let trailingConstraintTable = NSLayoutConstraint(item: tableView, attribute: .trailingMargin, relatedBy: .equal, toItem: view, attribute: .trailing, multiplier: 1, constant: 0)
-        let leadingConstraintTable = NSLayoutConstraint(item: tableView, attribute: .leadingMargin, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: 1, constant: 0)
-//        let topConstraintPicker = NSLayoutConstraint(item: teamPicker, attribute: .topMargin, relatedBy: .equal, toItem: tableView, attribute: .bottom, multiplier: 1, constant: 0)
-//        let bottomConstraintPicker = NSLayoutConstraint(item: teamPicker, attribute: .bottomMargin, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1, constant: 5)
-        NSLayoutConstraint.activate([topConstraintTable,bottomConstraintTable,trailingConstraintTable,leadingConstraintTable])
-        
-//        let y = teamPicker.frame.origin.y
-//        tableView.frame = CGRect(x: view.frame.width, y: view.frame.height - 90 , width: view.frame.width, height: view.frame.height)
-//        let navBarHeight: CGFloat =
         teamPicker.transform = CGAffineTransform(rotationAngle: rotationAngle)
         teamPicker.frame = CGRect(x: -100, y: view.frame.height - 73, width: view.frame.width + 200, height: 68)
-//        tableView = UITableView(frame: CGRect(x: 0, y: barHeight, width: displayWidth, height: displayHeight - barHeight))
-        print(teamPicker.frame.origin)
-        print(view.frame.width)
-        print(teamPicker.frame)
-        teamPicker.selectRow(2, inComponent: 0, animated: true)
-        gamesRef.observe(.value, with: { snapshot in
-            for child in snapshot.children.allObjects as! [DataSnapshot] {
-                let game = SoccerGame(snapShot: child)
-                self.soccerGames.append(game)
-                
-                let formatter = DateFormatter()
-                // November 14, 2017
-                // 3:30 PM ET
-                
-                if game.timestamp == nil {
-                    let timeWithoutTimeZoneString = (game.time as NSString).substring(to: game.time.count - 2)
-                
-                    let dateAndTimeStringWithProperTimeZone = game.date + " " + timeWithoutTimeZoneString + self.timezoneFromTimeString(timeString: game.time)
-                    // Date parsing, Time parsing
-                    formatter.dateFormat = "MMMM dd, yyyy h:mm a ZZZ"
-                    let date = formatter.date(from: dateAndTimeStringWithProperTimeZone)
-                    gamesRef.child(child.key).child("timestamp").setValue(date?.timeIntervalSince1970)
-                }
+        
+    
+        var existingKeys : Set<String> = ["MNT", "ALL TEAMS", "WNT"]
+        var allGames = [SoccerGame]()
+        for key in sortedGames.keys {
+            existingKeys.insert(key)
+            allGames += sortedGames[key]!
+        }
+        sortedGames["ALL TEAMS"] = allGames
+        
+        // Remove the missing ones
+        var updatedPickerTeamsArray = [String]()
+        for team in pickerTeamsArray {
+            if existingKeys.contains(team) {
+                updatedPickerTeamsArray.append(team)
             }
-            self.tableView.reloadData()
-        })
+        }
+        pickerTeamsArray = updatedPickerTeamsArray
+        
+        if let index = pickerTeamsArray.index(of: "ALL TEAMS") {
+            teamPicker.selectRow(index, inComponent: 0, animated: true)
+        }
+
+        
+        filterValue = "ALL TEAMS"
+        soccerGames = sortedGames[filterValue] ?? [SoccerGame]()
+        tableView.reloadData()
     }
     
     func timezoneFromTimeString(timeString: String) -> String {
@@ -142,6 +136,12 @@ extension HomeVC: UIPickerViewDelegate, UIPickerViewDataSource {
         return customHeight
     }
     
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        filterValue = pickerTeamsArray[row]
+        soccerGames = sortedGames[filterValue] ?? [SoccerGame]()
+        tableView.reloadData()
+    }
+    
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: customWidth, height: customHeight))
         let nameLabel = UILabel(frame: CGRect(x: 0, y: 0, width: customWidth, height: customHeight))
@@ -153,5 +153,7 @@ extension HomeVC: UIPickerViewDelegate, UIPickerViewDataSource {
         view.transform = CGAffineTransform(rotationAngle: (150 * (.pi/100)))
         return view
     }
+    
+    
 }
 
