@@ -20,14 +20,8 @@ class HomeVC: UIViewController {
     let customWidth: CGFloat = 80
     var filterValue: String!
     var sortedGames = [String: [SoccerGame]]()
-//    var filteredGamesDict = ["U-15 MNT": [SoccerGame](), "U-16 MNT": [SoccerGame](), "U-17 MNT": [SoccerGame](), "U-18 MNT": [SoccerGame](), "U-19 MNT": [SoccerGame](), "U-20 MNT": [SoccerGame](), "U-23 MNT": [SoccerGame](),"MNT": [SoccerGame](), "WNT": [SoccerGame](), "U-15 WNT": [SoccerGame](), "U-16 WNT": [SoccerGame](), "U-17 WNT": [SoccerGame](), "U-18 WNT": [SoccerGame](), "U-19 WNT": [SoccerGame](), "U-20 WNT": [SoccerGame](), "U-23 WNT": [SoccerGame]()]
-    var filteredGames = [SoccerGame]()
     var soccerGames = [SoccerGame]()
-    
-    
-    override func viewDidAppear(_ animated: Bool) {
-        filteredGames = soccerGames
-    }
+  
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,24 +60,6 @@ class HomeVC: UIViewController {
         filterValue = "ALL TEAMS"
         soccerGames = sortedGames[filterValue] ?? [SoccerGame]()
         tableView.reloadData()
-    }
-    
-    func timezoneFromTimeString(timeString: String) -> String {
-        // -0500
-        let timeZoneString = (timeString as NSString).substring(from: timeString.count - 2)
-        
-        switch timeZoneString {
-        case "ET":
-            return "-0500"
-        case "CT":
-            return "-0600"
-        case "MT":
-            return "-0700"
-        case "PT":
-            return "-0800"
-        default:
-            return "-0500"
-        }
     }
 }
 
