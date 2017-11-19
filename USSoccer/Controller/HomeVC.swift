@@ -33,6 +33,11 @@ class HomeVC: UIViewController {
         tableView.separatorStyle = .none
         teamPicker.transform = CGAffineTransform(rotationAngle: rotationAngle)
         teamPicker.frame = CGRect(x: -100, y: view.frame.height - 73, width: view.frame.width + 200, height: 68)
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+        self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.isTranslucent = true
+        self.navigationController?.view.backgroundColor = UIColor.clear
+        self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedStringKey.font: UIFont(name: "HelveticaNeue-CondensedBold", size: 22.0)!,NSAttributedStringKey.foregroundColor: UIColor.white]
         
     
         var existingKeys : Set<String> = ["MNT", "ALL TEAMS", "WNT"]
@@ -123,8 +128,8 @@ extension HomeVC: UIPickerViewDelegate, UIPickerViewDataSource {
         let nameLabel = UILabel(frame: CGRect(x: 0, y: 0, width: customWidth, height: customHeight))
         nameLabel.text = pickerTeamsArray[row]
         nameLabel.textAlignment = .center
-        nameLabel.textColor = UIColor(red:0.00, green:0.25, blue:0.53, alpha:1.0)
-        nameLabel.font = UIFont.systemFont(ofSize: 14, weight: .bold)
+        nameLabel.textColor = UIColor.white
+        nameLabel.font = UIFont(name: "HelveticaNeue-CondensedBold", size: 17.0)
         view.addSubview(nameLabel)
         view.transform = CGAffineTransform(rotationAngle: (150 * (.pi/100)))
         return view
