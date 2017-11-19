@@ -10,10 +10,19 @@ import UIKit
 import FirebaseDatabase
 
 class LoadingVC: UIViewController {
+    
+    @IBOutlet weak var loadingLbl: UILabel!
     var sortedGames = [String: [SoccerGame]]()
     let appenderArray = [SoccerGame]()
     
     override func viewDidAppear(_ animated: Bool) {
+        UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseIn, animations: {
+            self.loadingLbl.alpha = 0
+        }) { (true) in
+            UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseOut, animations: {
+                self.loadingLbl.alpha = 1
+            }, completion: nil)
+        }
         gamesRef.observe(.value, with: { snapshot in
             for child in snapshot.children.allObjects as! [DataSnapshot] {
                 let game = SoccerGame(snapShot: child)

@@ -17,7 +17,7 @@ class HomeVC: UIViewController {
     var pickerTeamsArray = ["U-15 MNT", "U-16 MNT", "U-17 MNT", "U-18 MNT", "U-19 MNT", "U-20 MNT", "U-23 MNT", "MNT", "ALL TEAMS", "WNT", "U-23 WNT", "U-20 WNT", "U-19 WNT", "U-18 WNT", "U-17 WNT", "U-16 WNT", "U-15 WNT"]
     var rotationAngle: CGFloat!
     let customHeight: CGFloat = 100
-    let customWidth: CGFloat = 80
+    let customWidth: CGFloat = 100
     var filterValue: String!
     var sortedGames = [String: [SoccerGame]]()
     var soccerGames = [SoccerGame]()
@@ -129,7 +129,7 @@ extension HomeVC: UIPickerViewDelegate, UIPickerViewDataSource {
         nameLabel.text = pickerTeamsArray[row]
         nameLabel.textAlignment = .center
         nameLabel.textColor = UIColor.white
-        nameLabel.font = UIFont(name: "HelveticaNeue-CondensedBold", size: 17.0)
+        nameLabel.font = UIFont(name: "HelveticaNeue-CondensedBold", size: 19.0)
         view.addSubview(nameLabel)
         view.transform = CGAffineTransform(rotationAngle: (150 * (.pi/100)))
         return view

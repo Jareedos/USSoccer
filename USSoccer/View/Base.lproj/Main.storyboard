@@ -119,10 +119,23 @@
                     <view key="view" contentMode="scaleToFill" id="nWK-BX-QT5">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l6x-LC-G0z">
+                                <rect key="frame" x="135.5" y="314" width="104.5" height="39.5"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-CondensedBold" family="Helvetica Neue" pointSize="33"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="l6x-LC-G0z" firstAttribute="centerY" secondItem="nWK-BX-QT5" secondAttribute="centerY" id="K5Y-19-yED"/>
+                            <constraint firstItem="l6x-LC-G0z" firstAttribute="centerX" secondItem="nWK-BX-QT5" secondAttribute="centerX" id="bvs-CG-t4O"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="Cxe-0F-Lgb"/>
                     </view>
                     <connections>
+                        <outlet property="loadingLbl" destination="l6x-LC-G0z" id="cOl-Xg-O04"/>
                         <segue destination="BKJ-Ys-7tR" kind="show" identifier="loadingToHome" id="Cxw-B3-bgo"/>
                     </connections>
                 </viewController>
@@ -138,13 +151,13 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background" translatesAutoresizingMaskIntoConstraints="NO" id="wzi-G3-Dgt">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Back drop@4x" translatesAutoresizingMaskIntoConstraints="NO" id="wzi-G3-Dgt">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="gradient" translatesAutoresizingMaskIntoConstraints="NO" id="q3j-bz-fqr">
-                                <rect key="frame" x="0.0" y="64" width="375" height="20"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="shadow@4x" translatesAutoresizingMaskIntoConstraints="NO" id="q3j-bz-fqr">
+                                <rect key="frame" x="0.0" y="64" width="375" height="30"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="20" id="1PB-aP-K6j"/>
+                                    <constraint firstAttribute="height" constant="30" id="1PB-aP-K6j"/>
                                 </constraints>
                             </imageView>
                             <pickerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9sp-UI-TnC">
@@ -246,30 +259,29 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
-                            <view alpha="0.80000000000000004" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="k7N-EU-b6d">
-                                <rect key="frame" x="0.0" y="589" width="375" height="4"/>
-                                <color key="backgroundColor" red="0.0" green="0.2470588235" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bShadow@4x" translatesAutoresizingMaskIntoConstraints="NO" id="MYe-Pv-JPK">
+                                <rect key="frame" x="0.0" y="553" width="375" height="40"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="4" id="D4f-7d-CAt"/>
+                                    <constraint firstAttribute="height" constant="40" id="912-Ze-mXe"/>
                                 </constraints>
-                            </view>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="wzi-G3-Dgt" firstAttribute="top" secondItem="iGN-4c-zIJ" secondAttribute="top" id="DNQ-3b-vgR"/>
                             <constraint firstItem="h4C-pc-o0i" firstAttribute="leading" secondItem="fuk-bO-Jvu" secondAttribute="leading" id="FVa-m1-aX4"/>
                             <constraint firstItem="wzi-G3-Dgt" firstAttribute="leading" secondItem="fuk-bO-Jvu" secondAttribute="leading" id="Jou-fW-wxa"/>
+                            <constraint firstItem="fuk-bO-Jvu" firstAttribute="bottom" secondItem="MYe-Pv-JPK" secondAttribute="bottom" constant="74" id="KlM-VR-1ku"/>
                             <constraint firstItem="q3j-bz-fqr" firstAttribute="top" secondItem="fuk-bO-Jvu" secondAttribute="top" id="X32-cx-6eB"/>
-                            <constraint firstItem="k7N-EU-b6d" firstAttribute="leading" secondItem="fuk-bO-Jvu" secondAttribute="leading" id="a7L-xQ-0xJ"/>
                             <constraint firstItem="q3j-bz-fqr" firstAttribute="trailing" secondItem="fuk-bO-Jvu" secondAttribute="trailing" id="b6T-oq-nZX"/>
                             <constraint firstItem="q3j-bz-fqr" firstAttribute="leading" secondItem="fuk-bO-Jvu" secondAttribute="leading" id="blC-IJ-5Al"/>
                             <constraint firstItem="h4C-pc-o0i" firstAttribute="trailing" secondItem="fuk-bO-Jvu" secondAttribute="trailing" id="dS7-wl-aNl"/>
                             <constraint firstItem="h4C-pc-o0i" firstAttribute="top" secondItem="fuk-bO-Jvu" secondAttribute="top" id="dnq-0p-n3F"/>
-                            <constraint firstItem="k7N-EU-b6d" firstAttribute="bottom" secondItem="fuk-bO-Jvu" secondAttribute="bottom" constant="-74" id="h0z-k4-jXv"/>
                             <constraint firstItem="h4C-pc-o0i" firstAttribute="bottom" secondItem="fuk-bO-Jvu" secondAttribute="bottom" constant="-78.5" id="iU4-Pt-fks"/>
+                            <constraint firstItem="MYe-Pv-JPK" firstAttribute="leading" secondItem="fuk-bO-Jvu" secondAttribute="leading" id="oxP-1A-hQ4"/>
                             <constraint firstItem="wzi-G3-Dgt" firstAttribute="trailing" secondItem="fuk-bO-Jvu" secondAttribute="trailing" id="qx3-Yd-CM8"/>
                             <constraint firstItem="wzi-G3-Dgt" firstAttribute="bottom" secondItem="fuk-bO-Jvu" secondAttribute="bottom" id="rQm-Ac-YTZ"/>
-                            <constraint firstItem="k7N-EU-b6d" firstAttribute="trailing" secondItem="fuk-bO-Jvu" secondAttribute="trailing" id="tWh-W6-UhQ"/>
+                            <constraint firstItem="MYe-Pv-JPK" firstAttribute="trailing" secondItem="fuk-bO-Jvu" secondAttribute="trailing" id="yVg-bW-XT0"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="fuk-bO-Jvu"/>
                     </view>
@@ -372,11 +384,12 @@
         </scene>
     </scenes>
     <resources>
+        <image name="Back drop@4x" width="1500" height="2668"/>
         <image name="USSoccer" width="3966" height="3624"/>
-        <image name="background" width="375" height="667"/>
+        <image name="bShadow@4x" width="1452" height="80"/>
         <image name="cancel" width="64" height="64"/>
-        <image name="gradient" width="375" height="20"/>
         <image name="icons8-alarm-filled-50" width="25" height="25"/>
         <image name="musical-bell-outline (2)" width="64" height="64"/>
+        <image name="shadow@4x" width="1500" height="80"/>
     </resources>
 </document>
