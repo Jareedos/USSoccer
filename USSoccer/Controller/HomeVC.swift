@@ -78,6 +78,8 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "GamesTVCell", for: indexPath) as? GamesTVCell else {
             fatalError("The Cell Failed to Deque")
         }
+        cell.notificationBtn.tag = indexPath.row
+        cell.notificationBtn.addTarget(self, action: #selector(notificationButtonClicked(sender:)), for: .touchUpInside)
         cell.gameTimeLbl.text = "3:30PM ET"
         let usSoccerTitle = soccerGames[indexPath.row].title.components(separatedBy: " ")
         if usSoccerTitle[1] != "vs" {
@@ -100,6 +102,22 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
         cell.gameTimeLbl.text = strDate
         
         return cell
+    }
+    
+    @objc func notificationButtonClicked(sender: UIButton) {
+        let buttonRow = sender.tag
+        
+        let buttonPosition = sender.convert(CGPoint.zero, to: tableView)
+        let indexPath: IndexPath! = tableView.indexPathForRow(at: buttonPosition)
+        
+        let cell = tableView.cellForRow(at: indexPath as IndexPath)
+        
+        //Now change the text and background colour
+        
+        
+//        cell.button.backgroundColor = UIColor.blueColor()
+        print("I got here")
+        
     }
 }
 

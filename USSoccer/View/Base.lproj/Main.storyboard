@@ -253,6 +253,7 @@
                                             <outlet property="gameDateLbl" destination="0uy-Ri-2HO" id="BA7-hg-w7E"/>
                                             <outlet property="gameTimeLbl" destination="QX5-KB-ESV" id="nwo-k3-a9V"/>
                                             <outlet property="gameTitleLbl" destination="f7n-YE-p9c" id="gYs-uE-6MC"/>
+                                            <outlet property="notificationBtn" destination="HxC-mw-aj0" id="DlR-Uu-a2B"/>
                                             <outlet property="opponentLbl" destination="7Ch-Wb-TwP" id="o5Q-SV-owM"/>
                                             <outlet property="vsLbl" destination="dxo-Ot-Eqb" id="R5j-N1-G0z"/>
                                         </connections>
