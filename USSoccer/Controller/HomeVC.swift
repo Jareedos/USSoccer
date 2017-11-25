@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 import FirebaseDatabase
+import CoreData
 
 class HomeVC: UIViewController {
     
@@ -21,7 +22,7 @@ class HomeVC: UIViewController {
     var filterValue: String!
     var sortedGames = [String: [SoccerGame]]()
     var soccerGames = [SoccerGame]()
-  
+    var teamArray = [Team]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,7 +40,15 @@ class HomeVC: UIViewController {
         self.navigationController?.view.backgroundColor = UIColor.clear
         self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedStringKey.font: UIFont(name: "HelveticaNeue-CondensedBold", size: 22.0)!,NSAttributedStringKey.foregroundColor: UIColor.white]
         
-    
+        //Checking to see if the Teams are set up in CoreData, Setting them up if they are not
+        teamArray = CoreDataService.shared.fetchTeams()
+        if teamArray.isEmpty {
+            for teamTitle in pickerTeamsArray {
+                CoreDataService.shared.saveTeam(title: teamTitle)
+            }
+        }
+        
+        // Creating a set for all the Teams Titles that have games schedualed
         var existingKeys : Set<String> = ["MNT", "ALL TEAMS", "WNT"]
         var allGames = [SoccerGame]()
         for key in sortedGames.keys {
@@ -66,6 +75,8 @@ class HomeVC: UIViewController {
         soccerGames = sortedGames[filterValue] ?? [SoccerGame]()
         tableView.reloadData()
     }
+    
+   
 }
 
 extension HomeVC: UITableViewDelegate, UITableViewDataSource {
@@ -82,6 +93,8 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
         cell.notificationBtn.addTarget(self, action: #selector(notificationButtonClicked(sender:)), for: .touchUpInside)
         cell.gameTimeLbl.text = "3:30PM ET"
         let usSoccerTitle = soccerGames[indexPath.row].title.components(separatedBy: " ")
+        
+        
         if usSoccerTitle[1] != "vs" {
             cell.gameTitleLbl.text = "\(usSoccerTitle[0].uppercased()) \(usSoccerTitle[1].uppercased())"
             cell.vsLbl.text = "\(usSoccerTitle[2].uppercased())"
@@ -91,6 +104,17 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
             cell.vsLbl.text = "\(usSoccerTitle[1].uppercased())"
             cell.opponentLbl.text = "\(usSoccerTitle[2].uppercased())"
         }
+        
+        let soccerGame = soccerGames[indexPath.row]
+        if let team = team(forGame: soccerGame) {
+            
+            if team.notifications == true {
+                cell.notificationBtn.setImage(UIImage(named: "bell-musical-tool (1)"), for: .normal)
+            } else {
+                cell.notificationBtn.setImage(UIImage(named: "musical-bell-outline (2)"), for: .normal)
+            }
+        }
+        
         let gameDate = soccerGames[indexPath.row].date.components(separatedBy: " ")
         let formatedMonth = gameDate[0].prefix(3)
         cell.gameDateLbl.text = "\(formatedMonth.uppercased()) \(gameDate[1]) \(gameDate[2])"
@@ -104,17 +128,28 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
+    func team(forGame game: SoccerGame) -> Team? {
+        // Get the team from
+        let teams = teamArray.filter { (team: Team) -> Bool in
+            return team.title == game.usTeam
+        }
+        return teams.first
+    }
+    
     @objc func notificationButtonClicked(sender: UIButton) {
-        let buttonRow = sender.tag
         
         let buttonPosition = sender.convert(CGPoint.zero, to: tableView)
         let indexPath: IndexPath! = tableView.indexPathForRow(at: buttonPosition)
         
-        let cell = tableView.cellForRow(at: indexPath as IndexPath)
-        
+        let game = soccerGames[indexPath.row]
+        if let team = team(forGame: game) {
+            team.notifications = !team.notifications
+            team.twoHour = !team.twoHour
+            CoreDataService.shared.saveContext()
+        }
         //Now change the text and background colour
         
-        
+        tableView.reloadData()
 //        cell.button.backgroundColor = UIColor.blueColor()
         print("I got here")
         

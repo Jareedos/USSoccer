@@ -18,6 +18,12 @@ class SoccerGame {
     let venue: String!
     var timestamp: Date?
 //    var ref: DataReference?
+    var usTeam : String! {
+        let teamsTitles = title.components(separatedBy: "vs")
+        let trimmedTitle = stringTrimmer(stringToTrim: teamsTitles[0].uppercased())
+        return trimmedTitle
+    }
+    
     
     init(snapShot: DataSnapshot) {
 //        ref = snapShot.ref

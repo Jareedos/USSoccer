@@ -9,6 +9,12 @@
 import Foundation
 import UIKit
 
+
+/*
+ 1) Some data in Firebase
+ 2) Pull it and create your local database (map the properties and relationships)
+ */
+
 // func takes optional strings and removes whitespaces and newlinnes from strings
 func stringTrimmer(stringToTrim string: String?) -> String? {
     let trimmedString = string?.trimmingCharacters(in: .whitespacesAndNewlines)

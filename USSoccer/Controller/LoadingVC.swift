@@ -26,6 +26,8 @@ class LoadingVC: UIViewController {
         gamesRef.observe(.value, with: { snapshot in
             for child in snapshot.children.allObjects as! [DataSnapshot] {
                 let game = SoccerGame(snapShot: child)
+                
+                // Sorting Games into a Dictionary to use on HomeVC
                 let teamsTitles = game.title.components(separatedBy: "vs")
                 let trimmedTitle = stringTrimmer(stringToTrim: teamsTitles[0].uppercased())
                 
@@ -35,21 +37,20 @@ class LoadingVC: UIViewController {
                 } else {
                     self.sortedGames[trimmedTitle!] = [game]
                 }
-                print(self.sortedGames)
-            
-                // settingUpTimeStamps
+
+                // Setting Up Time Stamps
                 let formatter = DateFormatter()
                 if game.timestamp == nil {
                     let timeWithoutTimeZoneString = (game.time as NSString).substring(to: game.time.count - 2)
                     
                     let dateAndTimeStringWithProperTimeZone = game.date + " " + timeWithoutTimeZoneString + self.timezoneFromTimeString(timeString: game.time)
+                    
                     // Date parsing, Time parsing
                     formatter.dateFormat = "MMMM dd, yyyy h:mm a ZZZ"
                     let date = formatter.date(from: dateAndTimeStringWithProperTimeZone)
                     gamesRef.child(child.key).child("timestamp").setValue(date?.timeIntervalSince1970)
                 }
             }
-            
             DispatchQueue.main.async {
                 self.performSegue(withIdentifier: "loadingToHome", sender: nil)
             }
@@ -62,7 +63,7 @@ class LoadingVC: UIViewController {
     }
     
     func timezoneFromTimeString(timeString: String) -> String {
-        // -0500
+        // Default Eastern Time Zone -0500
         let timeZoneString = (timeString as NSString).substring(from: timeString.count - 2)
         
         switch timeZoneString {
