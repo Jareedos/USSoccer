@@ -13,8 +13,11 @@ import CoreData
 
 class HomeVC: UIViewController {
     
+    @IBOutlet weak var notificationAlertLbl: UILabel!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var teamPicker: UIPickerView!
+    @IBOutlet weak var notificationLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var notificationMenuTrailingConstraint: NSLayoutConstraint!
     var pickerTeamsArray = ["U-15 MNT", "U-16 MNT", "U-17 MNT", "U-18 MNT", "U-19 MNT", "U-20 MNT", "U-23 MNT", "MNT", "ALL TEAMS", "WNT", "U-23 WNT", "U-20 WNT", "U-19 WNT", "U-18 WNT", "U-17 WNT", "U-16 WNT", "U-15 WNT"]
     var rotationAngle: CGFloat!
     let customHeight: CGFloat = 100
@@ -23,6 +26,10 @@ class HomeVC: UIViewController {
     var sortedGames = [String: [SoccerGame]]()
     var soccerGames = [SoccerGame]()
     var teamArray = [Team]()
+    
+    var notificationAlertVisible = false
+    var notificationMenuVisible = false
+    var notificationAlertHideTimer : Timer?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,9 +81,23 @@ class HomeVC: UIViewController {
         filterValue = "ALL TEAMS"
         soccerGames = sortedGames[filterValue] ?? [SoccerGame]()
         tableView.reloadData()
+        
+        
+        notificationLeadingConstraint.constant = UIScreen.main.bounds.size.width
+        notificationMenuTrailingConstraint.constant = 187
+        view.layoutIfNeeded()
     }
     
-   
+    @IBAction func notificationMenuSwipedOff(_ sender: Any) {
+        
+        notificationMenuTrailingConstraint.constant = 187
+        UIView.animate(withDuration: 0.3, animations: {
+            self.view.layoutIfNeeded()
+        }) { (finished: Bool) in
+            self.notificationMenuVisible = false
+        }
+        
+    }
 }
 
 extension HomeVC: UITableViewDelegate, UITableViewDataSource {
@@ -136,6 +157,29 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
         return teams.first
     }
     
+    
+    @IBAction func notificationsSettingsTapped(_ sender: Any) {
+        
+        notificationMenuTrailingConstraint.constant = 0.0
+        notificationLeadingConstraint.constant = UIScreen.main.bounds.size.width
+        UIView.animate(withDuration: 0.3, animations: {
+            self.view.layoutIfNeeded()
+        }, completion: { (finished: Bool) in
+            self.notificationMenuVisible = true
+            self.notificationAlertVisible = false
+        })
+    }
+    
+    @objc func notificationAlertHideTimerFired() {
+        // Hide after some time
+        UIView.animate(withDuration: 0.3, animations: {
+            self.notificationLeadingConstraint.constant = UIScreen.main.bounds.size.width
+            self.view.layoutIfNeeded()
+        }, completion: { (finished: Bool) in
+            self.notificationAlertVisible = false
+        })
+    }
+    
     @objc func notificationButtonClicked(sender: UIButton) {
         
         let buttonPosition = sender.convert(CGPoint.zero, to: tableView)
@@ -146,8 +190,33 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
             team.notifications = !team.notifications
             team.twoHour = !team.twoHour
             CoreDataService.shared.saveContext()
+            
+            // Change text on Alert to match
+            notificationAlertLbl.text = "\(team.title?.uppercased() ?? "Name not available") Notification Set"
+            
+            //Now change the text and background colour
+            if team.notifications {
+                notificationAlertVisible = !notificationAlertVisible
+                if notificationAlertVisible {
+                    // Showing
+                    notificationLeadingConstraint.constant = 0.0
+                    UIView.animate(withDuration: 0.3, animations: {
+                        self.view.layoutIfNeeded()
+                    }, completion: { (finished: Bool) in
+                        
+                        self.notificationAlertHideTimer = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(HomeVC.notificationAlertHideTimerFired), userInfo: nil, repeats: false)
+                    })
+                    
+                } else {
+                    // Hiding
+                    notificationLeadingConstraint.constant = UIScreen.main.bounds.size.width
+                    UIView.animate(withDuration: 0.3) {
+                        self.view.layoutIfNeeded()
+                    }
+                }
+            }
         }
-        //Now change the text and background colour
+        
         
         tableView.reloadData()
 //        cell.button.backgroundColor = UIColor.blueColor()
