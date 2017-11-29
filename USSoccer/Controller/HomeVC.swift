@@ -204,7 +204,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
                         self.view.layoutIfNeeded()
                     }, completion: { (finished: Bool) in
                         
-                        self.notificationAlertHideTimer = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(HomeVC.notificationAlertHideTimerFired), userInfo: nil, repeats: false)
+                        self.notificationAlertHideTimer = Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(HomeVC.notificationAlertHideTimerFired), userInfo: nil, repeats: false)
                     })
                     
                 } else {

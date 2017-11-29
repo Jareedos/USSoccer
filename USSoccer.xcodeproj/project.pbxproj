@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5E294B0EAE393A00C25830E2 /* Pods_USSoccer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 570DE21D74C2822D0662D8ED /* Pods_USSoccer.framework */; };
+		BF19BF511FCDD219001B243E /* ApiCall.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF19BF501FCDD219001B243E /* ApiCall.swift */; };
+		BF23AF481FC9D4EB004C4F13 /* CoreDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF23AF471FC9D4EB004C4F13 /* CoreDataModel.swift */; };
 		BF3ABD771F8483CC00D46DD3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3ABD761F8483CC00D46DD3 /* AppDelegate.swift */; };
 		BF3ABD7C1F8483CC00D46DD3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BF3ABD7A1F8483CC00D46DD3 /* Main.storyboard */; };
 		BF3ABD7E1F8483CC00D46DD3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BF3ABD7D1F8483CC00D46DD3 /* Assets.xcassets */; };
@@ -17,17 +20,19 @@
 		BF4A4AFD1FB7AFD100E93E18 /* HomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4A4AFC1FB7AFD100E93E18 /* HomeVC.swift */; };
 		BF4A4B001FBA2CF100E93E18 /* GamesTVCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4A4AFF1FBA2CF100E93E18 /* GamesTVCell.swift */; };
 		BF5F0E4A1FBD471C00AEA1BB /* NotificationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5F0E491FBD471C00AEA1BB /* NotificationVC.swift */; };
+		BF8788521FCA2E89002C2A15 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8788511FCA2E89002C2A15 /* Team.swift */; };
 		BFD339141F85CD8700EEAB3F /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD339131F85CD8700EEAB3F /* LoginVC.swift */; };
 		BFD339191F85DEBE00EEAB3F /* Uitility.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD339181F85DEBE00EEAB3F /* Uitility.swift */; };
 		BFD3391D1F868FE000EEAB3F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BFD3391C1F868FE000EEAB3F /* GoogleService-Info.plist */; };
 		BFF710311F87E5110001EC0E /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF710301F87E5110001EC0E /* Constants.swift */; };
-		CD6C63086E2C220EA84D8967 /* Pods_USSoccer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 570DE21D74C2822D0662D8ED /* Pods_USSoccer.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		3097B29D3005A3B5804D9F8A /* Pods-USSoccer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-USSoccer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-USSoccer/Pods-USSoccer.debug.xcconfig"; sourceTree = "<group>"; };
 		39895979E6EF2F0585E73F94 /* Pods-USSoccer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-USSoccer.release.xcconfig"; path = "Pods/Target Support Files/Pods-USSoccer/Pods-USSoccer.release.xcconfig"; sourceTree = "<group>"; };
 		570DE21D74C2822D0662D8ED /* Pods_USSoccer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_USSoccer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BF19BF501FCDD219001B243E /* ApiCall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiCall.swift; sourceTree = "<group>"; };
+		BF23AF471FC9D4EB004C4F13 /* CoreDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataModel.swift; sourceTree = "<group>"; };
 		BF3ABD731F8483CC00D46DD3 /* USSoccer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = USSoccer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF3ABD761F8483CC00D46DD3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BF3ABD7B1F8483CC00D46DD3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -40,6 +45,7 @@
 		BF4A4AFC1FB7AFD100E93E18 /* HomeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeVC.swift; sourceTree = "<group>"; };
 		BF4A4AFF1FBA2CF100E93E18 /* GamesTVCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamesTVCell.swift; sourceTree = "<group>"; };
 		BF5F0E491FBD471C00AEA1BB /* NotificationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationVC.swift; sourceTree = "<group>"; };
+		BF8788511FCA2E89002C2A15 /* Team.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
 		BFD339131F85CD8700EEAB3F /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		BFD339181F85DEBE00EEAB3F /* Uitility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Uitility.swift; sourceTree = "<group>"; };
 		BFD3391C1F868FE000EEAB3F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
@@ -47,11 +53,11 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		BF3ABD701F8483CC00D46DD3 /* Frameworks */ = {
+		3A8CDE6DAC6E63F47666DCD0 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CD6C63086E2C220EA84D8967 /* Pods_USSoccer.framework in Frameworks */,
+				5E294B0EAE393A00C25830E2 /* Pods_USSoccer.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +118,9 @@
 			isa = PBXGroup;
 			children = (
 				BF3ABD8B1F8538E500D46DD3 /* SoccerGame.swift */,
+				BF23AF471FC9D4EB004C4F13 /* CoreDataModel.swift */,
+				BF8788511FCA2E89002C2A15 /* Team.swift */,
+				BF19BF501FCDD219001B243E /* ApiCall.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -154,12 +163,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = BF3ABD851F8483CC00D46DD3 /* Build configuration list for PBXNativeTarget "USSoccer" */;
 			buildPhases = (
-				2A2DADD0F5A8B06A036FC666 /* [CP] Check Pods Manifest.lock */,
+				A2FDF75B3C8180893043F930 /* [CP] Check Pods Manifest.lock */,
 				BF3ABD6F1F8483CC00D46DD3 /* Sources */,
-				BF3ABD701F8483CC00D46DD3 /* Frameworks */,
 				BF3ABD711F8483CC00D46DD3 /* Resources */,
-				59A31FA75BBFD8C1C09CDE99 /* [CP] Embed Pods Frameworks */,
-				C3AABDFDECF4D31F2C69A90B /* [CP] Copy Pods Resources */,
+				3A8CDE6DAC6E63F47666DCD0 /* Frameworks */,
+				716F068886BB0DAA5462C03C /* [CP] Embed Pods Frameworks */,
+				B27B36C569C82BCB7BB3A084 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -182,7 +191,7 @@
 				TargetAttributes = {
 					BF3ABD721F8483CC00D46DD3 = {
 						CreatedOnToolsVersion = 9.0;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -219,7 +228,31 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		2A2DADD0F5A8B06A036FC666 /* [CP] Check Pods Manifest.lock */ = {
+		716F068886BB0DAA5462C03C /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-USSoccer/Pods-USSoccer-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-USSoccer/Pods-USSoccer-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A2FDF75B3C8180893043F930 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -237,33 +270,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		59A31FA75BBFD8C1C09CDE99 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-USSoccer/Pods-USSoccer-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
-				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
-				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
-				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
-				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-USSoccer/Pods-USSoccer-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		C3AABDFDECF4D31F2C69A90B /* [CP] Copy Pods Resources */ = {
+		B27B36C569C82BCB7BB3A084 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -285,9 +292,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BF23AF481FC9D4EB004C4F13 /* CoreDataModel.swift in Sources */,
+				BF8788521FCA2E89002C2A15 /* Team.swift in Sources */,
 				BF4A4AF91FB7AE0400E93E18 /* USSoccer.xcdatamodeld in Sources */,
 				BF5F0E4A1FBD471C00AEA1BB /* NotificationVC.swift in Sources */,
 				BF4A4AFD1FB7AFD100E93E18 /* HomeVC.swift in Sources */,
+				BF19BF511FCDD219001B243E /* ApiCall.swift in Sources */,
 				BFF710311F87E5110001EC0E /* Constants.swift in Sources */,
 				BF4A4B001FBA2CF100E93E18 /* GamesTVCell.swift in Sources */,
 				BF3ABD8C1F8538E500D46DD3 /* SoccerGame.swift in Sources */,
@@ -432,12 +442,15 @@
 			baseConfigurationReference = 3097B29D3005A3B5804D9F8A /* Pods-USSoccer.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = J69W6VP8JF;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = 755RTC79Q5;
 				INFOPLIST_FILE = USSoccer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.JaredSobol.USSoccer;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jaredsobol.ussoccerr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "83af0771-4e76-41a5-8f4b-7646ae23ddb1";
+				PROVISIONING_PROFILE_SPECIFIER = Jared;
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -448,12 +461,15 @@
 			baseConfigurationReference = 39895979E6EF2F0585E73F94 /* Pods-USSoccer.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = J69W6VP8JF;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = 755RTC79Q5;
 				INFOPLIST_FILE = USSoccer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.JaredSobol.USSoccer;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jaredsobol.ussoccerr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "83af0771-4e76-41a5-8f4b-7646ae23ddb1";
+				PROVISIONING_PROFILE_SPECIFIER = Jared;
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

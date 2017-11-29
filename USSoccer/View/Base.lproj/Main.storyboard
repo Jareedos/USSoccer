@@ -6,7 +6,6 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
-        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -300,7 +299,7 @@
                                 </constraints>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gIA-1m-T9W" userLabel="Notification Menu View">
-                                <rect key="frame" x="188" y="0.0" width="187" height="667"/>
+                                <rect key="frame" x="375" y="0.0" width="187" height="667"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5bO-nl-JVM">
                                         <rect key="frame" x="8" y="8" width="20" height="20"/>
@@ -353,7 +352,7 @@
                             <constraint firstItem="q3j-bz-fqr" firstAttribute="top" secondItem="fuk-bO-Jvu" secondAttribute="top" id="X32-cx-6eB"/>
                             <constraint firstItem="q3j-bz-fqr" firstAttribute="trailing" secondItem="fuk-bO-Jvu" secondAttribute="trailing" id="b6T-oq-nZX"/>
                             <constraint firstItem="q3j-bz-fqr" firstAttribute="leading" secondItem="fuk-bO-Jvu" secondAttribute="leading" id="blC-IJ-5Al"/>
-                            <constraint firstItem="gIA-1m-T9W" firstAttribute="trailing" secondItem="fuk-bO-Jvu" secondAttribute="trailing" id="cSf-yx-cmU"/>
+                            <constraint firstItem="gIA-1m-T9W" firstAttribute="trailing" secondItem="fuk-bO-Jvu" secondAttribute="trailing" constant="187" id="cSf-yx-cmU"/>
                             <constraint firstItem="h4C-pc-o0i" firstAttribute="trailing" secondItem="fuk-bO-Jvu" secondAttribute="trailing" id="dS7-wl-aNl"/>
                             <constraint firstItem="h4C-pc-o0i" firstAttribute="top" secondItem="fuk-bO-Jvu" secondAttribute="top" id="dnq-0p-n3F"/>
                             <constraint firstItem="h4C-pc-o0i" firstAttribute="bottom" secondItem="fuk-bO-Jvu" secondAttribute="bottom" constant="-78.5" id="iU4-Pt-fks"/>
@@ -369,9 +368,6 @@
                     <navigationItem key="navigationItem" title="USA Soccer" id="eLJ-Ys-JLH">
                         <barButtonItem key="rightBarButtonItem" title="Item" image="icons8-alarm-filled-50" id="hQo-rr-epG">
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            <connections>
-                                <segue destination="Csq-XU-gD7" kind="presentation" modalPresentationStyle="overFullScreen" modalTransitionStyle="crossDissolve" id="PSU-ZK-5PX"/>
-                            </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
@@ -390,64 +386,6 @@
                 </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="2677.5999999999999" y="-9.4452773613193415"/>
-        </scene>
-        <!--NotificationVC-->
-        <scene sceneID="2CY-0W-Rcq">
-            <objects>
-                <viewController id="Csq-XU-gD7" customClass="NotificationVC" customModule="USSoccer" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Ii5-ci-uGC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <visualEffectView opaque="NO" alpha="0.59999999999999998" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gdr-L5-bpw">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="iIU-ZO-duR">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                    <subviews>
-                                        <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4Oc-Vj-MTy">
-                                            <rect key="frame" x="1" y="0.0" width="375" height="667"/>
-                                            <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="glm-0N-HEb">
-                                                    <rect key="frame" x="6" y="18" width="50" height="50"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="40" id="MLR-Dh-GsQ"/>
-                                                        <constraint firstAttribute="height" constant="40" id="QMb-aE-6UD"/>
-                                                    </constraints>
-                                                    <state key="normal" image="cancel"/>
-                                                    <connections>
-                                                        <action selector="cancelBtnPressed:" destination="Csq-XU-gD7" eventType="touchUpInside" id="QU9-4E-5xe"/>
-                                                    </connections>
-                                                </button>
-                                            </subviews>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <constraints>
-                                                <constraint firstItem="glm-0N-HEb" firstAttribute="leading" secondItem="4Oc-Vj-MTy" secondAttribute="leading" constant="15" id="QnY-m3-PHD"/>
-                                                <constraint firstItem="glm-0N-HEb" firstAttribute="top" secondItem="4Oc-Vj-MTy" secondAttribute="top" constant="15" id="RsB-cm-RNu"/>
-                                            </constraints>
-                                        </view>
-                                    </subviews>
-                                    <constraints>
-                                        <constraint firstAttribute="height" secondItem="4Oc-Vj-MTy" secondAttribute="height" multiplier="1.25" id="Vax-P9-XJ7"/>
-                                        <constraint firstAttribute="width" secondItem="4Oc-Vj-MTy" secondAttribute="width" multiplier="1.11111" id="s98-ef-DQX"/>
-                                    </constraints>
-                                </view>
-                                <blurEffect style="light"/>
-                            </visualEffectView>
-                        </subviews>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="gdr-L5-bpw" firstAttribute="top" secondItem="Ii5-ci-uGC" secondAttribute="top" id="0jG-HW-EhR"/>
-                            <constraint firstItem="gdr-L5-bpw" firstAttribute="bottom" secondItem="gKJ-16-mO3" secondAttribute="bottom" id="79e-Ea-Z9k"/>
-                            <constraint firstItem="gdr-L5-bpw" firstAttribute="leading" secondItem="gKJ-16-mO3" secondAttribute="leading" id="LHF-fm-ZEi"/>
-                            <constraint firstItem="gdr-L5-bpw" firstAttribute="trailing" secondItem="gKJ-16-mO3" secondAttribute="trailing" id="xit-HX-28z"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="gKJ-16-mO3"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="GhD-CB-sxA" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="3431" y="-439"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="eTK-dH-Hm2">
@@ -476,7 +414,6 @@
         <image name="Back drop@4x" width="1500" height="2668"/>
         <image name="USSoccer" width="3966" height="3624"/>
         <image name="bShadow@4x" width="1452" height="80"/>
-        <image name="cancel" width="64" height="64"/>
         <image name="icons8-alarm-filled-50" width="25" height="25"/>
         <image name="musical-bell-outline (2)" width="64" height="64"/>
         <image name="settings" width="64" height="64"/>
