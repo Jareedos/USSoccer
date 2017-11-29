@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5E294B0EAE393A00C25830E2 /* Pods_USSoccer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 570DE21D74C2822D0662D8ED /* Pods_USSoccer.framework */; };
-		BF19BF511FCDD219001B243E /* ApiCall.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF19BF501FCDD219001B243E /* ApiCall.swift */; };
+		BF19BF511FCDD219001B243E /* ApiCaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF19BF501FCDD219001B243E /* ApiCaller.swift */; };
 		BF23AF481FC9D4EB004C4F13 /* CoreDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF23AF471FC9D4EB004C4F13 /* CoreDataModel.swift */; };
 		BF3ABD771F8483CC00D46DD3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3ABD761F8483CC00D46DD3 /* AppDelegate.swift */; };
 		BF3ABD7C1F8483CC00D46DD3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BF3ABD7A1F8483CC00D46DD3 /* Main.storyboard */; };
@@ -31,7 +31,7 @@
 		3097B29D3005A3B5804D9F8A /* Pods-USSoccer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-USSoccer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-USSoccer/Pods-USSoccer.debug.xcconfig"; sourceTree = "<group>"; };
 		39895979E6EF2F0585E73F94 /* Pods-USSoccer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-USSoccer.release.xcconfig"; path = "Pods/Target Support Files/Pods-USSoccer/Pods-USSoccer.release.xcconfig"; sourceTree = "<group>"; };
 		570DE21D74C2822D0662D8ED /* Pods_USSoccer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_USSoccer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		BF19BF501FCDD219001B243E /* ApiCall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiCall.swift; sourceTree = "<group>"; };
+		BF19BF501FCDD219001B243E /* ApiCaller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiCaller.swift; sourceTree = "<group>"; };
 		BF23AF471FC9D4EB004C4F13 /* CoreDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataModel.swift; sourceTree = "<group>"; };
 		BF3ABD731F8483CC00D46DD3 /* USSoccer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = USSoccer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF3ABD761F8483CC00D46DD3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -120,7 +120,7 @@
 				BF3ABD8B1F8538E500D46DD3 /* SoccerGame.swift */,
 				BF23AF471FC9D4EB004C4F13 /* CoreDataModel.swift */,
 				BF8788511FCA2E89002C2A15 /* Team.swift */,
-				BF19BF501FCDD219001B243E /* ApiCall.swift */,
+				BF19BF501FCDD219001B243E /* ApiCaller.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -235,6 +235,7 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-USSoccer/Pods-USSoccer-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
 				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
@@ -242,6 +243,7 @@
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
@@ -297,7 +299,7 @@
 				BF4A4AF91FB7AE0400E93E18 /* USSoccer.xcdatamodeld in Sources */,
 				BF5F0E4A1FBD471C00AEA1BB /* NotificationVC.swift in Sources */,
 				BF4A4AFD1FB7AFD100E93E18 /* HomeVC.swift in Sources */,
-				BF19BF511FCDD219001B243E /* ApiCall.swift in Sources */,
+				BF19BF511FCDD219001B243E /* ApiCaller.swift in Sources */,
 				BFF710311F87E5110001EC0E /* Constants.swift in Sources */,
 				BF4A4B001FBA2CF100E93E18 /* GamesTVCell.swift in Sources */,
 				BF3ABD8C1F8538E500D46DD3 /* SoccerGame.swift in Sources */,
