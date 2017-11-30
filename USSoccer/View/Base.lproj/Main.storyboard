@@ -264,10 +264,10 @@
                                 </prototypes>
                             </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fs0-BP-2Jd" userLabel="Notification Alert View">
-                                <rect key="frame" x="0.0" y="94" width="375" height="110"/>
+                                <rect key="frame" x="0.0" y="94" width="375" height="60"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KIh-Sh-7ay" userLabel="Settings Button">
-                                        <rect key="frame" x="310" y="35" width="40" height="40"/>
+                                        <rect key="frame" x="310" y="10" width="40" height="40"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="40" id="IRQ-96-Luj"/>
                                             <constraint firstAttribute="height" constant="40" id="eYO-Gv-Ixo"/>
@@ -278,7 +278,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lFr-9i-Yvo">
-                                        <rect key="frame" x="24" y="55.5" width="0.0" height="0.0"/>
+                                        <rect key="frame" x="24" y="30.5" width="0.0" height="0.0"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="22"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
@@ -290,7 +290,7 @@
                                     <constraint firstAttribute="trailing" secondItem="KIh-Sh-7ay" secondAttribute="trailing" constant="25" id="6wc-cD-1WC"/>
                                     <constraint firstItem="lFr-9i-Yvo" firstAttribute="centerY" secondItem="Fs0-BP-2Jd" secondAttribute="centerY" id="8bq-sB-eFN"/>
                                     <constraint firstItem="lFr-9i-Yvo" firstAttribute="leading" secondItem="Fs0-BP-2Jd" secondAttribute="leading" constant="24" id="Wwl-el-0sD"/>
-                                    <constraint firstAttribute="height" constant="110" id="l29-i5-IBX"/>
+                                    <constraint firstAttribute="height" constant="60" id="l29-i5-IBX"/>
                                 </constraints>
                             </view>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bShadow@4x" translatesAutoresizingMaskIntoConstraints="NO" id="MYe-Pv-JPK">

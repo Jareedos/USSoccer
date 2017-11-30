@@ -9,14 +9,16 @@
 import Foundation
 import UIKit
 import Alamofire
+import Firebase
 
 class ApiCaller{
     static let shared = ApiCaller()
     private init () {}
+    var currentGameArray = [String]()
     
     func ApiCall() {
         Alamofire.request("https://www.parsehub.com/api/v2/projects/tZQ5VDy6j2JB/last_ready_run/data?api_key=trmNdK43wwBZ").responseJSON { response in
-
+       
             if let jsonData = response.result.value as? Dictionary<String, AnyObject> {
 //                print("JSON: \(jsonData)") // serialized json response
 //                self.parseJson(json: jsonData)
@@ -51,13 +53,28 @@ class ApiCaller{
                         formatter.dateFormat = "MMMM dd, yyyy h:mm a ZZZ"
                         let dateFormated = formatter.date(from: dateAndTimeStringWithProperTimeZone)
                         assert(dateFormated != nil)
-                    let dict: [String: Any] = ["title": title as Any, "venue": venue as Any, "time": time as Any, "date": date as Any, "stations": stations, "timestamp": dateFormated?.timeIntervalSince1970 as Any]
-                    gamesRef.childByAutoId().setValue(dict)
+                        let dispatchGroup = DispatchGroup()
+                        dispatchGroup.enter()
+                    gamesRef.observe(.value, with: { snapshot in
+                        for child in snapshot.children {
+                            let game = SoccerGame(snapShot: (child as? DataSnapshot)!)
+                            self.currentGameArray.append(game.title)
+                            
+                        }
+                        dispatchGroup.leave()
+                    })
+                    // Checking incoming game titles against current Games to ensure only new games are written to firebase
+                    dispatchGroup.notify(queue: .main) {
+                        if !self.currentGameArray.contains(title as! String) {
+                            let dict: [String: Any] = ["title": title as Any, "venue": venue as Any, "time": time as Any, "date": date as Any, "stations": stations, "timestamp": dateFormated?.timeIntervalSince1970 as Any]
+                            gamesRef.childByAutoId().setValue(dict)
+                        }
+                    }
                 }
             }
         }
     }
-    
+
     func timezoneFromTimeString(timeString: String) -> String {
         // Default Eastern Time Zone -0500
         let timeZoneString = (timeString as NSString).substring(from: timeString.count - 2)
