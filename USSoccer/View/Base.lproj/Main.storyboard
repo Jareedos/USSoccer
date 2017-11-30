@@ -391,10 +391,10 @@
             </objects>
             <point key="canvasLocation" x="2677.5999999999999" y="-9.4452773613193415"/>
         </scene>
-        <!--View Controller-->
+        <!--Game DetailVC-->
         <scene sceneID="EWM-1i-HDB">
             <objects>
-                <viewController id="hHJ-5m-7BH" sceneMemberID="viewController">
+                <viewController id="hHJ-5m-7BH" customClass="GameDetailVC" customModule="USSoccer" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="EaV-Mr-e8E">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

@@ -9,7 +9,7 @@
 import UIKit
 
 class GameDetailVC: UIViewController {
-//    var soccerGame = SoccerGame!
+    var soccerGame: SoccerGame!
 
     override func viewDidLoad() {
         super.viewDidLoad()
