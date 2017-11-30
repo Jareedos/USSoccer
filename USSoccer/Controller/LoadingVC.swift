@@ -16,16 +16,14 @@ class LoadingVC: UIViewController {
     let appenderArray = [SoccerGame]()
     
     override func viewDidAppear(_ animated: Bool) {
-        UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseIn, animations: {
-            self.loadingLbl.alpha = 0
-        }) { (true) in
-            UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseOut, animations: {
-                self.loadingLbl.alpha = 1
-            }, completion: nil)
-        }
+        // call Api and Parse it
+        ApiCaller.shared.ApiCall()
+        
         gamesRef.observe(.value, with: { snapshot in
             for child in snapshot.children.allObjects as! [DataSnapshot] {
+                print(child, "child")
                 let game = SoccerGame(snapShot: child)
+                print(game, "game")
                 
                 // Sorting Games into a Dictionary to use on HomeVC
                 let teamsTitles = game.title.components(separatedBy: "vs")
@@ -39,17 +37,17 @@ class LoadingVC: UIViewController {
                 }
 
                 // Setting Up Time Stamps
-                let formatter = DateFormatter()
-                if game.timestamp == nil {
-                    let timeWithoutTimeZoneString = (game.time as NSString).substring(to: game.time.count - 2)
-                    
-                    let dateAndTimeStringWithProperTimeZone = game.date + " " + timeWithoutTimeZoneString + self.timezoneFromTimeString(timeString: game.time)
-                    
-                    // Date parsing, Time parsing
-                    formatter.dateFormat = "MMMM dd, yyyy h:mm a ZZZ"
-                    let date = formatter.date(from: dateAndTimeStringWithProperTimeZone)
-                    gamesRef.child(child.key).child("timestamp").setValue(date?.timeIntervalSince1970)
-                }
+//                let formatter = DateFormatter()
+//                if game.timestamp == nil {
+//                    let timeWithoutTimeZoneString = (game.time as NSString).substring(to: game.time.count - 2)
+//
+//                    let dateAndTimeStringWithProperTimeZone = game.date + " " + timeWithoutTimeZoneString + self.timezoneFromTimeString(timeString: game.time)
+//
+//                    // Date parsing, Time parsing
+//                    formatter.dateFormat = "MMMM dd, yyyy h:mm a ZZZ"
+//                    let date = formatter.date(from: dateAndTimeStringWithProperTimeZone)
+//                    gamesRef.child(child.key).child("timestamp").setValue(date?.timeIntervalSince1970)
+//                }
             }
             DispatchQueue.main.async {
                 self.performSegue(withIdentifier: "loadingToHome", sender: nil)

@@ -9,13 +9,15 @@
 import Foundation
 //import Alamofire
 import FirebaseDatabase
+import CoreData
 
-
-class SoccerGame {
-    let title: String!
-    let date: String!
-    let time: String!
-    let venue: String!
+@objc(SoccerGame)
+public class SoccerGame: NSManagedObject  {
+    let title: String = ""
+    let date: String = ""
+    let time: String = ""
+    let venue: String = ""
+    let notification: Bool = false
     var timestamp: Date?
 //    var ref: DataReference?
     var usTeam : String! {
@@ -26,6 +28,10 @@ class SoccerGame {
     
     
     init(snapShot: DataSnapshot) {
+        let managedContext = CoreDataService.shared.managedContext
+        let entity = NSEntityDescription.entity(forEntityName: "Game", in: managedContext!)!
+        super.init(entity: entity, insertInto: managedContext)
+        
 //        ref = snapShot.ref
         let snapShotValue = snapShot.value as! [String: AnyObject]
         title = snapShotValue["title"] as! String
@@ -38,9 +44,14 @@ class SoccerGame {
     }
     
     init(title: String, date: String, time: String, venue: String ) {
+        let managedContext = CoreDataService.shared.managedContext
+        let entity = NSEntityDescription.entity(forEntityName: "Game", in: managedContext!)!
+        super.init(entity: entity, insertInto: managedContext)
         self.title = title
         self.date = date
         self.time = time
         self.venue = venue
     }
+    
+    
 }

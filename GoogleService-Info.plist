@@ -17,21 +17,21 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.JaredSobol.USSoccer</string>
+	<string>com.jaredsobol.ussoccerr</string>
 	<key>PROJECT_ID</key>
 	<string>ussoccer-96dd3</string>
 	<key>STORAGE_BUCKET</key>
 	<string>ussoccer-96dd3.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_APPINVITE_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_GCM_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:142823775153:ios:d31c476fe1093c83</string>
 	<key>DATABASE_URL</key>

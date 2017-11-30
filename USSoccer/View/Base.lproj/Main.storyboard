@@ -129,7 +129,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" red="0.84705882349999995" green="0.1215686275" blue="0.1529411765" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="l6x-LC-G0z" firstAttribute="centerY" secondItem="nWK-BX-QT5" secondAttribute="centerY" id="K5Y-19-yED"/>
                             <constraint firstItem="l6x-LC-G0z" firstAttribute="centerX" secondItem="nWK-BX-QT5" secondAttribute="centerX" id="bvs-CG-t4O"/>
@@ -258,6 +258,7 @@
                                             <outlet property="notificationBtn" destination="HxC-mw-aj0" id="DlR-Uu-a2B"/>
                                             <outlet property="opponentLbl" destination="7Ch-Wb-TwP" id="o5Q-SV-owM"/>
                                             <outlet property="vsLbl" destination="dxo-Ot-Eqb" id="R5j-N1-G0z"/>
+                                            <segue destination="hHJ-5m-7BH" kind="show" id="KXB-Ep-hhe"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -283,7 +284,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
-                                <color key="backgroundColor" red="0.84705882349999995" green="0.1215686275" blue="0.1529411765" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" red="0.84705882352941175" green="0.1215686275" blue="0.1529411765" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstItem="KIh-Sh-7ay" firstAttribute="centerY" secondItem="Fs0-BP-2Jd" secondAttribute="centerY" id="4KU-M4-hH8"/>
                                     <constraint firstAttribute="trailing" secondItem="KIh-Sh-7ay" secondAttribute="trailing" constant="25" id="6wc-cD-1WC"/>
@@ -366,6 +367,9 @@
                         <viewLayoutGuide key="safeArea" id="fuk-bO-Jvu"/>
                     </view>
                     <navigationItem key="navigationItem" title="USA Soccer" id="eLJ-Ys-JLH">
+                        <barButtonItem key="backBarButtonItem" title="Back" id="JTe-SP-bMk">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Item" image="icons8-alarm-filled-50" id="hQo-rr-epG">
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         </barButtonItem>
@@ -386,6 +390,32 @@
                 </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="2677.5999999999999" y="-9.4452773613193415"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="EWM-1i-HDB">
+            <objects>
+                <viewController id="hHJ-5m-7BH" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="EaV-Mr-e8E">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Back drop@4x" translatesAutoresizingMaskIntoConstraints="NO" id="EWy-iB-fSo">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="EWy-iB-fSo" firstAttribute="bottom" secondItem="43d-3U-LXI" secondAttribute="bottom" id="D0O-Mm-Nwi"/>
+                            <constraint firstItem="EWy-iB-fSo" firstAttribute="leading" secondItem="43d-3U-LXI" secondAttribute="leading" id="Ht1-Nf-LC3"/>
+                            <constraint firstItem="EWy-iB-fSo" firstAttribute="top" secondItem="EaV-Mr-e8E" secondAttribute="top" id="UAu-em-1Tz"/>
+                            <constraint firstItem="EWy-iB-fSo" firstAttribute="trailing" secondItem="43d-3U-LXI" secondAttribute="trailing" id="rlP-aG-jZR"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="43d-3U-LXI"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3Ds-Xv-9fZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2678" y="733"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="eTK-dH-Hm2">

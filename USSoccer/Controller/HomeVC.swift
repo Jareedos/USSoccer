@@ -96,8 +96,15 @@ class HomeVC: UIViewController {
         }) { (finished: Bool) in
             self.notificationMenuVisible = false
         }
-        
     }
+//
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//            let gameCellThatWasClicked = sender as! UITableViewCell
+//            let indexPath = self.tableView.indexPath(for: gameCellThatWasClicked)
+//            let soccerGame = soccerGames[(indexPath?.row)!]
+//            let detailViewController = segue.destination as! GameDetailVC
+//            detailViewController.soccerGame = soccerGame
+//    }
 }
 
 extension HomeVC: UITableViewDelegate, UITableViewDataSource {
