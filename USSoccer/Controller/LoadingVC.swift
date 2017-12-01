@@ -21,7 +21,7 @@ class LoadingVC: UIViewController {
         imageView.frame = CGRect(x: view.bounds.width / 2, y: view.bounds.height / 2 , width: 100, height: 100)
 
         // call Api and Parse it
-        ApiCaller.shared.ApiCall()
+//        ApiCaller.shared.ApiCall()
         
         gamesRef.observe(.value, with: { snapshot in
             for child in snapshot.children.allObjects as! [DataSnapshot] {
@@ -37,23 +37,10 @@ class LoadingVC: UIViewController {
                 } else {
                     self.sortedGames[trimmedTitle!] = [game]
                 }
-
-                // Setting Up Time Stamps
-//                let formatter = DateFormatter()
-//                if game.timestamp == nil {
-//                    let timeWithoutTimeZoneString = (game.time as NSString).substring(to: game.time.count - 2)
-//
-//                    let dateAndTimeStringWithProperTimeZone = game.date + " " + timeWithoutTimeZoneString + self.timezoneFromTimeString(timeString: game.time)
-//
-//                    // Date parsing, Time parsing
-//                    formatter.dateFormat = "MMMM dd, yyyy h:mm a ZZZ"
-//                    let date = formatter.date(from: dateAndTimeStringWithProperTimeZone)
-//                    gamesRef.child(child.key).child("timestamp").setValue(date?.timeIntervalSince1970)
-//                }
             }
-//            DispatchQueue.main.async {
-//                self.performSegue(withIdentifier: "loadingToHome", sender: nil)
-//            }
+            DispatchQueue.main.async {
+                self.performSegue(withIdentifier: "loadingToHome", sender: nil)
+            }
         })
     }
 
@@ -64,24 +51,6 @@ class LoadingVC: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
     }
-    
-//    func timezoneFromTimeString(timeString: String) -> String {
-//        // Default Eastern Time Zone -0500
-//        let timeZoneString = (timeString as NSString).substring(from: timeString.count - 2)
-//        
-//        switch timeZoneString {
-//        case "ET":
-//            return "-0500"
-//        case "CT":
-//            return "-0600"
-//        case "MT":
-//            return "-0700"
-//        case "PT":
-//            return "-0800"
-//        default:
-//            return "-0500"
-//        }
-//    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let toDoItemToPass = sortedGames

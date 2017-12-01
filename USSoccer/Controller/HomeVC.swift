@@ -63,17 +63,6 @@ class HomeVC: UIViewController {
             allGames += sortedGames[key]!
         }
         sortedGames["ALL TEAMS"] = allGames
-        //Appending PlaceholderGames if MNT OR WNT are empty
-        if (sortedGames["MNT"]?.isEmpty)! {
-            let newGame = SoccerGame(title: "No Upcoming Games Available", date: "NA", time: "NA", venue: "NA")
-            sortedGames["MNT"]?.append(newGame)
-        }
-        
-        if (sortedGames["WNT"]?.isEmpty)! {
-            let newGame = SoccerGame(title: "No Upcoming Games Available", date: "NA", time: "NA", venue: "NA")
-            sortedGames["WNT"]?.append(newGame)
-        }
-        
         
         // Remove the missing ones
         var updatedPickerTeamsArray = [String]()
@@ -91,6 +80,25 @@ class HomeVC: UIViewController {
         
         filterValue = "ALL TEAMS"
         soccerGames = sortedGames[filterValue] ?? [SoccerGame]()
+        if sortedGames["MNT"] == nil{
+            sortedGames["MNT"] = [SoccerGame]()
+        }
+        if sortedGames["WNT"] == nil{
+            sortedGames["WNT"] = [SoccerGame]()
+        }
+        guard let mensNational = sortedGames["MNT"] else {
+            print("Men's national wasn't found")
+            fatalError()
+        }
+        if (mensNational.isEmpty){
+            let newGame = SoccerGame(title: "No Upcoming Games Available", date: "NA", time: "NA", venue: "NA")
+            sortedGames["MNT"]!.append(newGame)
+        }
+
+        if (sortedGames["WNT"]!.isEmpty) {
+            let newGame = SoccerGame(title: "No Upcoming Games Available", date: "NA", time: "NA", venue: "NA")
+            sortedGames["WNT"]!.append(newGame)
+        }
         tableView.reloadData()
         
         
@@ -135,6 +143,10 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
         
         if gameTime == "NA" {
             cell.gameDateLbl.text = soccerGames[indexPath.row].title
+            cell.gameTitleLbl.text = ""
+            cell.vsLbl.text = ""
+            cell.opponentLbl.text = ""
+//            cell.notificationBtn.isHidden = true
         } else {
             let usSoccerTitle = soccerGames[indexPath.row].title.components(separatedBy: " ")
             if usSoccerTitle[1] != "vs" {
@@ -160,7 +172,8 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
         let gameDate = soccerGames[indexPath.row].date.components(separatedBy: " ")
         //Checking for PlaceholderGame
         if gameDate[0] == "NA" {
-            cell.gameTimeLbl.text = gameDate[0]
+            cell.gameTimeLbl.text = ""
+            cell.notificationBtn.isHidden = true
         } else {
             let formatedMonth = gameDate[0].prefix(3)
             cell.gameDateLbl.text = "\(formatedMonth.uppercased()) \(gameDate[1]) \(gameDate[2])"
@@ -170,6 +183,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
             dateFormatter.timeStyle = .short
             let strDate = dateFormatter.string(from: date!)
             cell.gameTimeLbl.text = strDate
+            cell.notificationBtn.isHidden = false
         }
         
         return cell
@@ -268,6 +282,7 @@ extension HomeVC: UIPickerViewDelegate, UIPickerViewDataSource {
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         filterValue = pickerTeamsArray[row]
         soccerGames = sortedGames[filterValue] ?? [SoccerGame]()
+        
         tableView.reloadData()
     }
     
