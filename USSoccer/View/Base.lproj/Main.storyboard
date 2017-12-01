@@ -121,29 +121,16 @@
                     <view key="view" contentMode="scaleToFill" id="nWK-BX-QT5">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l6x-LC-G0z">
-                                <rect key="frame" x="135.5" y="314" width="104.5" height="39.5"/>
-                                <fontDescription key="fontDescription" name="HelveticaNeue-CondensedBold" family="Helvetica Neue" pointSize="33"/>
-                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
                         <color key="backgroundColor" red="0.84705882349999995" green="0.1215686275" blue="0.1529411765" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        <constraints>
-                            <constraint firstItem="l6x-LC-G0z" firstAttribute="centerY" secondItem="nWK-BX-QT5" secondAttribute="centerY" id="K5Y-19-yED"/>
-                            <constraint firstItem="l6x-LC-G0z" firstAttribute="centerX" secondItem="nWK-BX-QT5" secondAttribute="centerX" id="bvs-CG-t4O"/>
-                        </constraints>
                         <viewLayoutGuide key="safeArea" id="Cxe-0F-Lgb"/>
                     </view>
                     <connections>
-                        <outlet property="loadingLbl" destination="l6x-LC-G0z" id="cOl-Xg-O04"/>
                         <segue destination="BKJ-Ys-7tR" kind="show" identifier="loadingToHome" id="Cxw-B3-bgo"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iaq-Hw-3yu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1068" y="-9"/>
+            <point key="canvasLocation" x="1068" y="0.0"/>
         </scene>
         <!--USA Soccer-->
         <scene sceneID="75q-jQ-70U">
@@ -370,7 +357,7 @@
                         <barButtonItem key="backBarButtonItem" title="Back" id="JTe-SP-bMk">
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Item" image="icons8-alarm-filled-50" id="hQo-rr-epG">
+                        <barButtonItem key="rightBarButtonItem" title="Item" image="settings" id="hQo-rr-epG">
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         </barButtonItem>
                     </navigationItem>
@@ -444,9 +431,8 @@
         <image name="Back drop@4x" width="1500" height="2668"/>
         <image name="USSoccer" width="3966" height="3624"/>
         <image name="bShadow@4x" width="1452" height="80"/>
-        <image name="icons8-alarm-filled-50" width="25" height="25"/>
         <image name="musical-bell-outline (2)" width="64" height="64"/>
-        <image name="settings" width="64" height="64"/>
+        <image name="settings" width="21" height="21"/>
         <image name="shadow@4x" width="1500" height="80"/>
     </resources>
 </document>

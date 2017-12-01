@@ -11,11 +11,15 @@ import FirebaseDatabase
 
 class LoadingVC: UIViewController {
     
-    @IBOutlet weak var loadingLbl: UILabel!
     var sortedGames = [String: [SoccerGame]]()
     let appenderArray = [SoccerGame]()
     
     override func viewDidAppear(_ animated: Bool) {
+        let soccerBall = #imageLiteral(resourceName: "football-ball")
+        var imageView = UIImageView(image: soccerBall)
+        self.view.addSubview(imageView)
+        imageView.frame = CGRect(x: view.bounds.width / 2, y: view.bounds.height / 2 , width: 100, height: 100)
+
         // call Api and Parse it
         ApiCaller.shared.ApiCall()
         
@@ -47,12 +51,15 @@ class LoadingVC: UIViewController {
 //                    gamesRef.child(child.key).child("timestamp").setValue(date?.timeIntervalSince1970)
 //                }
             }
-            DispatchQueue.main.async {
-                self.performSegue(withIdentifier: "loadingToHome", sender: nil)
-            }
+//            DispatchQueue.main.async {
+//                self.performSegue(withIdentifier: "loadingToHome", sender: nil)
+//            }
         })
     }
 
+//    func addSoccerBall() {
+//       layer.addSublayer(soccerBall)
+//    }
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.

@@ -63,6 +63,17 @@ class HomeVC: UIViewController {
             allGames += sortedGames[key]!
         }
         sortedGames["ALL TEAMS"] = allGames
+        //Appending PlaceholderGames if MNT OR WNT are empty
+        if (sortedGames["MNT"]?.isEmpty)! {
+            let newGame = SoccerGame(title: "No Upcoming Games Available", date: "NA", time: "NA", venue: "NA")
+            sortedGames["MNT"]?.append(newGame)
+        }
+        
+        if (sortedGames["WNT"]?.isEmpty)! {
+            let newGame = SoccerGame(title: "No Upcoming Games Available", date: "NA", time: "NA", venue: "NA")
+            sortedGames["WNT"]?.append(newGame)
+        }
+        
         
         // Remove the missing ones
         var updatedPickerTeamsArray = [String]()
@@ -117,41 +128,49 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "GamesTVCell", for: indexPath) as? GamesTVCell else {
             fatalError("The Cell Failed to Deque")
         }
-        cell.notificationBtn.tag = indexPath.row
         cell.notificationBtn.addTarget(self, action: #selector(notificationButtonClicked(sender:)), for: .touchUpInside)
-        cell.gameTimeLbl.text = "3:30PM ET"
-        let usSoccerTitle = soccerGames[indexPath.row].title.components(separatedBy: " ")
         
+        // Checking for PlaceHolderGame and adjusting displayed text accordingly
+        let gameTime = soccerGames[indexPath.row].time
         
-        if usSoccerTitle[1] != "vs" {
-            cell.gameTitleLbl.text = "\(usSoccerTitle[0].uppercased()) \(usSoccerTitle[1].uppercased())"
-            cell.vsLbl.text = "\(usSoccerTitle[2].uppercased())"
-            cell.opponentLbl.text = "\(usSoccerTitle[3].uppercased())"
+        if gameTime == "NA" {
+            cell.gameDateLbl.text = soccerGames[indexPath.row].title
         } else {
-            cell.gameTitleLbl.text = "\(usSoccerTitle[0].uppercased())"
-            cell.vsLbl.text = "\(usSoccerTitle[1].uppercased())"
-            cell.opponentLbl.text = "\(usSoccerTitle[2].uppercased())"
-        }
-        
-        let soccerGame = soccerGames[indexPath.row]
-        if let team = team(forGame: soccerGame) {
-            
-            if team.notifications == true {
-                cell.notificationBtn.setImage(UIImage(named: "bell-musical-tool (1)"), for: .normal)
+            let usSoccerTitle = soccerGames[indexPath.row].title.components(separatedBy: " ")
+            if usSoccerTitle[1] != "vs" {
+                cell.gameTitleLbl.text = "\(usSoccerTitle[0].uppercased()) \(usSoccerTitle[1].uppercased())"
+                cell.vsLbl.text = "\(usSoccerTitle[2].uppercased())"
+                cell.opponentLbl.text = "\(usSoccerTitle[3].uppercased())"
             } else {
-                cell.notificationBtn.setImage(UIImage(named: "musical-bell-outline (2)"), for: .normal)
+                cell.gameTitleLbl.text = "\(usSoccerTitle[0].uppercased())"
+                cell.vsLbl.text = "\(usSoccerTitle[1].uppercased())"
+                cell.opponentLbl.text = "\(usSoccerTitle[2].uppercased())"
+            }
+            
+            let soccerGame = soccerGames[indexPath.row]
+            if let team = team(forGame: soccerGame) {
+                
+                if team.notifications == true {
+                    cell.notificationBtn.setImage(UIImage(named: "bell-musical-tool (1)"), for: .normal)
+                } else {
+                    cell.notificationBtn.setImage(UIImage(named: "musical-bell-outline (2)"), for: .normal)
+                }
             }
         }
-        
         let gameDate = soccerGames[indexPath.row].date.components(separatedBy: " ")
-        let formatedMonth = gameDate[0].prefix(3)
-        cell.gameDateLbl.text = "\(formatedMonth.uppercased()) \(gameDate[1]) \(gameDate[2])"
-        let date = soccerGames[indexPath.row].timestamp
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .none
-        dateFormatter.timeStyle = .short
-        let strDate = dateFormatter.string(from: date!)
-        cell.gameTimeLbl.text = strDate
+        //Checking for PlaceholderGame
+        if gameDate[0] == "NA" {
+            cell.gameTimeLbl.text = gameDate[0]
+        } else {
+            let formatedMonth = gameDate[0].prefix(3)
+            cell.gameDateLbl.text = "\(formatedMonth.uppercased()) \(gameDate[1]) \(gameDate[2])"
+            let date = soccerGames[indexPath.row].timestamp
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateStyle = .none
+            dateFormatter.timeStyle = .short
+            let strDate = dateFormatter.string(from: date!)
+            cell.gameTimeLbl.text = strDate
+        }
         
         return cell
     }
