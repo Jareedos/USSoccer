@@ -48,6 +48,7 @@
 		BF5F0E491FBD471C00AEA1BB /* NotificationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationVC.swift; sourceTree = "<group>"; };
 		BF68790D1FCF897300AC7C1A /* GameDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameDetailVC.swift; sourceTree = "<group>"; };
 		BF8788511FCA2E89002C2A15 /* Team.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
+		BFA55BA21FD5DB5600E3411D /* USSoccer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = USSoccer.entitlements; sourceTree = "<group>"; };
 		BFD339131F85CD8700EEAB3F /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		BFD339181F85DEBE00EEAB3F /* Uitility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Uitility.swift; sourceTree = "<group>"; };
 		BFD3391C1F868FE000EEAB3F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
@@ -105,6 +106,7 @@
 		BF3ABD751F8483CC00D46DD3 /* USSoccer */ = {
 			isa = PBXGroup;
 			children = (
+				BFA55BA21FD5DB5600E3411D /* USSoccer.entitlements */,
 				BF4A4AFE1FBA2C3B00E93E18 /* View */,
 				BFD3391C1F868FE000EEAB3F /* GoogleService-Info.plist */,
 				BFD339171F85DE9D00EEAB3F /* Utilities */,
@@ -195,6 +197,11 @@
 					BF3ABD721F8483CC00D46DD3 = {
 						CreatedOnToolsVersion = 9.0;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -448,6 +455,7 @@
 			baseConfigurationReference = 3097B29D3005A3B5804D9F8A /* Pods-USSoccer.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = USSoccer/USSoccer.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 755RTC79Q5;
@@ -467,6 +475,7 @@
 			baseConfigurationReference = 39895979E6EF2F0585E73F94 /* Pods-USSoccer.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = USSoccer/USSoccer.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 755RTC79Q5;
