@@ -45,7 +45,7 @@ class HomeVC: UIViewController {
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationController?.navigationBar.isTranslucent = true
         self.navigationController?.view.backgroundColor = UIColor.clear
-        self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedStringKey.font: UIFont(name: "HelveticaNeue-CondensedBold", size: 22.0)!,NSAttributedStringKey.foregroundColor: UIColor.white]
+        self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedStringKey.font: UIFont(name: "HelveticaNeue-CondensedBold", size: 30.0)!,NSAttributedStringKey.foregroundColor: UIColor.white]
         
         //Checking to see if the Teams are set up in CoreData, Setting them up if they are not
         teamArray = CoreDataService.shared.fetchTeams()

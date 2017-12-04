@@ -16,14 +16,30 @@ class GameDetailVC: UIViewController {
     @IBOutlet weak var gameTimeLbl: UILabel!
     @IBOutlet weak var gameStaionsLbl: UILabel!
     @IBOutlet weak var gameVenueLbl: UILabel!
+    @IBOutlet weak var gameVenueCityState: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Game Details"
-        gameTitleLbl.text = soccerGame.title
-        gameDateLbl.text = soccerGame.date
-        gameTimeLbl.text = soccerGame.time
-        gameStaionsLbl.text = soccerGame.stations
+        gameTitleLbl.text = soccerGame.title.uppercased()
+        gameDateLbl.text = soccerGame.date.uppercased()
+        let date = soccerGame.timestamp
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .none
+        dateFormatter.timeStyle = .short
+        let strDate = dateFormatter.string(from: date!)
+        gameTimeLbl.text = strDate.uppercased()
+        if soccerGame.stations == "ussoccer.com" {
+            gameStaionsLbl.text = soccerGame.stations
+        } else {
+            var stationComponents = soccerGame.stations.components(separatedBy: "Tickets")
+            let removingSlash = stationComponents[1].replacingOccurrences(of: "\n", with: "")
+            gameStaionsLbl.text = removingSlash
+        }
+        var venueComponents = soccerGame.venue.components(separatedBy: ";")
+        let removeFantasyCamp = venueComponents[1].replacingOccurrences(of: "\nFantasy Camp", with: "")
+        gameVenueLbl.text = venueComponents[0]
+        gameVenueCityState.text = removeFantasyCamp
         // Do any additional setup after loading the view.
     }
 
