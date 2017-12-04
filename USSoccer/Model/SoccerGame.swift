@@ -17,7 +17,8 @@ public class SoccerGame: NSManagedObject  {
     let date: String = ""
     let time: String = ""
     let venue: String = ""
-    let notification: Bool = false
+    let stations: String = ""
+    var notification: Bool = false
     var timestamp: Date?
 //    var ref: DataReference?
     var usTeam : String! {
@@ -38,15 +39,17 @@ public class SoccerGame: NSManagedObject  {
         date = snapShotValue["date"] as! String
         time = snapShotValue["time"] as! String
         venue = snapShotValue["venue"] as! String
+        stations = snapShotValue["stations"] as! String
         if let ts = snapShotValue["timestamp"] as? Double {
             timestamp = Date(timeIntervalSince1970: ts)
         }
     }
     
-    init(title: String, date: String, time: String, venue: String ) {
+    init(title: String, date: String, time: String, venue: String, stations: String ) {
         let managedContext = CoreDataService.shared.managedContext
         let entity = NSEntityDescription.entity(forEntityName: "Game", in: managedContext!)!
         super.init(entity: entity, insertInto: managedContext)
+        self.stations = stations
         self.title = title
         self.date = date
         self.time = time

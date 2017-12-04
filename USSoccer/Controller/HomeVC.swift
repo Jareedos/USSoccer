@@ -91,12 +91,12 @@ class HomeVC: UIViewController {
             fatalError()
         }
         if (mensNational.isEmpty){
-            let newGame = SoccerGame(title: "No Upcoming Games Available", date: "NA", time: "NA", venue: "NA")
+            let newGame = SoccerGame(title: "No Upcoming Games Available", date: "NA", time: "NA", venue: "NA", stations: "NA")
             sortedGames["MNT"]!.append(newGame)
         }
 
         if (sortedGames["WNT"]!.isEmpty) {
-            let newGame = SoccerGame(title: "No Upcoming Games Available", date: "NA", time: "NA", venue: "NA")
+            let newGame = SoccerGame(title: "No Upcoming Games Available", date: "NA", time: "NA", venue: "NA", stations: "NA")
             sortedGames["WNT"]!.append(newGame)
         }
         tableView.reloadData()
@@ -159,15 +159,22 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
                 cell.opponentLbl.text = "\(usSoccerTitle[2].uppercased())"
             }
             
-            let soccerGame = soccerGames[indexPath.row]
-            if let team = team(forGame: soccerGame) {
-                
-                if team.notifications == true {
+            let currentGame = soccerGames[indexPath.row] 
+                if currentGame.notification == true {
                     cell.notificationBtn.setImage(UIImage(named: "bell-musical-tool (1)"), for: .normal)
                 } else {
                     cell.notificationBtn.setImage(UIImage(named: "musical-bell-outline (2)"), for: .normal)
                 }
-            }
+           
+//            let soccerGame = soccerGames[indexPath.row]
+//            if let team = team(forGame: soccerGame) {
+//
+//                if team.notifications == true {
+//                    cell.notificationBtn.setImage(UIImage(named: "bell-musical-tool (1)"), for: .normal)
+//                } else {
+//                    cell.notificationBtn.setImage(UIImage(named: "musical-bell-outline (2)"), for: .normal)
+//                }
+//            }
         }
         let gameDate = soccerGames[indexPath.row].date.components(separatedBy: " ")
         //Checking for PlaceholderGame
@@ -226,16 +233,22 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
         let indexPath: IndexPath! = tableView.indexPathForRow(at: buttonPosition)
         
         let game = soccerGames[indexPath.row]
+        game.notification = !game.notification
         if let team = team(forGame: game) {
-            team.notifications = !team.notifications
-            team.twoHour = !team.twoHour
-            CoreDataService.shared.saveContext()
-            
-            // Change text on Alert to match
             notificationAlertLbl.text = "\(team.title?.uppercased() ?? "Name not available") Notification Set"
-            
+        }
+
+//        if let team = team(forGame: game) {
+//            team.notifications = !team.notifications
+//            team.twoHour = !team.twoHour
+//            CoreDataService.shared.saveContext()
+        
+            // Change text on Alert to match
+//            notificationAlertLbl.text = "\(team.title?.uppercased() ?? "Name not available") Notification Set"
+        
             //Now change the text and background colour
-            if team.notifications {
+//            if team.notifications {
+            if game.notification {
                 notificationAlertVisible = !notificationAlertVisible
                 if notificationAlertVisible {
                     // Showing
@@ -255,7 +268,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
                     }
                 }
             }
-        }
+       // }
         
         
         tableView.reloadData()

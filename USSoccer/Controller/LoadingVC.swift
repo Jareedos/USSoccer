@@ -15,13 +15,13 @@ class LoadingVC: UIViewController {
     let appenderArray = [SoccerGame]()
     
     override func viewDidAppear(_ animated: Bool) {
-        let soccerBall = #imageLiteral(resourceName: "football-ball")
-        var imageView = UIImageView(image: soccerBall)
+//        let soccerBall = #imageLiteral(resourceName: "football-ball")
+        var imageView = UIImageView(image: #imageLiteral(resourceName: "soccer"))
         self.view.addSubview(imageView)
         imageView.frame = CGRect(x: view.bounds.width / 2, y: view.bounds.height / 2 , width: 100, height: 100)
 
         // call Api and Parse it
-//        ApiCaller.shared.ApiCall()
+        ApiCaller.shared.ApiCall()
         
         gamesRef.observe(.value, with: { snapshot in
             for child in snapshot.children.allObjects as! [DataSnapshot] {
