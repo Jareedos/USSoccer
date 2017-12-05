@@ -37,3 +37,37 @@ func trimmedAndUnwrappedUserPass(email: String?, password: String?) -> (String,S
     guard let unwrappedTrimmedPassword = trimmedPassword else {return ("","")}
     return (unwrappedTrimmedEmail, unwrappedTrimmedPassword)
 }
+
+// send user a message
+func messageAlert(title: String, message: String?, from: UIViewController?) {
+    
+    // Create the Alert Controller
+    let alertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+    // add the button actions - Left to right
+    //    OK Button
+    alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+    
+    // Present the Alert
+    
+    (from ?? UIApplication.topViewController()!).present(alertController, animated: true, completion: nil)
+}
+
+extension UIApplication {
+    
+    static func topViewController(base: UIViewController? = UIApplication.shared.delegate?.window??.rootViewController) -> UIViewController? {
+        
+        if let nav = base as? UINavigationController {
+            return topViewController(base: nav.visibleViewController)
+        }
+        
+        if let tab = base as? UITabBarController, let selected = tab.selectedViewController {
+            return topViewController(base: selected)
+        }
+        
+        if let presented = base?.presentedViewController {
+            return topViewController(base: presented)
+        }
+        
+        return base
+    }
+}

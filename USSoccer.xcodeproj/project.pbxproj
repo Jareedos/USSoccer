@@ -24,6 +24,7 @@
 		BF8788521FCA2E89002C2A15 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8788511FCA2E89002C2A15 /* Team.swift */; };
 		BFA55BA41FD60E5000E3411D /* TeamsTVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA55BA31FD60E5000E3411D /* TeamsTVC.swift */; };
 		BFA55BA61FD6119400E3411D /* NotificationMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA55BA51FD6119400E3411D /* NotificationMenuView.swift */; };
+		BFA55BA81FD70CF400E3411D /* NetworkCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA55BA71FD70CF400E3411D /* NetworkCheck.swift */; };
 		BFD339141F85CD8700EEAB3F /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD339131F85CD8700EEAB3F /* LoginVC.swift */; };
 		BFD339191F85DEBE00EEAB3F /* Uitility.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD339181F85DEBE00EEAB3F /* Uitility.swift */; };
 		BFD3391D1F868FE000EEAB3F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BFD3391C1F868FE000EEAB3F /* GoogleService-Info.plist */; };
@@ -53,6 +54,7 @@
 		BFA55BA21FD5DB5600E3411D /* USSoccer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = USSoccer.entitlements; sourceTree = "<group>"; };
 		BFA55BA31FD60E5000E3411D /* TeamsTVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeamsTVC.swift; sourceTree = "<group>"; };
 		BFA55BA51FD6119400E3411D /* NotificationMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationMenuView.swift; sourceTree = "<group>"; };
+		BFA55BA71FD70CF400E3411D /* NetworkCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkCheck.swift; sourceTree = "<group>"; };
 		BFD339131F85CD8700EEAB3F /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		BFD339181F85DEBE00EEAB3F /* Uitility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Uitility.swift; sourceTree = "<group>"; };
 		BFD3391C1F868FE000EEAB3F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
@@ -163,6 +165,7 @@
 				BFD339181F85DEBE00EEAB3F /* Uitility.swift */,
 				BF3ABD761F8483CC00D46DD3 /* AppDelegate.swift */,
 				BFF710301F87E5110001EC0E /* Constants.swift */,
+				BFA55BA71FD70CF400E3411D /* NetworkCheck.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -315,6 +318,7 @@
 				BF4A4AF91FB7AE0400E93E18 /* USSoccer.xcdatamodeld in Sources */,
 				BF5F0E4A1FBD471C00AEA1BB /* NotificationVC.swift in Sources */,
 				BF4A4AFD1FB7AFD100E93E18 /* HomeVC.swift in Sources */,
+				BFA55BA81FD70CF400E3411D /* NetworkCheck.swift in Sources */,
 				BF19BF511FCDD219001B243E /* ApiCaller.swift in Sources */,
 				BFA55BA41FD60E5000E3411D /* TeamsTVC.swift in Sources */,
 				BFF710311F87E5110001EC0E /* Constants.swift in Sources */,
