@@ -286,7 +286,7 @@
                                     <constraint firstAttribute="height" constant="40" id="912-Ze-mXe"/>
                                 </constraints>
                             </imageView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gIA-1m-T9W" userLabel="Notification Menu View">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gIA-1m-T9W" userLabel="Notification Menu View" customClass="NotificationMenuView" customModule="USSoccer" customModuleProvider="target">
                                 <rect key="frame" x="133" y="0.0" width="187" height="568"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5bO-nl-JVM">
@@ -296,6 +296,9 @@
                                             <constraint firstAttribute="width" constant="10" id="QH9-ki-PpE"/>
                                         </constraints>
                                         <state key="normal" image="cancel-music"/>
+                                        <connections>
+                                            <action selector="cancelBtnPressed:" destination="Vvl-Sq-t2R" eventType="touchUpInside" id="fnD-Xr-Vqj"/>
+                                        </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Notifications Settings" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZIV-nu-fra">
                                         <rect key="frame" x="5" y="40" width="177" height="21.5"/>
@@ -376,38 +379,40 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" Team Settings" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7B2-wZ-NT0">
-                                        <rect key="frame" x="16" y="308" width="155" height="21.5"/>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue-CondensedBold" family="Helvetica Neue" pointSize="18"/>
+                                        <rect key="frame" x="16" y="308" width="155" height="26.5"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-CondensedBold" family="Helvetica Neue" pointSize="22"/>
                                         <color key="textColor" red="0.84705882349999995" green="0.1215686275" blue="0.1529411765" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="npl-4o-Enb">
-                                        <rect key="frame" x="0.0" y="331.5" width="187" height="3"/>
+                                        <rect key="frame" x="0.0" y="336.5" width="187" height="3"/>
                                         <color key="backgroundColor" red="0.90980392160000001" green="0.1215686275" blue="0.1529411765" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="3" id="fVt-LS-aNw"/>
                                         </constraints>
                                         <viewLayoutGuide key="safeArea" id="jah-cy-SMG"/>
                                     </view>
-                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ybL-Rg-j7u">
-                                        <rect key="frame" x="8" y="343" width="171" height="217"/>
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="50" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ybL-Rg-j7u">
+                                        <rect key="frame" x="8" y="348" width="171" height="212"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="separatorColor" red="0.40784313729999999" green="0.40784313729999999" blue="0.40784313729999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         <prototypes>
-                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="47" id="mlJ-jV-0WX">
-                                                <rect key="frame" x="0.0" y="28" width="171" height="47"/>
+                                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="TeamTVC" rowHeight="50" id="mlJ-jV-0WX" customClass="TeamsTVC" customModule="USSoccer" customModuleProvider="target">
+                                                <rect key="frame" x="0.0" y="28" width="171" height="50"/>
                                                 <autoresizingMask key="autoresizingMask"/>
                                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="mlJ-jV-0WX" id="5Y1-9s-0Xb">
-                                                    <rect key="frame" x="0.0" y="0.0" width="171" height="46.5"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="171" height="49.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wzn-1k-FJR">
-                                                            <rect key="frame" x="64.5" y="12" width="41" height="22.5"/>
+                                                            <rect key="frame" x="64.5" y="14" width="41" height="22.5"/>
                                                             <fontDescription key="fontDescription" name="HelveticaNeue-CondensedBold" family="Helvetica Neue" pointSize="19"/>
                                                             <color key="textColor" red="0.0" green="0.2470588235" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bell-musical-tool" translatesAutoresizingMaskIntoConstraints="NO" id="S9L-R7-4Fz">
-                                                            <rect key="frame" x="149" y="16.5" width="15" height="15"/>
+                                                            <rect key="frame" x="149" y="18.5" width="15" height="15"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="15" id="9iE-gE-dnh"/>
                                                                 <constraint firstAttribute="width" constant="15" id="Fl2-TM-nbd"/>
@@ -421,6 +426,10 @@
                                                         <constraint firstItem="Wzn-1k-FJR" firstAttribute="centerX" secondItem="5Y1-9s-0Xb" secondAttribute="centerX" id="w9d-s3-cLS"/>
                                                     </constraints>
                                                 </tableViewCellContentView>
+                                                <connections>
+                                                    <outlet property="notificationIconBtn" destination="S9L-R7-4Fz" id="p6e-UW-oIm"/>
+                                                    <outlet property="teamTitle" destination="Wzn-1k-FJR" id="jt9-Cc-JwH"/>
+                                                </connections>
                                             </tableViewCell>
                                         </prototypes>
                                     </tableView>
@@ -509,9 +518,13 @@
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Item" image="settings" id="hQo-rr-epG">
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <connections>
+                                <action selector="settingBtnPressed:" destination="Vvl-Sq-t2R" id="32V-6V-QgY"/>
+                            </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="NMTableView" destination="ybL-Rg-j7u" id="g35-n5-xyr"/>
                         <outlet property="notificationAlertLbl" destination="lFr-9i-Yvo" id="KWx-uF-lbk"/>
                         <outlet property="notificationLeadingConstraint" destination="JcW-K0-sjC" id="atM-zI-e2K"/>
                         <outlet property="notificationMenuTrailingConstraint" destination="cSf-yx-cmU" id="ooh-bB-q9H"/>

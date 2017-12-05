@@ -16,10 +16,12 @@ class HomeVC: UIViewController {
     @IBOutlet weak var notificationAlertLbl: UILabel!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var teamPicker: UIPickerView!
+    @IBOutlet weak var NMTableView: UITableView!
     @IBOutlet weak var notificationLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var notificationMenuTrailingConstraint: NSLayoutConstraint!
     var pickerTeamsArray = ["U-15 MNT", "U-16 MNT", "U-17 MNT", "U-18 MNT", "U-19 MNT", "U-20 MNT", "U-23 MNT", "MNT", "ALL TEAMS", "WNT", "U-23 WNT", "U-20 WNT", "U-19 WNT", "U-18 WNT", "U-17 WNT", "U-16 WNT", "U-15 WNT"]
     var rotationAngle: CGFloat!
+    let notificationVC = NotificationMenuView()
     let customHeight: CGFloat = 100
     let customWidth: CGFloat = 100
     var filterValue: String!
@@ -36,6 +38,11 @@ class HomeVC: UIViewController {
         rotationAngle = -150 * (.pi/100)
         teamPicker.delegate = self
         teamPicker.dataSource = self
+        
+        NMTableView.delegate = notificationVC
+        NMTableView.dataSource = notificationVC
+//        NMTableView.separatorStyle = .singleLine
+//        NMTableView.separatorStyle = .none
         tableView.delegate = self
         tableView.dataSource = self
         tableView.separatorStyle = .none
@@ -106,9 +113,31 @@ class HomeVC: UIViewController {
         notificationMenuTrailingConstraint.constant = 187
         view.layoutIfNeeded()
     }
+    @IBAction func settingBtnPressed(_ sender: Any) {
+        notificationMenuTrailingConstraint.constant = 0.0
+        notificationLeadingConstraint.constant = UIScreen.main.bounds.size.width
+        UIView.animate(withDuration: 0.3, animations: {
+            self.view.layoutIfNeeded()
+        }, completion: { (finished: Bool) in
+            self.notificationMenuVisible = true
+            self.notificationAlertVisible = false
+        })
+        
+    }
+    
+    @IBAction func cancelBtnPressed(_ sender: Any) {
+        UIView.animate(withDuration: 0.3, animations: {
+            self.notificationMenuTrailingConstraint.constant = 187
+            self.view.layoutIfNeeded()
+        }) { (finished: Bool) in
+            self.notificationMenuVisible = false
+        }
+    }
+    
+    
+    
     
     @IBAction func notificationMenuSwipedOff(_ sender: Any) {
-        
         notificationMenuTrailingConstraint.constant = 187
         UIView.animate(withDuration: 0.3, animations: {
             self.view.layoutIfNeeded()
@@ -146,7 +175,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
             cell.gameTitleLbl.text = ""
             cell.vsLbl.text = ""
             cell.opponentLbl.text = ""
-//            cell.notificationBtn.isHidden = true
         } else {
             let usSoccerTitle = soccerGames[indexPath.row].title.components(separatedBy: " ")
             if usSoccerTitle[1] != "vs" {
@@ -276,6 +304,10 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
         print("I got here")
         
     }
+}
+
+extension HomeVC {
+    
 }
 
 extension HomeVC: UIPickerViewDelegate, UIPickerViewDataSource {
