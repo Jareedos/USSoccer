@@ -17,8 +17,8 @@ class HomeVC: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var teamPicker: UIPickerView!
     @IBOutlet weak var NMTableView: UITableView!
-    @IBOutlet weak var notificationLeadingConstraint: NSLayoutConstraint!
     @IBOutlet weak var notificationMenuTrailingConstraint: NSLayoutConstraint!
+    @IBOutlet weak var notificationAlertTopConstraint: NSLayoutConstraint!
     var pickerTeamsArray = ["U-15 MNT", "U-16 MNT", "U-17 MNT", "U-18 MNT", "U-19 MNT", "U-20 MNT", "U-23 MNT", "MNT", "ALL TEAMS", "WNT", "U-23 WNT", "U-20 WNT", "U-19 WNT", "U-18 WNT", "U-17 WNT", "U-16 WNT", "U-15 WNT"]
     var rotationAngle: CGFloat!
     let notificationVC = NotificationMenuView()
@@ -32,7 +32,10 @@ class HomeVC: UIViewController {
     var notificationAlertVisible = false
     var notificationMenuVisible = false
     var notificationAlertHideTimer : Timer?
-
+    
+    @IBOutlet var notificationMenuView: NotificationMenuView!
+    @IBOutlet var notificationView: UIView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         rotationAngle = -150 * (.pi/100)
@@ -83,7 +86,6 @@ class HomeVC: UIViewController {
         if let index = pickerTeamsArray.index(of: "ALL TEAMS") {
             teamPicker.selectRow(index, inComponent: 0, animated: true)
         }
-
         
         filterValue = "ALL TEAMS"
         soccerGames = sortedGames[filterValue] ?? [SoccerGame]()
@@ -107,17 +109,54 @@ class HomeVC: UIViewController {
             sortedGames["WNT"]!.append(newGame)
         }
         tableView.reloadData()
-        
-        
-        notificationLeadingConstraint.constant = UIScreen.main.bounds.size.width
-        notificationMenuTrailingConstraint.constant = 187
-        view.layoutIfNeeded()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if let view = navigationController?.view {
+            view.addSubview(notificationMenuView)
+            
+            let trailingConstraint = NSLayoutConstraint(item: notificationMenuView, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: .trailing, multiplier: 1.0, constant: 0.0)
+            let topConstraint = NSLayoutConstraint(item: notificationMenuView, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: .top, multiplier: 1.0, constant: 0.0)
+            let bottomConstraint = NSLayoutConstraint(item: notificationMenuView, attribute: NSLayoutAttribute.bottom, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: 0.0)
+            view.addConstraint(trailingConstraint)
+            view.addConstraint(topConstraint)
+            view.addConstraint(bottomConstraint)
+            
+            notificationMenuTrailingConstraint = trailingConstraint
+            notificationMenuTrailingConstraint.constant = 187
+            
+            
+            
+            view.addSubview(notificationView)
+            
+            let trailingConstraint2 = NSLayoutConstraint(item: notificationView, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: .trailing, multiplier: 1.0, constant: 0.0)
+            let topConstraint2 = NSLayoutConstraint(item: notificationView, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: .top, multiplier: 1.0, constant: 0.0)
+            let leadingConstraint2 = NSLayoutConstraint(item: notificationView, attribute: NSLayoutAttribute.leading, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: .leading, multiplier: 1.0, constant: 0.0)
+            view.addConstraint(trailingConstraint2)
+            view.addConstraint(topConstraint2)
+            view.addConstraint(leadingConstraint2)
+            
+            notificationAlertTopConstraint = topConstraint2
+            notificationAlertTopConstraint.constant = -notificationView.frame.size.height
+            
+            
+            navigationController?.view.layoutIfNeeded()
+        }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        notificationMenuView.removeFromSuperview()
+    }
+    
     @IBAction func settingBtnPressed(_ sender: Any) {
         notificationMenuTrailingConstraint.constant = 0.0
-        notificationLeadingConstraint.constant = UIScreen.main.bounds.size.width
+        notificationAlertTopConstraint.constant = -notificationView.frame.size.height
         UIView.animate(withDuration: 0.3, animations: {
-            self.view.layoutIfNeeded()
+            self.navigationController?.view.layoutIfNeeded()
         }, completion: { (finished: Bool) in
             self.notificationMenuVisible = true
             self.notificationAlertVisible = false
@@ -126,9 +165,9 @@ class HomeVC: UIViewController {
     }
     
     @IBAction func cancelBtnPressed(_ sender: Any) {
+        self.notificationMenuTrailingConstraint.constant = 187
         UIView.animate(withDuration: 0.3, animations: {
-            self.notificationMenuTrailingConstraint.constant = 187
-            self.view.layoutIfNeeded()
+            self.navigationController?.view.layoutIfNeeded()
         }) { (finished: Bool) in
             self.notificationMenuVisible = false
         }
@@ -140,7 +179,7 @@ class HomeVC: UIViewController {
     @IBAction func notificationMenuSwipedOff(_ sender: Any) {
         notificationMenuTrailingConstraint.constant = 187
         UIView.animate(withDuration: 0.3, animations: {
-            self.view.layoutIfNeeded()
+            self.navigationController?.view.layoutIfNeeded()
         }) { (finished: Bool) in
             self.notificationMenuVisible = false
         }
@@ -236,9 +275,9 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
     @IBAction func notificationsSettingsTapped(_ sender: Any) {
         
         notificationMenuTrailingConstraint.constant = 0.0
-        notificationLeadingConstraint.constant = UIScreen.main.bounds.size.width
+        notificationAlertTopConstraint.constant = -notificationView.frame.size.height
         UIView.animate(withDuration: 0.3, animations: {
-            self.view.layoutIfNeeded()
+            self.navigationController?.view.layoutIfNeeded()
         }, completion: { (finished: Bool) in
             self.notificationMenuVisible = true
             self.notificationAlertVisible = false
@@ -248,8 +287,8 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
     @objc func notificationAlertHideTimerFired() {
         // Hide after some time
         UIView.animate(withDuration: 0.3, animations: {
-            self.notificationLeadingConstraint.constant = UIScreen.main.bounds.size.width
-            self.view.layoutIfNeeded()
+            self.notificationAlertTopConstraint.constant = -self.notificationView.frame.size.height
+            self.navigationController?.view.layoutIfNeeded()
         }, completion: { (finished: Bool) in
             self.notificationAlertVisible = false
         })
@@ -280,9 +319,9 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
                 notificationAlertVisible = !notificationAlertVisible
                 if notificationAlertVisible {
                     // Showing
-                    notificationLeadingConstraint.constant = 0.0
+                    notificationAlertTopConstraint.constant = 0.0
                     UIView.animate(withDuration: 0.3, animations: {
-                        self.view.layoutIfNeeded()
+                        self.navigationController?.view.layoutIfNeeded()
                     }, completion: { (finished: Bool) in
                         
                         self.notificationAlertHideTimer = Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(HomeVC.notificationAlertHideTimerFired), userInfo: nil, repeats: false)
@@ -290,9 +329,9 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
                     
                 } else {
                     // Hiding
-                    notificationLeadingConstraint.constant = UIScreen.main.bounds.size.width
+                    notificationAlertTopConstraint.constant = -notificationView.frame.size.height
                     UIView.animate(withDuration: 0.3) {
-                        self.view.layoutIfNeeded()
+                        self.navigationController?.view.layoutIfNeeded()
                     }
                 }
             }
@@ -325,10 +364,18 @@ extension HomeVC: UIPickerViewDelegate, UIPickerViewDataSource {
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        filterValue = pickerTeamsArray[row]
-        soccerGames = sortedGames[filterValue] ?? [SoccerGame]()
         
-        tableView.reloadData()
+        self.tableView.contentOffset = CGPoint.zero
+        
+        self.filterValue = self.pickerTeamsArray[row]
+        self.soccerGames = self.sortedGames[self.filterValue] ?? [SoccerGame]()
+        
+        //self.tableView.reloadData()
+        
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+            self.view.layoutIfNeeded()
+        }
     }
     
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
@@ -342,7 +389,5 @@ extension HomeVC: UIPickerViewDelegate, UIPickerViewDataSource {
         view.transform = CGAffineTransform(rotationAngle: (150 * (.pi/100)))
         return view
     }
-    
-    
 }
 
