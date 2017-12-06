@@ -24,17 +24,77 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Replace 'YOUR_APP_ID' with your OneSignal App ID.
         OneSignal.initWithLaunchOptions(launchOptions,
-                                        appId: "YOUR_APP_ID",
+                                        appId: "28bbbff3-5e9e-468c-b99d-beb9d034f404",
                                         handleNotificationAction: nil,
                                         settings: onesignalInitSettings)
         
         OneSignal.inFocusDisplayType = OSNotificationDisplayType.notification;
         
-        // Recommend moving the below line to prompt for push after informing the user about
-        //   how your app will use them.
-        OneSignal.promptForPushNotifications(userResponse: { accepted in
-            print("User accepted notifications: \(accepted)")
-        })
+        
+        Auth.auth().signInAnonymously { (user: User?, error: Error?) in
+            if let user = user {
+                
+                
+                // Recommend moving the below line to prompt for push after informing the user about
+                //   how your app will use them.
+                OneSignal.promptForPushNotifications(userResponse: { accepted in
+                    print("User accepted notifications: \(accepted)")
+                    
+                    if accepted {
+                        
+                        OneSignal.setSubscription(true)
+                        
+                        let status: OSPermissionSubscriptionState = OneSignal.getPermissionSubscriptionState()
+                        
+                        let hasPrompted = status.permissionStatus.hasPrompted
+                        print("hasPrompted = \(hasPrompted)")
+                        let userStatus = status.permissionStatus.status
+                        print("userStatus = \(userStatus)")
+                        
+                        let isSubscribed = status.subscriptionStatus.subscribed
+                        print("isSubscribed = \(isSubscribed)")
+                        let userSubscriptionSetting = status.subscriptionStatus.userSubscriptionSetting
+                        print("userSubscriptionSetting = \(userSubscriptionSetting)")
+                        
+                        
+                        // This is your device's identification within OneSignal
+                        let userID = status.subscriptionStatus.userId
+                        
+                        
+                        print("userID = \(userID ?? "")")
+                        let pushToken = status.subscriptionStatus.pushToken
+                        print("pushToken = \(pushToken ?? "")")
+                        
+                        
+                        let userRef = Database.database().reference().child("users").child(user.uid)
+                        // Set the one signal id
+                        if let userID = userID {
+                            userRef.child("oneSignalIds").child(userID).setValue(true)
+                        }
+                        
+                        // Save the push notification settings
+                        let dict: [String: Bool] = ["TwoDayNotification": false, "OneDayNotification": false, "TwoHourNotification": true, "OneHourNotification": false, "HalfHourNotification": false]
+                        userRef.child("notificationSettings").setValue(dict)
+                        
+                        // Set the following of the teams
+                        let teams = CoreDataService.shared.fetchTeams()
+                        let followingRef = Database.database().reference().child("following")
+                        for team in teams {
+                            if let key = team.firebaseKey() {
+                                let teamFollowingRef = followingRef.child(key).child(user.uid)
+                                if team.notifications {
+                                    teamFollowingRef.setValue(true)
+                                } else {
+                                    teamFollowingRef.removeValue()
+                                }
+                            }
+                        }
+                    }
+                })
+                
+            }
+        }
+        
         return true
     }
 

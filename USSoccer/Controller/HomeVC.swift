@@ -61,6 +61,8 @@ class HomeVC: UIViewController {
         self.navigationController?.navigationBar.isTranslucent = true
         self.navigationController?.view.backgroundColor = UIColor.clear
         self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedStringKey.font: UIFont(name: "HelveticaNeue-CondensedBold", size: 30.0)!,NSAttributedStringKey.foregroundColor: UIColor.white]
+        
+        
         let dict: [String: Bool] = ["TwoDayNotification": twoDayBool, "OneDayNotification": oneDayBool, "TwoHourNotification": twoHourBool, "OneHourNotification": oneHourBool, "HalfHourNotification": halfHourBool]
         notificationsRef.setValue(dict)
         
@@ -163,6 +165,7 @@ class HomeVC: UIViewController {
         super.viewWillDisappear(animated)
         
         notificationMenuView.removeFromSuperview()
+        notificationView.removeFromSuperview()
     }
     
     @IBAction func settingBtnPressed(_ sender: Any) {

@@ -11,4 +11,8 @@ import Foundation
 
 extension Team {
     
+    func firebaseKey() -> String? {
+        return stringTrimmer(stringToTrim: title)
+    }
+    
 }
