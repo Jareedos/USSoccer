@@ -50,7 +50,6 @@ class ApiCaller{
                         for child in snapshot.children {
                             let game = SoccerGame(snapShot: (child as? DataSnapshot)!)
                             self.currentGameArray.append(game.title)
-                            
                         }
                         dispatchGroup.leave()
                     })
@@ -58,6 +57,7 @@ class ApiCaller{
                     dispatchGroup.notify(queue: .main) {
                         if !self.currentGameArray.contains(title as! String) {
                             let dict: [String: Any] = ["title": title as Any, "venue": venue as Any, "time": time as Any, "date": date as Any, "stations": stations, "timestamp": dateFormated?.timeIntervalSince1970 as Any]
+                            CoreDataService.shared.saveContext()
                             gamesRef.childByAutoId().setValue(dict)
                         }
                     }

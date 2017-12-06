@@ -45,7 +45,11 @@ public class SoccerGame: NSManagedObject  {
         }
     }
     
-    init(title: String, date: String, time: String, venue: String, stations: String ) {
+    override public init(entity: NSEntityDescription, insertInto context: NSManagedObjectContext?) {
+        super.init(entity: entity, insertInto: context)
+    }
+    
+    init(title: String, date: String, time: String, venue: String, stations: String) {
         let managedContext = CoreDataService.shared.managedContext
         let entity = NSEntityDescription.entity(forEntityName: "Game", in: managedContext!)!
         super.init(entity: entity, insertInto: managedContext)

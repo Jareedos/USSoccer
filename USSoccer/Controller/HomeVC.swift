@@ -24,6 +24,11 @@ class HomeVC: UIViewController {
     let notificationVC = NotificationMenuView()
     let customHeight: CGFloat = 100
     let customWidth: CGFloat = 100
+    var twoDayBool = false
+    var oneDayBool = false
+    var twoHourBool = false
+    var oneHourBool = false
+    var halfHourBool = false
     var filterValue: String!
     var sortedGames = [String: [SoccerGame]]()
     var soccerGames = [SoccerGame]()
@@ -56,6 +61,8 @@ class HomeVC: UIViewController {
         self.navigationController?.navigationBar.isTranslucent = true
         self.navigationController?.view.backgroundColor = UIColor.clear
         self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedStringKey.font: UIFont(name: "HelveticaNeue-CondensedBold", size: 30.0)!,NSAttributedStringKey.foregroundColor: UIColor.white]
+        let dict: [String: Bool] = ["TwoDayNotification": twoDayBool, "OneDayNotification": oneDayBool, "TwoHourNotification": twoHourBool, "OneHourNotification": oneHourBool, "HalfHourNotification": halfHourBool]
+        notificationsRef.setValue(dict)
         
         //Checking to see if the Teams are set up in CoreData, Setting them up if they are not
         teamArray = CoreDataService.shared.fetchTeams()
@@ -146,6 +153,12 @@ class HomeVC: UIViewController {
         }
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        if !ConnectionCheck.isConnectedToNetwork() {
+            messageAlert(title: "Offline Mode", message: "Games Information may not be accurate due to no internet connection. \n Please connect to the internet and restart USA Soccer for the full experience", from: nil)
+        }
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
@@ -232,16 +245,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
                 } else {
                     cell.notificationBtn.setImage(UIImage(named: "musical-bell-outline (2)"), for: .normal)
                 }
-           
-//            let soccerGame = soccerGames[indexPath.row]
-//            if let team = team(forGame: soccerGame) {
-//
-//                if team.notifications == true {
-//                    cell.notificationBtn.setImage(UIImage(named: "bell-musical-tool (1)"), for: .normal)
-//                } else {
-//                    cell.notificationBtn.setImage(UIImage(named: "musical-bell-outline (2)"), for: .normal)
-//                }
-//            }
         }
         let gameDate = soccerGames[indexPath.row].date.components(separatedBy: " ")
         //Checking for PlaceholderGame
@@ -296,25 +299,15 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
     
     @objc func notificationButtonClicked(sender: UIButton) {
         
+        if ConnectionCheck.isConnectedToNetwork() {
         let buttonPosition = sender.convert(CGPoint.zero, to: tableView)
         let indexPath: IndexPath! = tableView.indexPathForRow(at: buttonPosition)
-        
         let game = soccerGames[indexPath.row]
         game.notification = !game.notification
         if let team = team(forGame: game) {
             notificationAlertLbl.text = "\(team.title?.uppercased() ?? "Name not available") Notification Set"
         }
-
-//        if let team = team(forGame: game) {
-//            team.notifications = !team.notifications
-//            team.twoHour = !team.twoHour
-//            CoreDataService.shared.saveContext()
         
-            // Change text on Alert to match
-//            notificationAlertLbl.text = "\(team.title?.uppercased() ?? "Name not available") Notification Set"
-        
-            //Now change the text and background colour
-//            if team.notifications {
             if game.notification {
                 notificationAlertVisible = !notificationAlertVisible
                 if notificationAlertVisible {
@@ -335,18 +328,14 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
                     }
                 }
             }
-       // }
         
         
         tableView.reloadData()
-//        cell.button.backgroundColor = UIColor.blueColor()
         print("I got here")
-        
+        } else {
+            messageAlert(title: "No Internet Connection", message: "Internet Connection is Required to update Game Notifications", from: nil)
+        }
     }
-}
-
-extension HomeVC {
-    
 }
 
 extension HomeVC: UIPickerViewDelegate, UIPickerViewDataSource {
@@ -370,7 +359,6 @@ extension HomeVC: UIPickerViewDelegate, UIPickerViewDataSource {
         self.filterValue = self.pickerTeamsArray[row]
         self.soccerGames = self.sortedGames[self.filterValue] ?? [SoccerGame]()
         
-        //self.tableView.reloadData()
         
         DispatchQueue.main.async {
             self.tableView.reloadData()

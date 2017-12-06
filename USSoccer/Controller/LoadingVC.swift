@@ -16,17 +16,34 @@ class LoadingVC: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
 //        let soccerBall = #imageLiteral(resourceName: "football-ball")
-        var imageView = UIImageView(image: #imageLiteral(resourceName: "soccer"))
+        let imageView = UIImageView(image: #imageLiteral(resourceName: "soccer"))
         self.view.addSubview(imageView)
         imageView.frame = CGRect(x: view.bounds.width / 2, y: view.bounds.height / 2 , width: 100, height: 100)
-
+         if ConnectionCheck.isConnectedToNetwork() {
         // call Api and Parse it
-        ApiCaller.shared.ApiCall()
+            ApiCaller.shared.ApiCall()
+         } else {
+           let soccerGamesCoreData = CoreDataService.shared.fetchGames()
+           print(soccerGamesCoreData)
+            for game in soccerGamesCoreData {
+                let teamsTitles = game.title.components(separatedBy: "vs")
+                let trimmedTitle = stringTrimmer(stringToTrim: teamsTitles[0].uppercased())
+                
+                if var appenderArray = self.sortedGames[trimmedTitle!] {
+                    appenderArray.append(game)
+                    self.sortedGames[trimmedTitle!] = appenderArray
+                } else {
+                    self.sortedGames[trimmedTitle!] = [game]
+                }
+            }
+            DispatchQueue.main.async {
+                self.performSegue(withIdentifier: "loadingToHome", sender: nil)
+            }
+         }
         
         gamesRef.observe(.value, with: { snapshot in
             for child in snapshot.children.allObjects as! [DataSnapshot] {
                 let game = SoccerGame(snapShot: child)
-                
                 // Sorting Games into a Dictionary to use on HomeVC
                 let teamsTitles = game.title.components(separatedBy: "vs")
                 let trimmedTitle = stringTrimmer(stringToTrim: teamsTitles[0].uppercased())

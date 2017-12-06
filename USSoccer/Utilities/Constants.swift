@@ -18,4 +18,5 @@ enum AuthErrorCodesFirebase: Int {
 
 let ref = Database.database().reference()
 let gamesRef = ref.child("Games")
+let notificationsRef = ref.child("Notifications")
 
