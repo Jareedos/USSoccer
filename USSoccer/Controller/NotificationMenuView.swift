@@ -8,8 +8,14 @@
 
 import UIKit
 import Firebase
+import FirebaseDatabase
 
 class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
+    var currentUser = Auth.auth().currentUser
+//    let isAnonymous = user!.isAnonymous  // true
+//    let uid = user!.uid
+//    let usersRef = ref.child(user.uid)
+    
     var twoDayBool = false
     var oneDayBool = false
     var twoHourBool = false
@@ -42,7 +48,9 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
     @IBAction func twoDaySwitch(_ sender: UISwitch) {
         if ConnectionCheck.isConnectedToNetwork() {
             twoDayBool = !twoDayBool
-            notificationsRef.updateChildValues(["TwoDayNotification": twoDayBool])
+            ref.child("users").child((currentUser?.uid)!).child("notificationSettings").updateChildValues(["TwoDayNotification": twoDayBool])
+            
+//            notificationsRef.updateChildValues(["TwoDayNotification": twoDayBool])
         } else {
             messageAlert(title: "No Internet Connection", message: "Internet Connection is Required to update Team Notifications", from: nil)
         }
@@ -52,8 +60,7 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
     @IBAction func oneDaySwitch(_ sender: UISwitch) {
         if ConnectionCheck.isConnectedToNetwork() {
             oneDayBool = !oneDayBool
-            
-            notificationsRef.updateChildValues(["OneDayNotification": oneDayBool])
+            ref.child("users").child((currentUser?.uid)!).child("notificationSettings").updateChildValues(["OneDayNotification": oneDayBool])
         } else {
             messageAlert(title: "No Internet Connection", message: "Internet Connection is Required to update Team Notifications", from: nil)
         }
@@ -62,8 +69,7 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
     @IBAction func twoHourSwitch(_ sender: UISwitch) {
         if ConnectionCheck.isConnectedToNetwork() {
             twoHourBool = !twoHourBool
-            
-            notificationsRef.updateChildValues(["TwoHourNotification": twoHourBool])
+            ref.child("users").child((currentUser?.uid)!).child("notificationSettings").updateChildValues(["TwoHourNotification": twoHourBool])
         } else {
             messageAlert(title: "No Internet Connection", message: "Internet Connection is Required to update Team Notifications", from: nil)
         }
@@ -72,8 +78,7 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
     @IBAction func oneHourSwitch(_ sender: UISwitch) {
         if ConnectionCheck.isConnectedToNetwork() {
             oneHourBool = !oneHourBool
-            
-            notificationsRef.updateChildValues(["OneHourNotification": oneHourBool])
+            ref.child("users").child((currentUser?.uid)!).child("notificationSettings").updateChildValues(["OneHourNotification": oneHourBool])
         } else {
             messageAlert(title: "No Internet Connection", message: "Internet Connection is Required to update Team Notifications", from: nil)
         }
@@ -81,8 +86,7 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
     @IBAction func halfHourSwitch(_ sender: UISwitch) {
         if ConnectionCheck.isConnectedToNetwork() {
             halfHourBool = !halfHourBool
-            
-            notificationsRef.updateChildValues(["HalfHourNotification": halfHourBool])
+            ref.child("users").child((currentUser?.uid)!).child("notificationSettings").updateChildValues(["HalfHourNotification": halfHourBool])
         } else {
             messageAlert(title: "No Internet Connection", message: "Internet Connection is Required to update Team Notifications", from: nil)
         }

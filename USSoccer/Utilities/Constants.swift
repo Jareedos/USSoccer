@@ -5,7 +5,7 @@
 //  Created by Jared Sobol on 10/6/17.
 //  Copyright © 2017 Appmaker. All rights reserved.
 //
-
+import UIKit
 import Foundation
 import FirebaseDatabase
 
@@ -19,4 +19,5 @@ enum AuthErrorCodesFirebase: Int {
 let ref = Database.database().reference()
 let gamesRef = ref.child("Games")
 let notificationsRef = ref.child("Notifications")
+let blueColor = UIColor(red:0.00, green:0.25, blue:0.53, alpha:1.0)
 

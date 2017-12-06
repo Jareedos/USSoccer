@@ -22,7 +22,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FirebaseApp.configure()
         let onesignalInitSettings = [kOSSettingsKeyAutoPrompt: false]
         
-        // Replace 'YOUR_APP_ID' with your OneSignal App ID.
         OneSignal.initWithLaunchOptions(launchOptions,
                                         appId: "28bbbff3-5e9e-468c-b99d-beb9d034f404",
                                         handleNotificationAction: nil,
@@ -30,8 +29,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         OneSignal.inFocusDisplayType = OSNotificationDisplayType.notification;
         
-        
         Auth.auth().signInAnonymously { (user: User?, error: Error?) in
+            
             if let user = user {
                 
                 
@@ -59,33 +58,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                         
                         // This is your device's identification within OneSignal
                         let userID = status.subscriptionStatus.userId
-                        
-                        
-                        print("userID = \(userID ?? "")")
-                        let pushToken = status.subscriptionStatus.pushToken
-                        print("pushToken = \(pushToken ?? "")")
-                        
-                        
-                        let userRef = Database.database().reference().child("users").child(user.uid)
-                        // Set the one signal id
-                        if let userID = userID {
-                            userRef.child("oneSignalIds").child(userID).setValue(true)
-                        }
-                        
-                        // Save the push notification settings
-                        let dict: [String: Bool] = ["TwoDayNotification": false, "OneDayNotification": false, "TwoHourNotification": true, "OneHourNotification": false, "HalfHourNotification": false]
-                        userRef.child("notificationSettings").setValue(dict)
-                        
-                        // Set the following of the teams
-                        let teams = CoreDataService.shared.fetchTeams()
-                        let followingRef = Database.database().reference().child("following")
-                        for team in teams {
-                            if let key = team.firebaseKey() {
-                                let teamFollowingRef = followingRef.child(key).child(user.uid)
-                                if team.notifications {
-                                    teamFollowingRef.setValue(true)
-                                } else {
-                                    teamFollowingRef.removeValue()
+                        CoreDataService.shared.savePerson(userID: userID!)
+                        if CoreDataService.shared.fetchPerson().userID != userID {
+                            print("I DIDNT WORK FUCK FUCK FUCK FUCK FUCK")
+                            print("userID = \(userID ?? "")")
+                            let pushToken = status.subscriptionStatus.pushToken
+                            print("pushToken = \(pushToken ?? "")")
+                            
+                            
+                            let userRef = Database.database().reference().child("users").child(user.uid)
+                            // Set the one signal id
+                            if let userID = userID {
+                                userRef.child("oneSignalIds").child(userID).setValue(true)
+                            }
+                            
+                            // Save the push notification settings
+                            let dict: [String: Bool] = ["TwoDayNotification": false, "OneDayNotification": false, "TwoHourNotification": true, "OneHourNotification": false, "HalfHourNotification": false]
+                            userRef.child("notificationSettings").setValue(dict)
+                            
+                            // Set the following of the teams
+                            let teams = CoreDataService.shared.fetchTeams()
+                            let followingRef = ref.child("following")
+                            for team in teams {
+                                if let key = team.firebaseKey() {
+                                    let teamFollowingRef = followingRef.child(key).child(user.uid)
+                                    if team.notifications {
+                                        teamFollowingRef.setValue(true)
+                                    } else {
+                                        teamFollowingRef.removeValue()
+                                    }
                                 }
                             }
                         }

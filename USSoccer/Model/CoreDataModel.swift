@@ -40,7 +40,16 @@ class CoreDataService {
         }
         return games
     }
-    
+    func fetchPerson() -> Person {
+        var currentPerson = [Person]()
+        let fetchPerson = NSFetchRequest<Person>(entityName: "Person")
+        do {
+            currentPerson = (try managedContext?.fetch(fetchPerson))!
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+        return currentPerson[0]
+    }
     
     func saveTeam(title: String) {
         let entity = NSEntityDescription.entity(forEntityName: "Team", in: managedContext!)!
@@ -67,6 +76,13 @@ class CoreDataService {
 //        game.setValue(date, forKey: "date")
         game.setValue(timeStamp, forKey: "timeStamp")
         
+        saveContext()
+    }
+    
+    func savePerson(userID: String){
+        let entity = NSEntityDescription.entity(forEntityName: "Person", in: managedContext!)!
+        let person = Person(entity: entity, insertInto: managedContext)
+        person.setValue(userID, forKey: "userID")
         saveContext()
     }
     

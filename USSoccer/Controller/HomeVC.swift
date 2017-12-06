@@ -17,6 +17,13 @@ class HomeVC: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var teamPicker: UIPickerView!
     @IBOutlet weak var NMTableView: UITableView!
+    @IBOutlet weak var twoDaySwitch: UISwitch!
+    @IBOutlet weak var oneDaySwitch: UISwitch!
+    @IBOutlet weak var twoHourSwitch: UISwitch!
+    @IBOutlet weak var oneHourSwitch: UISwitch!
+    @IBOutlet weak var halfHourSwitch: UISwitch!
+    
+    
     @IBOutlet weak var notificationMenuTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var notificationAlertTopConstraint: NSLayoutConstraint!
     var pickerTeamsArray = ["U-15 MNT", "U-16 MNT", "U-17 MNT", "U-18 MNT", "U-19 MNT", "U-20 MNT", "U-23 MNT", "MNT", "ALL TEAMS", "WNT", "U-23 WNT", "U-20 WNT", "U-19 WNT", "U-18 WNT", "U-17 WNT", "U-16 WNT", "U-15 WNT"]
@@ -37,6 +44,8 @@ class HomeVC: UIViewController {
     var notificationAlertVisible = false
     var notificationMenuVisible = false
     var notificationAlertHideTimer : Timer?
+    var currentUser = Auth.auth().currentUser
+
     
     @IBOutlet var notificationMenuView: NotificationMenuView!
     @IBOutlet var notificationView: UIView!
@@ -62,7 +71,26 @@ class HomeVC: UIViewController {
         self.navigationController?.view.backgroundColor = UIColor.clear
         self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedStringKey.font: UIFont(name: "HelveticaNeue-CondensedBold", size: 30.0)!,NSAttributedStringKey.foregroundColor: UIColor.white]
         
-        
+        ref.child("users").child("\(currentUser!.uid)").observeSingleEvent(of: .value) { (snapshot) in
+            let value = snapshot.value as? NSDictionary
+            let notifications = value!["notificationSettings"] as? NSDictionary
+            let halfHourNotification = notifications!["HalfHourNotification"]
+            let oneDayNotification = notifications!["OneDayNotification"]
+            let oneHourNotification = notifications!["OneHourNotification"]
+            let twoDayNotification = notifications!["TwoDayNotification"]
+            let twoHourNotification = notifications!["TwoHourNotification"]
+
+            self.halfHourSwitch.setOn(halfHourNotification as! Bool, animated: false)
+            self.oneDaySwitch.setOn(oneDayNotification as! Bool, animated: false)
+            self.oneHourSwitch.setOn(oneHourNotification as! Bool, animated: false)
+            self.twoDaySwitch.setOn(twoDayNotification as! Bool, animated: false)
+            self.twoHourSwitch.setOn(twoHourNotification as! Bool, animated: false)
+        }
+        twoDaySwitch.onTintColor = blueColor
+        oneDaySwitch.onTintColor = blueColor
+        twoHourSwitch.onTintColor = blueColor
+        oneHourSwitch.onTintColor = blueColor
+        halfHourSwitch.onTintColor = blueColor
         let dict: [String: Bool] = ["TwoDayNotification": twoDayBool, "OneDayNotification": oneDayBool, "TwoHourNotification": twoHourBool, "OneHourNotification": oneHourBool, "HalfHourNotification": halfHourBool]
         notificationsRef.setValue(dict)
         
