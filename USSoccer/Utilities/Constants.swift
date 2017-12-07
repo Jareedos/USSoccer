@@ -19,5 +19,6 @@ enum AuthErrorCodesFirebase: Int {
 let ref = Database.database().reference()
 let gamesRef = ref.child("Games")
 let notificationsRef = ref.child("Notifications")
+let followingRef = ref.child("following")
 let blueColor = UIColor(red:0.00, green:0.25, blue:0.53, alpha:1.0)
 

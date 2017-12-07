@@ -78,7 +78,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                             
                             // Set the following of the teams
                             let teams = CoreDataService.shared.fetchTeams()
-                            let followingRef = ref.child("following")
                             for team in teams {
                                 if let key = team.firebaseKey() {
                                     let teamFollowingRef = followingRef.child(key).child(user.uid)

@@ -66,16 +66,16 @@ class CoreDataService {
     }
     
     func saveGame(game: SoccerGame, timeStamp: Double) {
-        //let entity = NSEntityDescription.entity(forEntityName: "Game", in: managedContext!)!
-        //let game = SoccerGame(title: title, date: date, time: time, venue: venue, stations: stations)
-        //let game = SoccerGame(entity: entity, insertInto: managedContext)
+//        let entity = NSEntityDescription.entity(forEntityName: "Game", in: managedContext!)!
+//        //let game = SoccerGame(title: title, date: date, time: time, venue: venue, stations: stations)
+//        let game = SoccerGame(entity: entity, insertInto: managedContext)
 //        game.setValue(title, forKey: "title")
 //        game.setValue(venue, forKey: "venue")
 //        game.setValue(time, forKey: "string")
 //        game.setValue(false, forKey: "notification")
 //        game.setValue(date, forKey: "date")
-        game.setValue(timeStamp, forKey: "timeStamp")
-        
+//        game.setValue(timeStamp, forKey: "timeStamp")
+//        
         saveContext()
     }
     

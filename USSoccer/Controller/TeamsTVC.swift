@@ -17,11 +17,14 @@ class TeamsTVC: UITableViewCell {
         super.awakeFromNib()
         // Initialization code
     }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
+    
+    func configure(selected: Bool) {
+        
+        if selected {
+            notificationIconBtn.image = #imageLiteral(resourceName: "bell-musical-tool")
+        } else {
+            notificationIconBtn.image = #imageLiteral(resourceName: "musical-bell-outline (1)")
+        }
     }
 
 }

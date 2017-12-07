@@ -11,14 +11,14 @@ import FirebaseDatabase
 
 class LoadingVC: UIViewController {
     
+    @IBOutlet weak var soccerBallImage: UIImageView!
     var sortedGames = [String: [SoccerGame]]()
     let appenderArray = [SoccerGame]()
     
     override func viewDidAppear(_ animated: Bool) {
-//        let soccerBall = #imageLiteral(resourceName: "football-ball")
-        let imageView = UIImageView(image: #imageLiteral(resourceName: "soccer"))
-        self.view.addSubview(imageView)
-        imageView.frame = CGRect(x: view.bounds.width / 2, y: view.bounds.height / 2 , width: 100, height: 100)
+        startSpinning()
+
+
          if ConnectionCheck.isConnectedToNetwork() {
         // call Api and Parse it
             ApiCaller.shared.ApiCall()
@@ -36,11 +36,11 @@ class LoadingVC: UIViewController {
                     self.sortedGames[trimmedTitle!] = [game]
                 }
             }
+            sleep(1)
             DispatchQueue.main.async {
                 self.performSegue(withIdentifier: "loadingToHome", sender: nil)
             }
          }
-        
         gamesRef.observe(.value, with: { snapshot in
             for child in snapshot.children.allObjects as! [DataSnapshot] {
                 let game = SoccerGame(snapShot: child)
@@ -55,15 +55,15 @@ class LoadingVC: UIViewController {
                     self.sortedGames[trimmedTitle!] = [game]
                 }
             }
+            sleep(1)
             DispatchQueue.main.async {
                 self.performSegue(withIdentifier: "loadingToHome", sender: nil)
             }
         })
     }
+    
+    
 
-//    func addSoccerBall() {
-//       layer.addSublayer(soccerBall)
-//    }
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -78,5 +78,35 @@ class LoadingVC: UIViewController {
         }
         
     }
+    
+    func startSpinning() {
+        soccerBallImage.startRotating()
+    }
+    
+    func stopSpinning() {
+        soccerBallImage.stopRotating()
+    }
 
+}
+
+extension UIView {
+    func startRotating(duration: Double = 2) {
+        let kAnimationKey = "rotation"
+        
+        if self.layer.animation(forKey: kAnimationKey) == nil {
+            let animate = CABasicAnimation(keyPath: "transform.rotation")
+            animate.duration = duration
+            animate.repeatCount = Float.infinity
+            animate.fromValue = 0.0
+            animate.toValue = Float(.pi * 2.0)
+            self.layer.add(animate, forKey: kAnimationKey)
+        }
+    }
+    func stopRotating() {
+        let kAnimationKey = "rotation"
+        
+        if self.layer.animation(forKey: kAnimationKey) != nil {
+            self.layer.removeAnimation(forKey: kAnimationKey)
+        }
+    }
 }
