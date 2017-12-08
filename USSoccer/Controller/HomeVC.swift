@@ -72,19 +72,20 @@ class HomeVC: UIViewController {
         self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedStringKey.font: UIFont(name: "HelveticaNeue-CondensedBold", size: 30.0)!,NSAttributedStringKey.foregroundColor: UIColor.white]
         
         ref.child("users").child("\(currentUser!.uid)").observeSingleEvent(of: .value) { (snapshot) in
-            let value = snapshot.value as? NSDictionary
-            let notifications = value!["notificationSettings"] as? NSDictionary
-            let halfHourNotification = notifications!["HalfHourNotification"]
-            let oneDayNotification = notifications!["OneDayNotification"]
-            let oneHourNotification = notifications!["OneHourNotification"]
-            let twoDayNotification = notifications!["TwoDayNotification"]
-            let twoHourNotification = notifications!["TwoHourNotification"]
+            
+            guard let value = snapshot.value as? NSDictionary, let notifications = value["notificationSettings"] as? NSDictionary else { return }
+            
+            let halfHourNotification = notifications["HalfHourNotification"] as? Bool ?? false
+            let oneDayNotification = notifications["OneDayNotification"] as? Bool ?? false
+            let oneHourNotification = notifications["OneHourNotification"] as? Bool ?? false
+            let twoDayNotification = notifications["TwoDayNotification"] as? Bool ?? false
+            let twoHourNotification = notifications["TwoHourNotification"] as? Bool ?? true
 
-            self.halfHourSwitch.setOn(halfHourNotification as! Bool, animated: false)
-            self.oneDaySwitch.setOn(oneDayNotification as! Bool, animated: false)
-            self.oneHourSwitch.setOn(oneHourNotification as! Bool, animated: false)
-            self.twoDaySwitch.setOn(twoDayNotification as! Bool, animated: false)
-            self.twoHourSwitch.setOn(twoHourNotification as! Bool, animated: false)
+            self.halfHourSwitch.setOn(halfHourNotification, animated: false)
+            self.oneDaySwitch.setOn(oneDayNotification, animated: false)
+            self.oneHourSwitch.setOn(oneHourNotification, animated: false)
+            self.twoDaySwitch.setOn(twoDayNotification, animated: false)
+            self.twoHourSwitch.setOn(twoHourNotification, animated: false)
         }
         twoDaySwitch.onTintColor = blueColor
         oneDaySwitch.onTintColor = blueColor
