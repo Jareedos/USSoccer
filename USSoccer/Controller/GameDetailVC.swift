@@ -21,8 +21,8 @@ class GameDetailVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Game Details"
-        gameTitleLbl.text = soccerGame.title.uppercased()
-        gameDateLbl.text = soccerGame.date.uppercased()
+        gameTitleLbl.text = soccerGame.title!.uppercased()
+        gameDateLbl.text = soccerGame.date!.uppercased()
         let date = soccerGame.timestamp
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .none
@@ -32,11 +32,11 @@ class GameDetailVC: UIViewController {
         if soccerGame.stations == "ussoccer.com" {
             gameStaionsLbl.text = soccerGame.stations
         } else {
-            var stationComponents = soccerGame.stations.components(separatedBy: "Tickets")
+            var stationComponents = soccerGame.stations!.components(separatedBy: "Tickets")
             let removingSlash = stationComponents[1].replacingOccurrences(of: "\n", with: "")
             gameStaionsLbl.text = removingSlash
         }
-        var venueComponents = soccerGame.venue.components(separatedBy: ";")
+        var venueComponents = soccerGame.venue!.components(separatedBy: ";")
         let removeFantasyCamp = venueComponents[1].replacingOccurrences(of: "\nFantasy Camp", with: "")
         gameVenueLbl.text = venueComponents[0]
         gameVenueCityState.text = removeFantasyCamp

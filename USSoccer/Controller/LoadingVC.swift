@@ -18,29 +18,18 @@ class LoadingVC: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         startSpinning()
 
-
          if ConnectionCheck.isConnectedToNetwork() {
         // call Api and Parse it
-            ApiCaller.shared.ApiCall()
-         } else {
-           let soccerGamesCoreData = CoreDataService.shared.fetchGames()
-           print(soccerGamesCoreData)
-            for game in soccerGamesCoreData {
-                let teamsTitles = game.title.components(separatedBy: "vs")
-                let trimmedTitle = stringTrimmer(stringToTrim: teamsTitles[0].uppercased())
+            ApiCaller.shared.ApiCall {
                 
-                if var appenderArray = self.sortedGames[trimmedTitle!] {
-                    appenderArray.append(game)
-                    self.sortedGames[trimmedTitle!] = appenderArray
-                } else {
-                    self.sortedGames[trimmedTitle!] = [game]
+                DispatchQueue.main.async {
+                    self.finishLoading()
                 }
             }
-            sleep(1)
-            DispatchQueue.main.async {
-                self.performSegue(withIdentifier: "loadingToHome", sender: nil)
-            }
+         } else {
+            finishLoading()
          }
+        /*
         gamesRef.observe(.value, with: { snapshot in
             for child in snapshot.children.allObjects as! [DataSnapshot] {
                 let game = SoccerGame(snapShot: child)
@@ -59,9 +48,29 @@ class LoadingVC: UIViewController {
             DispatchQueue.main.async {
                 self.performSegue(withIdentifier: "loadingToHome", sender: nil)
             }
-        })
+        })*/
     }
     
+    func finishLoading() {
+        
+        let soccerGamesCoreData = CoreDataService.shared.fetchGames()
+        print(soccerGamesCoreData)
+        for game in soccerGamesCoreData {
+            let teamsTitles = game.title!.components(separatedBy: "vs")
+            let trimmedTitle = stringTrimmer(stringToTrim: teamsTitles[0].uppercased())
+            
+            if var appenderArray = self.sortedGames[trimmedTitle!] {
+                appenderArray.append(game)
+                self.sortedGames[trimmedTitle!] = appenderArray
+            } else {
+                self.sortedGames[trimmedTitle!] = [game]
+            }
+        }
+        sleep(1)
+        DispatchQueue.main.async {
+            self.performSegue(withIdentifier: "loadingToHome", sender: nil)
+        }
+    }
     
 
     override func viewDidLoad() {

@@ -260,15 +260,17 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
             cell.vsLbl.text = ""
             cell.opponentLbl.text = ""
         } else {
-            let usSoccerTitle = soccerGames[indexPath.row].title.components(separatedBy: " ")
-            if usSoccerTitle[1] != "vs" {
-                cell.gameTitleLbl.text = "\(usSoccerTitle[0].uppercased()) \(usSoccerTitle[1].uppercased())"
-                cell.vsLbl.text = "\(usSoccerTitle[2].uppercased())"
-                cell.opponentLbl.text = "\(usSoccerTitle[3].uppercased())"
-            } else {
-                cell.gameTitleLbl.text = "\(usSoccerTitle[0].uppercased())"
-                cell.vsLbl.text = "\(usSoccerTitle[1].uppercased())"
-                cell.opponentLbl.text = "\(usSoccerTitle[2].uppercased())"
+            let usSoccerTitle = soccerGames[indexPath.row].title!.components(separatedBy: " ")
+            if usSoccerTitle.count > 1 {
+                if usSoccerTitle[1] != "vs" {
+                    cell.gameTitleLbl.text = "\(usSoccerTitle[0].uppercased()) \(usSoccerTitle[1].uppercased())"
+                    cell.vsLbl.text = "\(usSoccerTitle[2].uppercased())"
+                    cell.opponentLbl.text = "\(usSoccerTitle[3].uppercased())"
+                } else {
+                    cell.gameTitleLbl.text = "\(usSoccerTitle[0].uppercased())"
+                    cell.vsLbl.text = "\(usSoccerTitle[1].uppercased())"
+                    cell.opponentLbl.text = "\(usSoccerTitle[2].uppercased())"
+                }
             }
             
             let currentGame = soccerGames[indexPath.row] 
@@ -278,7 +280,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
                     cell.notificationBtn.setImage(UIImage(named: "musical-bell-outline (2)"), for: .normal)
                 }
         }
-        let gameDate = soccerGames[indexPath.row].date.components(separatedBy: " ")
+        let gameDate = soccerGames[indexPath.row].date!.components(separatedBy: " ")
         //Checking for PlaceholderGame
         if gameDate[0] == "NA" {
             cell.gameTimeLbl.text = ""
@@ -335,12 +337,13 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
         let buttonPosition = sender.convert(CGPoint.zero, to: tableView)
         let indexPath: IndexPath! = tableView.indexPathForRow(at: buttonPosition)
         let game = soccerGames[indexPath.row]
-        game.notification = !game.notification
+            game.notification = NSNumber(value: !(game.notification?.boolValue ?? false))
+            CoreDataService.shared.saveContext()
         if let team = team(forGame: game) {
             notificationAlertLbl.text = "\(team.title?.uppercased() ?? "Name not available") Notification Set"
         }
         
-            if game.notification {
+            if game.notification!.boolValue {
                 notificationAlertVisible = !notificationAlertVisible
                 if notificationAlertVisible {
                     // Showing
