@@ -28,7 +28,19 @@ class ApiCaller{
             if let jsonData = response.result.value as? Dictionary<String, AnyObject> {
                 let data = jsonData["Data"] as? [[String: AnyObject]]
                 let arrayLength = data?.count
+                let currentDate = Date()
                 
+                //if its been only 3 days sense the lasttime data was updated then move on and load from coredata, else display alert about network error connection errror and needing to update data.
+//                ref.child("LastUpdate").observeSingleEvent(of: .value, with: { (snapShot) in
+//                    guard let value = snapShot.value as? NSDictionary else { return }
+//                    let lastUpdateDate = value["LastUpdate"] as! String
+//                    
+//                })
+//                ref.child("LastUpdate").updateChildValues(["LastUpdate":currentDate])
+//                
+//                if (data?.isEmpty)! {
+//                    return
+//                }
                 let dispatchGroup = DispatchGroup()
                 
                 for index in 0..<arrayLength! {
@@ -51,8 +63,6 @@ class ApiCaller{
                     // Date parsing, Time parsing
                     formatter.dateFormat = "MMMM dd, yyyy h:mm a ZZZ"
                     let dateFormated = formatter.date(from: dateAndTimeStringWithProperTimeZone)
-                   
-                    
                     let dict: [String: Any] = ["title": title as Any, "venue": venue as Any, "time": time as Any, "date": date as Any, "stations": stations, "timestamp": dateFormated?.timeIntervalSince1970 as Any]
                     self.updatedGamesFromAPIArray.append(dict)
                     
@@ -134,9 +144,5 @@ class ApiCaller{
         default:
             return "-0500"
         }
-    }
-
-    func parseJson(json: Any){
-        
     }
 }

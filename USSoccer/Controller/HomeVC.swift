@@ -36,6 +36,7 @@ class HomeVC: UIViewController {
     var twoHourBool = false
     var oneHourBool = false
     var halfHourBool = false
+    let formatter = DateFormatter()
     var filterValue: String!
     var sortedGames = [String: [SoccerGame]]()
     var soccerGames = [SoccerGame]()
@@ -58,8 +59,6 @@ class HomeVC: UIViewController {
         
         NMTableView.delegate = notificationVC
         NMTableView.dataSource = notificationVC
-//        NMTableView.separatorStyle = .singleLine
-//        NMTableView.separatorStyle = .none
         tableView.delegate = self
         tableView.dataSource = self
         tableView.separatorStyle = .none
@@ -71,22 +70,6 @@ class HomeVC: UIViewController {
         self.navigationController?.view.backgroundColor = UIColor.clear
         self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedStringKey.font: UIFont(name: "HelveticaNeue-CondensedBold", size: 30.0)!,NSAttributedStringKey.foregroundColor: UIColor.white]
         
-        ref.child("users").child("\(currentUser!.uid)").observeSingleEvent(of: .value) { (snapshot) in
-            
-            guard let value = snapshot.value as? NSDictionary, let notifications = value["notificationSettings"] as? NSDictionary else { return }
-            
-            let halfHourNotification = notifications["HalfHourNotification"] as? Bool ?? false
-            let oneDayNotification = notifications["OneDayNotification"] as? Bool ?? false
-            let oneHourNotification = notifications["OneHourNotification"] as? Bool ?? false
-            let twoDayNotification = notifications["TwoDayNotification"] as? Bool ?? false
-            let twoHourNotification = notifications["TwoHourNotification"] as? Bool ?? true
-
-            self.halfHourSwitch.setOn(halfHourNotification, animated: false)
-            self.oneDaySwitch.setOn(oneDayNotification, animated: false)
-            self.oneHourSwitch.setOn(oneHourNotification, animated: false)
-            self.twoDaySwitch.setOn(twoDayNotification, animated: false)
-            self.twoHourSwitch.setOn(twoHourNotification, animated: false)
-        }
         twoDaySwitch.onTintColor = blueColor
         oneDaySwitch.onTintColor = blueColor
         twoHourSwitch.onTintColor = blueColor
@@ -146,6 +129,47 @@ class HomeVC: UIViewController {
             let newGame = SoccerGame(title: "No Upcoming Games Available", date: "NA", time: "NA", venue: "NA", stations: "NA")
             sortedGames["WNT"]!.append(newGame)
         }
+        
+        if (sortedGames["ALL TEAMS"]!.isEmpty) {
+            let newGame = SoccerGame(title: "Internet Access Required For Game Info", date: "NA", time: "NA", venue: "NA", stations: "NA")
+            sortedGames["ALL TEAMS"]!.append(newGame)
+        }
+        
+        if !ConnectionCheck.isConnectedToNetwork() {
+            messageAlert(title: "Offline Mode", message: "Games Information may not be accurate due to no internet connection. \n Please connect to the internet and restart USA Soccer for the full experience", from: nil)
+        } else {
+        ref.child("users").child("\(currentUser!.uid)").observeSingleEvent(of: .value) { (snapshot) in
+            
+            guard let value = snapshot.value as? NSDictionary, let notifications = value["notificationSettings"] as? NSDictionary else { return }
+            
+            let halfHourNotification = notifications["HalfHourNotification"] as? Bool ?? false
+            let oneDayNotification = notifications["OneDayNotification"] as? Bool ?? false
+            let oneHourNotification = notifications["OneHourNotification"] as? Bool ?? false
+            let twoDayNotification = notifications["TwoDayNotification"] as? Bool ?? false
+            let twoHourNotification = notifications["TwoHourNotification"] as? Bool ?? true
+            
+            self.halfHourSwitch.setOn(halfHourNotification, animated: false)
+            self.oneDaySwitch.setOn(oneDayNotification, animated: false)
+            self.oneHourSwitch.setOn(oneHourNotification, animated: false)
+            self.twoDaySwitch.setOn(twoDayNotification, animated: false)
+            self.twoHourSwitch.setOn(twoHourNotification, animated: false)
+        }
+
+        let currentDate = Date()
+        formatter.dateFormat = "MMMM dd, yyyy h:mm a ZZZ"
+        let currentDateResult = formatter.string(from: currentDate)
+        let dateFormated = formatter.date(from: currentDateResult)?.timeIntervalSince1970
+        
+            for (key,value) in sortedGames {
+                sortedGames[key] = value.sorted(by: { $0.timestamp!.timeIntervalSince1970 < $1.timestamp!.timeIntervalSince1970})
+                for (index, game) in value.enumerated() {
+                    if game.timestamp!.timeIntervalSince1970 < dateFormated! {
+                        sortedGames[key]!.remove(at: index)
+                        gamesRef.child("\(game.title!)\(game.date!)").removeValue()
+                    }
+                }
+            }
+        }
         tableView.reloadData()
     }
     
@@ -184,11 +208,11 @@ class HomeVC: UIViewController {
         }
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        if !ConnectionCheck.isConnectedToNetwork() {
-            messageAlert(title: "Offline Mode", message: "Games Information may not be accurate due to no internet connection. \n Please connect to the internet and restart USA Soccer for the full experience", from: nil)
-        }
-    }
+//    override func viewDidAppear(_ animated: Bool) {
+//        if !ConnectionCheck.isConnectedToNetwork() {
+//            messageAlert(title: "Offline Mode", message: "Games Information may not be accurate due to no internet connection. \n Please connect to the internet and restart USA Soccer for the full experience", from: nil)
+//        }
+//    }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -198,6 +222,9 @@ class HomeVC: UIViewController {
     }
     
     @IBAction func settingBtnPressed(_ sender: Any) {
+        if !ConnectionCheck.isConnectedToNetwork() {
+            messageAlert(title: "No Internet Connection", message: "Notifications Setting Menu is not available in Offline Mode.", from: nil)
+        } else {
         notificationMenuTrailingConstraint.constant = 0.0
         notificationAlertTopConstraint.constant = -notificationView.frame.size.height
         UIView.animate(withDuration: 0.3, animations: {
@@ -207,6 +234,7 @@ class HomeVC: UIViewController {
             self.notificationAlertVisible = false
         })
         
+    }
     }
     
     @IBAction func cancelBtnPressed(_ sender: Any) {

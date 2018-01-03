@@ -21,7 +21,6 @@ class LoadingVC: UIViewController {
          if ConnectionCheck.isConnectedToNetwork() {
         // call Api and Parse it
             ApiCaller.shared.ApiCall {
-                
                 DispatchQueue.main.async {
                     self.finishLoading()
                 }
@@ -29,32 +28,10 @@ class LoadingVC: UIViewController {
          } else {
             finishLoading()
          }
-        /*
-        gamesRef.observe(.value, with: { snapshot in
-            for child in snapshot.children.allObjects as! [DataSnapshot] {
-                let game = SoccerGame(snapShot: child)
-                // Sorting Games into a Dictionary to use on HomeVC
-                let teamsTitles = game.title.components(separatedBy: "vs")
-                let trimmedTitle = stringTrimmer(stringToTrim: teamsTitles[0].uppercased())
-                
-                if var appenderArray = self.sortedGames[trimmedTitle!] {
-                    appenderArray.append(game)
-                    self.sortedGames[trimmedTitle!] = appenderArray
-                } else {
-                    self.sortedGames[trimmedTitle!] = [game]
-                }
-            }
-            sleep(1)
-            DispatchQueue.main.async {
-                self.performSegue(withIdentifier: "loadingToHome", sender: nil)
-            }
-        })*/
     }
     
     func finishLoading() {
-        
         let soccerGamesCoreData = CoreDataService.shared.fetchGames()
-        print(soccerGamesCoreData)
         for game in soccerGamesCoreData {
             let teamsTitles = game.title!.components(separatedBy: "vs")
             let trimmedTitle = stringTrimmer(stringToTrim: teamsTitles[0].uppercased())
@@ -82,7 +59,6 @@ class LoadingVC: UIViewController {
         let toDoItemToPass = sortedGames
         if let navc = segue.destination as? UINavigationController,
             let detailViewController = navc.viewControllers.first as? HomeVC {
-            
             detailViewController.sortedGames = toDoItemToPass
         }
         

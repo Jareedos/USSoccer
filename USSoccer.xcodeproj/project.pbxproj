@@ -26,7 +26,6 @@
 		BFA55BA61FD6119400E3411D /* NotificationMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA55BA51FD6119400E3411D /* NotificationMenuView.swift */; };
 		BFA55BA81FD70CF400E3411D /* NetworkCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA55BA71FD70CF400E3411D /* NetworkCheck.swift */; };
 		BFA55BAA1FD7AC3D00E3411D /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA55BA91FD7AC3D00E3411D /* NotificationService.swift */; };
-		BFD339141F85CD8700EEAB3F /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD339131F85CD8700EEAB3F /* LoginVC.swift */; };
 		BFD339191F85DEBE00EEAB3F /* Uitility.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD339181F85DEBE00EEAB3F /* Uitility.swift */; };
 		BFD3391D1F868FE000EEAB3F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BFD3391C1F868FE000EEAB3F /* GoogleService-Info.plist */; };
 		BFF710311F87E5110001EC0E /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF710301F87E5110001EC0E /* Constants.swift */; };
@@ -57,7 +56,6 @@
 		BFA55BA51FD6119400E3411D /* NotificationMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationMenuView.swift; sourceTree = "<group>"; };
 		BFA55BA71FD70CF400E3411D /* NetworkCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkCheck.swift; sourceTree = "<group>"; };
 		BFA55BA91FD7AC3D00E3411D /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
-		BFD339131F85CD8700EEAB3F /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		BFD339181F85DEBE00EEAB3F /* Uitility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Uitility.swift; sourceTree = "<group>"; };
 		BFD3391C1F868FE000EEAB3F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
 		BFF710301F87E5110001EC0E /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -150,7 +148,6 @@
 			isa = PBXGroup;
 			children = (
 				BF4A4AFF1FBA2CF100E93E18 /* GamesTVCell.swift */,
-				BFD339131F85CD8700EEAB3F /* LoginVC.swift */,
 				BF4A4AFA1FB7AF6500E93E18 /* LoadingVC.swift */,
 				BF4A4AFC1FB7AFD100E93E18 /* HomeVC.swift */,
 				BF5F0E491FBD471C00AEA1BB /* NotificationVC.swift */,
@@ -334,7 +331,6 @@
 				BF3ABD771F8483CC00D46DD3 /* AppDelegate.swift in Sources */,
 				BFD339191F85DEBE00EEAB3F /* Uitility.swift in Sources */,
 				BFA55BA61FD6119400E3411D /* NotificationMenuView.swift in Sources */,
-				BFD339141F85CD8700EEAB3F /* LoginVC.swift in Sources */,
 				BF4A4AFB1FB7AF6500E93E18 /* LoadingVC.swift in Sources */,
 				BF68790E1FCF897300AC7C1A /* GameDetailVC.swift in Sources */,
 			);

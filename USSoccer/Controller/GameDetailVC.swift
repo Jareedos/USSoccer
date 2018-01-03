@@ -34,7 +34,7 @@ class GameDetailVC: UIViewController {
         } else {
             var stationComponents = soccerGame.stations!.components(separatedBy: "Tickets")
             let removingSlash = stationComponents[1].replacingOccurrences(of: "\n", with: "")
-            gameStaionsLbl.text = removingSlash
+            gameStaionsLbl.text = stationComponents[1]
         }
         var venueComponents = soccerGame.venue!.components(separatedBy: ";")
         let removeFantasyCamp = venueComponents[1].replacingOccurrences(of: "\nFantasy Camp", with: "")
