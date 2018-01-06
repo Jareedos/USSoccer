@@ -259,11 +259,13 @@ class HomeVC: UIViewController {
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "gameDetail" {
             let gameCellThatWasClicked = sender as! UITableViewCell
             let indexPath = self.tableView.indexPath(for: gameCellThatWasClicked)
             let soccerGame = soccerGames[(indexPath?.row)!]
             let detailViewController = segue.destination as! GameDetailVC
             detailViewController.soccerGame = soccerGame
+        }
     }
 }
 
@@ -358,6 +360,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
             self.notificationAlertVisible = false
         })
     }
+    
     
     @objc func notificationButtonClicked(sender: UIButton) {
         

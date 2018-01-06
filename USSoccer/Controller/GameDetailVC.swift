@@ -32,6 +32,8 @@ class GameDetailVC: UIViewController {
         if soccerGame.stations == "ussoccer.com" {
             gameStaionsLbl.text = soccerGame.stations
         } else {
+            
+            // fix crash with out of index error
             var stationComponents = soccerGame.stations!.components(separatedBy: "Tickets")
             let removingSlash = stationComponents[1].replacingOccurrences(of: "\n", with: "")
             gameStaionsLbl.text = stationComponents[1]

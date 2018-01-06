@@ -28,6 +28,7 @@
 		BFA55BAA1FD7AC3D00E3411D /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA55BA91FD7AC3D00E3411D /* NotificationService.swift */; };
 		BFD339191F85DEBE00EEAB3F /* Uitility.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD339181F85DEBE00EEAB3F /* Uitility.swift */; };
 		BFD3391D1F868FE000EEAB3F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BFD3391C1F868FE000EEAB3F /* GoogleService-Info.plist */; };
+		BFD45FD01FFDA085000D437A /* InfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD45FCF1FFDA085000D437A /* InfoVC.swift */; };
 		BFF710311F87E5110001EC0E /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFF710301F87E5110001EC0E /* Constants.swift */; };
 /* End PBXBuildFile section */
 
@@ -58,6 +59,7 @@
 		BFA55BA91FD7AC3D00E3411D /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		BFD339181F85DEBE00EEAB3F /* Uitility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Uitility.swift; sourceTree = "<group>"; };
 		BFD3391C1F868FE000EEAB3F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = SOURCE_ROOT; };
+		BFD45FCF1FFDA085000D437A /* InfoVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoVC.swift; sourceTree = "<group>"; };
 		BFF710301F87E5110001EC0E /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -154,6 +156,7 @@
 				BF68790D1FCF897300AC7C1A /* GameDetailVC.swift */,
 				BFA55BA31FD60E5000E3411D /* TeamsTVC.swift */,
 				BFA55BA51FD6119400E3411D /* NotificationMenuView.swift */,
+				BFD45FCF1FFDA085000D437A /* InfoVC.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -320,6 +323,7 @@
 				BF8788521FCA2E89002C2A15 /* Team.swift in Sources */,
 				BF4A4AF91FB7AE0400E93E18 /* USSoccer.xcdatamodeld in Sources */,
 				BF5F0E4A1FBD471C00AEA1BB /* NotificationVC.swift in Sources */,
+				BFD45FD01FFDA085000D437A /* InfoVC.swift in Sources */,
 				BFA55BAA1FD7AC3D00E3411D /* NotificationService.swift in Sources */,
 				BF4A4AFD1FB7AFD100E93E18 /* HomeVC.swift in Sources */,
 				BFA55BA81FD70CF400E3411D /* NetworkCheck.swift in Sources */,
