@@ -50,6 +50,8 @@ class ApiCaller{
                     let time = currentArray["Time"]
                     let date = currentArray["Date"] as! String
                     let stations = (currentArray["Stations"] as? String) ?? "ussoccer.com"
+                    let teamSeperated = title.components(separatedBy: "vs")
+                    let team = teamSeperated[0]
                     let formatter = DateFormatter()
                     var castedTime = time as! String
                     
@@ -63,7 +65,7 @@ class ApiCaller{
                     // Date parsing, Time parsing
                     formatter.dateFormat = "MMMM dd, yyyy h:mm a ZZZ"
                     let dateFormated = formatter.date(from: dateAndTimeStringWithProperTimeZone)
-                    let dict: [String: Any] = ["title": title as Any, "venue": venue as Any, "time": time as Any, "date": date as Any, "stations": stations, "timestamp": dateFormated?.timeIntervalSince1970 as Any]
+                    let dict: [String: Any] = ["title": title as Any, "venue": venue as Any, "time": time as Any, "date": date as Any, "stations": stations, "timestamp": dateFormated?.timeIntervalSince1970 as Any, "team": team]
                     self.updatedGamesFromAPIArray.append(dict)
                     
                     dispatchGroup.enter()

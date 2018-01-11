@@ -208,12 +208,7 @@ class HomeVC: UIViewController {
             navigationController?.view.layoutIfNeeded()
         }
     }
-    
-//    override func viewDidAppear(_ animated: Bool) {
-//        if !ConnectionCheck.isConnectedToNetwork() {
-//            messageAlert(title: "Offline Mode", message: "Games Information may not be accurate due to no internet connection. \n Please connect to the internet and restart USA Soccer for the full experience", from: nil)
-//        }
-//    }
+
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
