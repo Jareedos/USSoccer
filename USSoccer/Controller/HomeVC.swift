@@ -41,7 +41,8 @@ class HomeVC: UIViewController {
     var sortedGames = [String: [SoccerGame]]()
     var soccerGames = [SoccerGame]()
     var teamArray = [Team]()
-    
+    let notificationType = UIApplication.shared.currentUserNotificationSettings!.types
+  
     var notificationAlertVisible = false
     var notificationMenuVisible = false
     var notificationAlertHideTimer : Timer?
@@ -222,19 +223,24 @@ class HomeVC: UIViewController {
     }
     
     @IBAction func settingBtnPressed(_ sender: Any) {
-        if !ConnectionCheck.isConnectedToNetwork() {
-            messageAlert(title: "No Internet Connection", message: "Notifications Setting Menu is not available in Offline Mode.", from: nil)
+        if notificationType == [] {
+            messageAlert(title: "Notifications Permission Required", message: "In order to update notification settings, notification permission is required. \n\n Please go to your setting and turn on notifications for USSoccer.", from: nil)
+            print("notifications are NOT enabled")
         } else {
-        notificationMenuTrailingConstraint.constant = 0.0
-        notificationAlertTopConstraint.constant = -notificationView.frame.size.height
-        UIView.animate(withDuration: 0.3, animations: {
-            self.navigationController?.view.layoutIfNeeded()
-        }, completion: { (finished: Bool) in
-            self.notificationMenuVisible = true
-            self.notificationAlertVisible = false
-        })
-        
-    }
+            if !ConnectionCheck.isConnectedToNetwork() {
+                messageAlert(title: "No Internet Connection", message: "Notifications Setting Menu is not available in Offline Mode.", from: nil)
+            } else {
+                notificationMenuTrailingConstraint.constant = 0.0
+                notificationAlertTopConstraint.constant = -notificationView.frame.size.height
+                UIView.animate(withDuration: 0.3, animations: {
+                    self.navigationController?.view.layoutIfNeeded()
+                }, completion: { (finished: Bool) in
+                    self.notificationMenuVisible = true
+                    self.notificationAlertVisible = false
+                })
+                
+            }
+        }
     }
     
     @IBAction func cancelBtnPressed(_ sender: Any) {
@@ -340,7 +346,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
     
     
     @IBAction func notificationsSettingsTapped(_ sender: Any) {
-        
         notificationMenuTrailingConstraint.constant = 0.0
         notificationAlertTopConstraint.constant = -notificationView.frame.size.height
         UIView.animate(withDuration: 0.3, animations: {
@@ -363,43 +368,48 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
     
     
     @objc func notificationButtonClicked(sender: UIButton) {
-        
-        if ConnectionCheck.isConnectedToNetwork() {
-        let buttonPosition = sender.convert(CGPoint.zero, to: tableView)
-        let indexPath: IndexPath! = tableView.indexPathForRow(at: buttonPosition)
-        let game = soccerGames[indexPath.row]
-            game.notification = NSNumber(value: !(game.notification?.boolValue ?? false))
-            CoreDataService.shared.saveContext()
-        if let team = team(forGame: game) {
-            notificationAlertLbl.text = "\(team.title?.uppercased() ?? "Name not available") Notification Set"
-        }
-        
-            if game.notification!.boolValue {
-                notificationAlertVisible = !notificationAlertVisible
-                if notificationAlertVisible {
-                    // Showing
-                    notificationAlertTopConstraint.constant = 0.0
-                    UIView.animate(withDuration: 0.3, animations: {
-                        self.navigationController?.view.layoutIfNeeded()
-                    }, completion: { (finished: Bool) in
+        if notificationType == [] {
+            messageAlert(title: "Notifications Permission Required", message: "In order to send a notificaiton, notification permission is required. \n\n Please go to your setting and turn on notifications for USSoccer.", from: nil)
+            print("notifications are NOT enabled")
+        } else {
+            if ConnectionCheck.isConnectedToNetwork() {
+                let buttonPosition = sender.convert(CGPoint.zero, to: tableView)
+                let indexPath: IndexPath! = tableView.indexPathForRow(at: buttonPosition)
+                let game = soccerGames[indexPath.row]
+                game.notification = NSNumber(value: !(game.notification?.boolValue ?? false))
+                CoreDataService.shared.saveContext()
+                if let team = team(forGame: game) {
+                    notificationAlertLbl.text = "\(team.title?.uppercased() ?? "Name not available") Notification Set"
+                }
+                
+                if game.notification!.boolValue {
+                    notificationAlertVisible = !notificationAlertVisible
+                    if notificationAlertVisible {
+                        // Showing
+                        notificationAlertTopConstraint.constant = 0.0
+                        UIView.animate(withDuration: 0.3, animations: {
+                            self.navigationController?.view.layoutIfNeeded()
+                        }, completion: { (finished: Bool) in
+                            
+                            self.notificationAlertHideTimer = Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(HomeVC.notificationAlertHideTimerFired), userInfo: nil, repeats: false)
+                        })
                         
-                        self.notificationAlertHideTimer = Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(HomeVC.notificationAlertHideTimerFired), userInfo: nil, repeats: false)
-                    })
-                    
-                } else {
-                    // Hiding
-                    notificationAlertTopConstraint.constant = -notificationView.frame.size.height
-                    UIView.animate(withDuration: 0.3) {
-                        self.navigationController?.view.layoutIfNeeded()
+                    } else {
+                        // Hiding
+                        notificationAlertTopConstraint.constant = -notificationView.frame.size.height
+                        UIView.animate(withDuration: 0.3) {
+                            self.navigationController?.view.layoutIfNeeded()
+                        }
                     }
                 }
+                
+                
+                tableView.reloadData()
+                print("I got here")
+            } else {
+                messageAlert(title: "No Internet Connection", message: "Internet connection is required to update game notifications.", from: nil)
             }
-        
-        
-        tableView.reloadData()
-        print("I got here")
-        } else {
-            messageAlert(title: "No Internet Connection", message: "Internet Connection is Required to update Game Notifications", from: nil)
+            print("notifications are enabled")
         }
     }
 }
