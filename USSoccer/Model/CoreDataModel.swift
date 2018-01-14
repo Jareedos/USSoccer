@@ -94,6 +94,11 @@ class CoreDataService {
         }
     }
     
+    func delete(object: NSManagedObject) {
+        managedContext?.delete(object)
+        saveContext()
+    }
+    
     static func updateGame() {
         
     }

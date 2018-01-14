@@ -23,6 +23,7 @@ class ApiCaller{
     }
     
     func ApiCall(completion: @escaping ()->Void) {
+        
         Alamofire.request("https://www.parsehub.com/api/v2/projects/tZQ5VDy6j2JB/last_ready_run/data?api_key=trmNdK43wwBZ").responseJSON { response in
             
             if let jsonData = response.result.value as? Dictionary<String, AnyObject> {
@@ -30,78 +31,98 @@ class ApiCaller{
                 let arrayLength = data?.count
                 let currentDate = Date()
                 
-                //if its been only 3 days sense the lasttime data was updated then move on and load from coredata, else display alert about network error connection errror and needing to update data.
-//                ref.child("LastUpdate").observeSingleEvent(of: .value, with: { (snapShot) in
-//                    guard let value = snapShot.value as? NSDictionary else { return }
-//                    let lastUpdateDate = value["LastUpdate"] as! String
-//                    
-//                })
-//                ref.child("LastUpdate").updateChildValues(["LastUpdate":currentDate])
-//                
-//                if (data?.isEmpty)! {
-//                    return
-//                }
-                let dispatchGroup = DispatchGroup()
+         //       if its been only 3 days sense the lasttime data was updated then move on and load from coredata, else display alert about network error connection errror and needing to update data.
                 
-                for index in 0..<arrayLength! {
-                    var currentArray = data![index]
-                    let title = currentArray["Title"] as! String
-                    let venue = currentArray["Venue"]
-                    let time = currentArray["Time"]
-                    let date = currentArray["Date"] as! String
-                    let stations = (currentArray["Stations"] as? String) ?? "ussoccer.com"
-                    let teamSeperated = title.components(separatedBy: "vs")
-                    let team = teamSeperated[0]
-                    let formatter = DateFormatter()
-                    var castedTime = time as! String
-                    
-                    if !castedTime.contains(":") {
-                        castedTime.insert(contentsOf: [":", "0", "0"], at: castedTime.index(castedTime.startIndex, offsetBy: 1))
-                    }
-                    let castedDate = date
-                    let timeWithoutTimeZoneString = castedTime[..<castedTime.index(castedTime.endIndex, offsetBy: -2)]
-                    let dateAndTimeStringWithProperTimeZone = castedDate + " " + timeWithoutTimeZoneString + self.timezoneFromTimeString(timeString: castedTime)
-                    
-                    // Date parsing, Time parsing
-                    formatter.dateFormat = "MMMM dd, yyyy h:mm a ZZZ"
-                    let dateFormated = formatter.date(from: dateAndTimeStringWithProperTimeZone)
-                    let dict: [String: Any] = ["title": title as Any, "venue": venue as Any, "time": time as Any, "date": date as Any, "stations": stations, "timestamp": dateFormated?.timeIntervalSince1970 as Any, "team": team]
-                    self.updatedGamesFromAPIArray.append(dict)
-                    
-                    dispatchGroup.enter()
-                    let gameKey = self.gameKey(title: title, date: date)
-                    gamesRef.child(gameKey).observeSingleEvent(of: .value, with: { (snapshot: DataSnapshot) in
-                        
-                        if let dict = snapshot.value as? [String: Any] {
-                            self.currentGamesInFirebaseArray.append(dict)
-                        }
-                        dispatchGroup.leave()
-                    })
+                if (data?.isEmpty)! {
+                    completion()
+                    return
                 }
                 
-                
-                // Checking incoming game titles against current games to ensure only new games are written to Firebase & CoreData
-                dispatchGroup.notify(queue: .main) {
-                    let titles = (self.currentGamesInFirebaseArray as NSArray).mutableArrayValue(forKey: "title").flatMap({return $0 as? String})
-                    // Sync Firebase (add missing f)
-                    for dict in self.updatedGamesFromAPIArray {
-                        
-                        let title = dict["title"] as! String
-                        let date = dict["date"] as! String
-                        if !titles.contains(title) {
-                        
-                            let gameKey = self.gameKey(title: title, date: date)
-                            gamesRef.child(gameKey).setValue(dict)
-                        }
+                ref.child("LastUpdate").observeSingleEvent(of: .value, with: { (snapShot) in
+                    let lastUpdateTimeStamp : Double = snapShot.value as? Double ?? 0.0
+                    let lastUpdateDate = Date(timeIntervalSince1970: lastUpdateTimeStamp)
+                    
+                    ref.child("LastUpdate").setValue(currentDate.timeIntervalSince1970)
+                    
+                    let thresholdTimeInterval : TimeInterval = 24.0 * 3.0 * 3600.0
+                    if currentDate.timeIntervalSince(lastUpdateDate) > thresholdTimeInterval {
+                        // It's been more than 3 days
+                        //alert here
+                        completion()
+                        return
                     }
                     
                     
-                    // Sync local database
-                    self.syncLocalDatabase(completion: completion)
-                }
+                    let dispatchGroup = DispatchGroup()
+                    
+                    for index in 0..<arrayLength! {
+                        var currentArray = data![index]
+                        let title = currentArray["Title"] as! String
+                        let venue = currentArray["Venue"]
+                        let time = currentArray["Time"]
+                        let date = currentArray["Date"] as! String
+                        let stations = (currentArray["Stations"] as? String) ?? "ussoccer.com"
+                        let teamSeperated = title.components(separatedBy: "vs")
+                        let team = stringTrimmer(stringToTrim: teamSeperated[0])
+                        let formatter = DateFormatter()
+                        var castedTime = time as! String
+                        
+                        if !castedTime.contains(":") {
+                            castedTime.insert(contentsOf: [":", "0", "0"], at: castedTime.index(castedTime.startIndex, offsetBy: 1))
+                        }
+                        let castedDate = date
+                        let timeWithoutTimeZoneString = castedTime[..<castedTime.index(castedTime.endIndex, offsetBy: -2)]
+                        let dateAndTimeStringWithProperTimeZone = castedDate + " " + timeWithoutTimeZoneString + self.timezoneFromTimeString(timeString: castedTime)
+                        
+                        // Date parsing, Time parsing
+                        formatter.dateFormat = "MMMM dd, yyyy h:mm a ZZZ"
+                        let dateFormated = formatter.date(from: dateAndTimeStringWithProperTimeZone)
+                        let dict: [String: Any] = ["title": title as Any, "venue": venue as Any, "time": time as Any, "date": date as Any, "stations": stations, "timestamp": dateFormated?.timeIntervalSince1970 as Any, "team": team as Any]
+                        self.updatedGamesFromAPIArray.append(dict)
+                        
+                        dispatchGroup.enter()
+                        let gameKey = self.gameKey(title: title, date: date)
+                        gamesRef.child(gameKey).observeSingleEvent(of: .value, with: { (snapshot: DataSnapshot) in
+                            
+                            if let dict = snapshot.value as? [String: Any] {
+                                self.currentGamesInFirebaseArray.append(dict)
+                            }
+                            dispatchGroup.leave()
+                        })
+                    }
+                    
+                    
+                    // Checking incoming game titles against current games to ensure only new games are written to Firebase & CoreData
+                    dispatchGroup.notify(queue: .main) {
+                        let titles = (self.currentGamesInFirebaseArray as NSArray).mutableArrayValue(forKey: "title").flatMap({return $0 as? String})
+                        // Sync Firebase (add missing f)
+                        for dict in self.updatedGamesFromAPIArray {
+                            
+                            let title = dict["title"] as! String
+                            let date = dict["date"] as! String
+                            if !titles.contains(title) {
+                                
+                                let gameKey = self.gameKey(title: title, date: date)
+                                gamesRef.child(gameKey).setValue(dict)
+                            }
+                        }
+                        
+                        
+                        // Sync local database
+                        self.syncLocalDatabase(completion: completion)
+                    }
+                    
+                })
+                
             }
         }
     }
+    
+    
+    func asdf() {
+        
+    }
+    
     
     func syncLocalDatabase(completion: @escaping ()->Void) {
         gamesRef.observeSingleEvent(of: .value) { snapshot in

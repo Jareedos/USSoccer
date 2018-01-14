@@ -162,14 +162,19 @@ class HomeVC: UIViewController {
         let dateFormated = formatter.date(from: currentDateResult)?.timeIntervalSince1970
         
             for (key,value) in sortedGames {
-                sortedGames[key] = value.sorted(by: { $0.timestamp!.timeIntervalSince1970 < $1.timestamp!.timeIntervalSince1970})
+                sortedGames[key] = value.sorted(by: { $0.timestamp?.timeIntervalSince1970 ?? 0.0 < $1.timestamp?.timeIntervalSince1970 ?? 0.0})
                 for (index, game) in value.enumerated() {
+                    if game.timestamp == nil {
+                        game.timestamp = Date(timeIntervalSince1970: 1511193000.0)
+                    }
                     if game.timestamp!.timeIntervalSince1970 < dateFormated! {
                         sortedGames[key]!.remove(at: index)
                         gamesRef.child("\(game.title!)\(game.date!)").removeValue()
+                        CoreDataService.shared.delete(object: game)
                     }
                 }
             }
+            
         }
         tableView.reloadData()
     }
