@@ -27,13 +27,16 @@ class ApiCaller{
         Alamofire.request("https://www.parsehub.com/api/v2/projects/tZQ5VDy6j2JB/last_ready_run/data?api_key=trmNdK43wwBZ").responseJSON { response in
             
             if let jsonData = response.result.value as? Dictionary<String, AnyObject> {
-                let data = jsonData["Data"] as? [[String: AnyObject]]
-                let arrayLength = data?.count
+                guard let data = jsonData["Data"] as? [[String: AnyObject]] else {
+                    completion()
+                    return
+                }
+                let arrayLength = data.count
                 let currentDate = Date()
                 
          //       if its been only 3 days sense the lasttime data was updated then move on and load from coredata, else display alert about network error connection errror and needing to update data.
                 
-                if (data?.isEmpty)! {
+                if data.isEmpty {
                     completion()
                     return
                 }
@@ -55,8 +58,8 @@ class ApiCaller{
                     
                     let dispatchGroup = DispatchGroup()
                     
-                    for index in 0..<arrayLength! {
-                        var currentArray = data![index]
+                    for index in 0..<arrayLength {
+                        var currentArray = data[index]
                         let title = currentArray["Title"] as! String
                         let venue = currentArray["Venue"]
                         let time = currentArray["Time"]

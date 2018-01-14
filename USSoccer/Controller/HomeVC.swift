@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import FirebaseDatabase
 import CoreData
+import UserNotifications
 
 class HomeVC: UIViewController {
     
@@ -23,7 +24,7 @@ class HomeVC: UIViewController {
     @IBOutlet weak var oneHourSwitch: UISwitch!
     @IBOutlet weak var halfHourSwitch: UISwitch!
     
-    
+    @IBOutlet var menuShaddowView: UIView!
     @IBOutlet weak var notificationMenuTrailingConstraint: NSLayoutConstraint!
     @IBOutlet weak var notificationAlertTopConstraint: NSLayoutConstraint!
     var pickerTeamsArray = ["U-15 MNT", "U-16 MNT", "U-17 MNT", "U-18 MNT", "U-19 MNT", "U-20 MNT", "U-23 MNT", "MNT", "ALL TEAMS", "WNT", "U-23 WNT", "U-20 WNT", "U-19 WNT", "U-18 WNT", "U-17 WNT", "U-16 WNT", "U-15 WNT"]
@@ -41,7 +42,8 @@ class HomeVC: UIViewController {
     var sortedGames = [String: [SoccerGame]]()
     var soccerGames = [SoccerGame]()
     var teamArray = [Team]()
-    let notificationType = UIApplication.shared.currentUserNotificationSettings!.types
+    //let notificationType = UIApplication.shared.currentUserNotificationSettings!.types
+    var notificationAuthorizationStatus : UNAuthorizationStatus = .notDetermined
   
     var notificationAlertVisible = false
     var notificationMenuVisible = false
@@ -54,6 +56,7 @@ class HomeVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         rotationAngle = -150 * (.pi/100)
         teamPicker.delegate = self
         teamPicker.dataSource = self
@@ -183,6 +186,20 @@ class HomeVC: UIViewController {
         super.viewWillAppear(animated)
         
         if let view = navigationController?.view {
+            view.addSubview(menuShaddowView)
+            if 1 == 1 { // 1==1 create a new scope for free basically
+                let trailingConstraint = NSLayoutConstraint(item: menuShaddowView, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: .trailing, multiplier: 1.0, constant: 0.0)
+                let topConstraint = NSLayoutConstraint(item: menuShaddowView, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: .top, multiplier: 1.0, constant: 0.0)
+                let bottomConstraint = NSLayoutConstraint(item: menuShaddowView, attribute: NSLayoutAttribute.bottom, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: 0.0)
+                let leadingConstraint = NSLayoutConstraint(item: menuShaddowView, attribute: NSLayoutAttribute.leading, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: .leading, multiplier: 1.0, constant: 0.0)
+                view.addConstraint(trailingConstraint)
+                view.addConstraint(topConstraint)
+                view.addConstraint(bottomConstraint)
+                view.addConstraint(leadingConstraint)
+                
+                menuShaddowView.isHidden = true
+            }
+            
             view.addSubview(notificationMenuView)
             
             let trailingConstraint = NSLayoutConstraint(item: notificationMenuView, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: .trailing, multiplier: 1.0, constant: 0.0)
@@ -220,49 +237,67 @@ class HomeVC: UIViewController {
         
         notificationMenuView.removeFromSuperview()
         notificationView.removeFromSuperview()
+        menuShaddowView.removeFromSuperview()
     }
     
     @IBAction func settingBtnPressed(_ sender: Any) {
-        if notificationType == [] {
-            messageAlert(title: "Notifications Permission Required", message: "In order to update notification settings, notification permission is required. \n\n Please go to your setting and turn on notifications for USSoccer.", from: nil)
-            print("notifications are NOT enabled")
-        } else {
-            if !ConnectionCheck.isConnectedToNetwork() {
-                messageAlert(title: "No Internet Connection", message: "Notifications Setting Menu is not available in Offline Mode.", from: nil)
-            } else {
-                notificationMenuTrailingConstraint.constant = 0.0
-                notificationAlertTopConstraint.constant = -notificationView.frame.size.height
-                UIView.animate(withDuration: 0.3, animations: {
-                    self.navigationController?.view.layoutIfNeeded()
-                }, completion: { (finished: Bool) in
-                    self.notificationMenuVisible = true
-                    self.notificationAlertVisible = false
-                })
+        
+        UNUserNotificationCenter.current().getNotificationSettings { (settings) in
+            self.notificationAuthorizationStatus = settings.authorizationStatus
+            
+            DispatchQueue.main.async {
                 
+                if self.notificationAuthorizationStatus != .authorized {
+                    messageAlert(title: "Notifications Permission Required", message: "In order to update notification settings, notification permission is required. \n\n Please go to your setting and turn on notifications for USSoccer.", from: nil)
+                    print("notifications are NOT enabled")
+                } else {
+                    if !ConnectionCheck.isConnectedToNetwork() {
+                        messageAlert(title: "No Internet Connection", message: "Notifications Setting Menu is not available in Offline Mode.", from: nil)
+                    } else {
+                        self.openMenu()
+                    }
+                }
             }
         }
     }
     
     @IBAction func cancelBtnPressed(_ sender: Any) {
-        self.notificationMenuTrailingConstraint.constant = 187
-        UIView.animate(withDuration: 0.3, animations: {
-            self.navigationController?.view.layoutIfNeeded()
-        }) { (finished: Bool) in
-            self.notificationMenuVisible = false
-        }
+        closeMenu()
     }
     
     
     
     
     @IBAction func notificationMenuSwipedOff(_ sender: Any) {
+        closeMenu()
+    }
+    // MARK: - Menu manipulation
+    
+    func openMenu() {
+        menuShaddowView.isHidden = false
+        menuShaddowView.alpha = 0.0
+        notificationMenuTrailingConstraint.constant = 0.0
+        notificationAlertTopConstraint.constant = -notificationView.frame.size.height
+        UIView.animate(withDuration: 0.3, animations: {
+            self.menuShaddowView.alpha = 1.0
+            self.navigationController?.view.layoutIfNeeded()
+        }, completion: { (finished: Bool) in
+            self.notificationMenuVisible = true
+            self.notificationAlertVisible = false
+        })
+    }
+    
+    func closeMenu() {
         notificationMenuTrailingConstraint.constant = 187
         UIView.animate(withDuration: 0.3, animations: {
             self.navigationController?.view.layoutIfNeeded()
+            self.menuShaddowView.alpha = 0.0
         }) { (finished: Bool) in
             self.notificationMenuVisible = false
+            self.menuShaddowView.isHidden = true
         }
     }
+    
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "gameDetail" {
@@ -346,14 +381,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
     
     
     @IBAction func notificationsSettingsTapped(_ sender: Any) {
-        notificationMenuTrailingConstraint.constant = 0.0
-        notificationAlertTopConstraint.constant = -notificationView.frame.size.height
-        UIView.animate(withDuration: 0.3, animations: {
-            self.navigationController?.view.layoutIfNeeded()
-        }, completion: { (finished: Bool) in
-            self.notificationMenuVisible = true
-            self.notificationAlertVisible = false
-        })
+        openMenu()
     }
     
     @objc func notificationAlertHideTimerFired() {
@@ -368,7 +396,19 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
     
     
     @objc func notificationButtonClicked(sender: UIButton) {
-        if notificationType == [] {
+        
+        UNUserNotificationCenter.current().getNotificationSettings { (settings) in
+            self.notificationAuthorizationStatus = settings.authorizationStatus
+            
+            DispatchQueue.main.async {
+                self.handleNotifications(sender: sender)
+            }
+        }
+    }
+    
+    private func handleNotifications(sender: UIButton) {
+        
+        if notificationAuthorizationStatus != .authorized {
             messageAlert(title: "Notifications Permission Required", message: "In order to send a notificaiton, notification permission is required. \n\n Please go to your setting and turn on notifications for USSoccer.", from: nil)
             print("notifications are NOT enabled")
         } else {
