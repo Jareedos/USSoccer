@@ -9,6 +9,7 @@
 import UIKit
 import Firebase
 import FirebaseDatabase
+import UserNotifications
 
 class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
     var currentUser = Auth.auth().currentUser
@@ -20,7 +21,7 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
     var twoHourBool = false
     var oneHourBool = false
     var halfHourBool = false
-    let notificationType = UIApplication.shared.currentUserNotificationSettings!.types
+    var notificationAuthorizationStatus : UNAuthorizationStatus = .notDetermined
     
     var teamsArray = ["ALL TEAMS", "MNT", "WNT", "U-23 MNT", "U-23 WNT", "U-20 MNT", "U-20 WNT", "U-19 MNT", "U-19 WNT", "U-18 MNT", "U-18 WNT", "U-17 MNT", "U-17 WNT", "U-16 MNT", "U-16 WNT","U-15 MNT", "U-15 WNT"]
     var selectedTeams = [String : Bool]()
@@ -67,101 +68,145 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if notificationType == [] {
-            messageAlert(title: "Notifications Permission Required", message: "In order to send a notificaiton, notification permission is required. \n\n Please go to your setting and turn on notifications for USSoccer.", from: nil)
-            print("notifications are NOT enabled")
-        } else {
-            if ConnectionCheck.isConnectedToNetwork() {
+        
+        UNUserNotificationCenter.current().getNotificationSettings { (settings) in
+            self.notificationAuthorizationStatus = settings.authorizationStatus
+            
+            DispatchQueue.main.async {
                 
-                let teamTitle = teamsArray[indexPath.row]
-                let followingTeamRef = followingRef.child(teamTitle).child(currentUser!.uid)
-                
-                var isSelected = selectedTeams[teamTitle] ?? false
-                // Flip
-                isSelected = !isSelected
-                selectedTeams[teamTitle] = isSelected
-                if isSelected {
-                    followingTeamRef.setValue(true)
+                if self.notificationAuthorizationStatus != .authorized {
+                    messageAlert(title: "Notifications Permission Required", message: "In order to update notification settings, notification permission is required. \n\n Please go to your setting and turn on notifications for USSoccer.", from: nil)
+                    print("notifications are NOT enabled")
                 } else {
-                    followingTeamRef.removeValue()
+                    
+                    if ConnectionCheck.isConnectedToNetwork() {
+                        
+                        let teamTitle = self.teamsArray[indexPath.row]
+                        let followingTeamRef = followingRef.child(teamTitle).child(self.currentUser!.uid)
+                        
+                        var isSelected = self.selectedTeams[teamTitle] ?? false
+                        // Flip
+                        isSelected = !isSelected
+                        self.selectedTeams[teamTitle] = isSelected
+                        if isSelected {
+                            followingTeamRef.setValue(true)
+                        } else {
+                            followingTeamRef.removeValue()
+                        }
+                        
+                        tableView.reloadData()
+                        
+                    } else {
+                        messageAlert(title: "No Internet Connection", message: "Internet connection is required to update team notifications.", from: nil)
+                    }
                 }
-                
-                tableView.reloadData()
-                
-            } else {
-                messageAlert(title: "No Internet Connection", message: "Internet connection is required to update team notifications.", from: nil)
             }
         }
     }
     
     @IBAction func twoDaySwitch(_ sender: UISwitch) {
-        if notificationType == [] {
-            messageAlert(title: "Notifications Permission Required", message: "In order to send a notificaiton, notification permission is required. \n\n Please go to your setting and turn on notifications for USSoccer.", from: nil)
-            print("notifications are NOT enabled")
-        } else {
-            if ConnectionCheck.isConnectedToNetwork() {
-                twoDayBool = sender.isOn
-                ref.child("users").child((currentUser?.uid)!).child("notificationSettings").updateChildValues(["TwoDayNotification": twoDayBool])
+        UNUserNotificationCenter.current().getNotificationSettings { (settings) in
+            self.notificationAuthorizationStatus = settings.authorizationStatus
+            
+            DispatchQueue.main.async {
                 
-                //            notificationsRef.updateChildValues(["TwoDayNotification": twoDayBool])
-            } else {
-                messageAlert(title: "No Internet Connection", message: "Internet connection is required to update team notifications.", from: nil)
+                if self.notificationAuthorizationStatus != .authorized {
+                    messageAlert(title: "Notifications Permission Required", message: "In order to update notification settings, notification permission is required. \n\n Please go to your setting and turn on notifications for USSoccer.", from: nil)
+                    print("notifications are NOT enabled")
+                } else {
+                    if ConnectionCheck.isConnectedToNetwork() {
+                        self.twoDayBool = sender.isOn
+                        ref.child("users").child((self.currentUser?.uid)!).child("notificationSettings").updateChildValues(["TwoDayNotification": self.twoDayBool])
+                        
+                        //            notificationsRef.updateChildValues(["TwoDayNotification": twoDayBool])
+                    } else {
+                        messageAlert(title: "No Internet Connection", message: "Internet connection is required to update team notifications.", from: nil)
+                    }
+                }
             }
         }
     }
     
     @IBAction func oneDaySwitch(_ sender: UISwitch) {
-        if notificationType == [] {
-            messageAlert(title: "Notifications Permission Required", message: "In order to send a notificaiton, notification permission is required. \n\n Please go to your setting and turn on notifications for USSoccer.", from: nil)
-            print("notifications are NOT enabled")
-        } else {
-            if ConnectionCheck.isConnectedToNetwork() {
-                oneDayBool = sender.isOn
-                ref.child("users").child((currentUser?.uid)!).child("notificationSettings").updateChildValues(["OneDayNotification": oneDayBool])
-            } else {
-                messageAlert(title: "No Internet Connection", message: "Internet connection is required to update team notifications.", from: nil)
+        UNUserNotificationCenter.current().getNotificationSettings { (settings) in
+            self.notificationAuthorizationStatus = settings.authorizationStatus
+            
+            DispatchQueue.main.async {
+                
+                if self.notificationAuthorizationStatus != .authorized {
+                    messageAlert(title: "Notifications Permission Required", message: "In order to update notification settings, notification permission is required. \n\n Please go to your setting and turn on notifications for USSoccer.", from: nil)
+                    print("notifications are NOT enabled")
+                } else {
+                    if ConnectionCheck.isConnectedToNetwork() {
+                        self.oneDayBool = sender.isOn
+                        ref.child("users").child((self.currentUser?.uid)!).child("notificationSettings").updateChildValues(["OneDayNotification": self.oneDayBool])
+                    } else {
+                        messageAlert(title: "No Internet Connection", message: "Internet connection is required to update team notifications.", from: nil)
+                    }
+                }
             }
         }
     }
     
     @IBAction func twoHourSwitch(_ sender: UISwitch) {
-        if notificationType == [] {
-            messageAlert(title: "Notifications Permission Required", message: "In order to send a notificaiton, notification permission is required. \n\n Please go to your setting and turn on notifications for USSoccer.", from: nil)
-            print("notifications are NOT enabled")
-        } else {
-            if ConnectionCheck.isConnectedToNetwork() {
-                twoHourBool = sender.isOn
-                ref.child("users").child((currentUser?.uid)!).child("notificationSettings").updateChildValues(["TwoHourNotification": twoHourBool])
-            } else {
-                messageAlert(title: "No Internet Connection", message: "Internet connection is required to update team notifications.", from: nil)
+        UNUserNotificationCenter.current().getNotificationSettings { (settings) in
+            self.notificationAuthorizationStatus = settings.authorizationStatus
+            
+            DispatchQueue.main.async {
+                
+                if self.notificationAuthorizationStatus != .authorized {
+                    messageAlert(title: "Notifications Permission Required", message: "In order to update notification settings, notification permission is required. \n\n Please go to your setting and turn on notifications for USSoccer.", from: nil)
+                    print("notifications are NOT enabled")
+                } else {
+                    if ConnectionCheck.isConnectedToNetwork() {
+                        self.twoHourBool = sender.isOn
+                        ref.child("users").child((self.currentUser?.uid)!).child("notificationSettings").updateChildValues(["TwoHourNotification": self.twoHourBool])
+                    } else {
+                        messageAlert(title: "No Internet Connection", message: "Internet connection is required to update team notifications.", from: nil)
+                    }
+                }
             }
         }
     }
     
     @IBAction func oneHourSwitch(_ sender: UISwitch) {
-        if notificationType == [] {
-            messageAlert(title: "Notifications Permission Required", message: "In order to send a notificaiton, notification permission is required. \n\n Please go to your setting and turn on notifications for USSoccer.", from: nil)
-            print("notifications are NOT enabled")
-        } else {
-            if ConnectionCheck.isConnectedToNetwork() {
-                oneHourBool = sender.isOn
-                ref.child("users").child((currentUser?.uid)!).child("notificationSettings").updateChildValues(["OneHourNotification": oneHourBool])
-            } else {
-                messageAlert(title: "No Internet Connection", message: "Internet connection is required to update team notifications.", from: nil)
+        UNUserNotificationCenter.current().getNotificationSettings { (settings) in
+            self.notificationAuthorizationStatus = settings.authorizationStatus
+            
+            DispatchQueue.main.async {
+                
+                if self.notificationAuthorizationStatus != .authorized {
+                    messageAlert(title: "Notifications Permission Required", message: "In order to update notification settings, notification permission is required. \n\n Please go to your setting and turn on notifications for USSoccer.", from: nil)
+                    print("notifications are NOT enabled")
+                } else {
+                    if ConnectionCheck.isConnectedToNetwork() {
+                        self.oneHourBool = sender.isOn
+                        ref.child("users").child((self.currentUser?.uid)!).child("notificationSettings").updateChildValues(["OneHourNotification": self.oneHourBool])
+                    } else {
+                        messageAlert(title: "No Internet Connection", message: "Internet connection is required to update team notifications.", from: nil)
+                    }
+                }
             }
         }
     }
     
     @IBAction func halfHourSwitch(_ sender: UISwitch) {
-        if notificationType == [] {
-            messageAlert(title: "Notifications Permission Required", message: "In order to send a notificaiton, notification permission is required. \n\n Please go to your setting and turn on notifications for USSoccer.", from: nil)
-            print("notifications are NOT enabled")
-        } else {
-            if ConnectionCheck.isConnectedToNetwork() {
-                halfHourBool = sender.isOn
-                ref.child("users").child((currentUser?.uid)!).child("notificationSettings").updateChildValues(["HalfHourNotification": halfHourBool])
-            } else {
-                messageAlert(title: "No Internet Connection", message: "Internet connection is required to update team notifications.", from: nil)
+        UNUserNotificationCenter.current().getNotificationSettings { (settings) in
+            self.notificationAuthorizationStatus = settings.authorizationStatus
+            
+            DispatchQueue.main.async {
+                
+                if self.notificationAuthorizationStatus != .authorized {
+                    messageAlert(title: "Notifications Permission Required", message: "In order to update notification settings, notification permission is required. \n\n Please go to your setting and turn on notifications for USSoccer.", from: nil)
+                    print("notifications are NOT enabled")
+                } else {
+                    if ConnectionCheck.isConnectedToNetwork() {
+                        self.halfHourBool = sender.isOn
+                        ref.child("users").child((self.currentUser?.uid)!).child("notificationSettings").updateChildValues(["HalfHourNotification": self.halfHourBool])
+                    } else {
+                        messageAlert(title: "No Internet Connection", message: "Internet connection is required to update team notifications.", from: nil)
+                    }
+                }
             }
         }
     }
