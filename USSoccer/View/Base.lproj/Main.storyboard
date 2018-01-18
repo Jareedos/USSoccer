@@ -382,7 +382,7 @@
                                         </constraints>
                                     </view>
                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1Dr-h9-KRe">
-                                        <rect key="frame" x="93" y="93" width="81" height="31"/>
+                                        <rect key="frame" x="123" y="93" width="51" height="31"/>
                                         <color key="tintColor" red="0.0" green="0.2470588235" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
                                         <connections>
                                             <action selector="twoDaySwitch:" destination="zBb-FL-ejQ" eventType="valueChanged" id="fO2-7N-89n"/>
@@ -390,7 +390,7 @@
                                         </connections>
                                     </switch>
                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kSR-zp-rh9">
-                                        <rect key="frame" x="93" y="139" width="81" height="31"/>
+                                        <rect key="frame" x="123" y="139" width="51" height="31"/>
                                         <color key="tintColor" red="0.0" green="0.2470588235" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
                                         <connections>
                                             <action selector="oneDaySwitch:" destination="gIA-1m-T9W" eventType="valueChanged" id="C1g-Uy-lkq"/>
@@ -398,7 +398,7 @@
                                         </connections>
                                     </switch>
                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H3p-ia-HK5">
-                                        <rect key="frame" x="93" y="184" width="81" height="31"/>
+                                        <rect key="frame" x="123" y="184" width="51" height="31"/>
                                         <color key="tintColor" red="0.0" green="0.2470588235" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
                                         <connections>
                                             <action selector="twoHourSwitch:" destination="gIA-1m-T9W" eventType="valueChanged" id="A1j-dd-4Iw"/>
@@ -406,7 +406,7 @@
                                         </connections>
                                     </switch>
                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="m2T-2H-zmN">
-                                        <rect key="frame" x="93" y="229.5" width="81" height="31"/>
+                                        <rect key="frame" x="123" y="229.5" width="51" height="31"/>
                                         <color key="tintColor" red="0.0" green="0.2470588235" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
                                         <connections>
                                             <action selector="oneHourSwitch:" destination="zBb-FL-ejQ" eventType="valueChanged" id="P9r-7V-0Mh"/>
@@ -414,7 +414,7 @@
                                         </connections>
                                     </switch>
                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mfx-Jf-64G">
-                                        <rect key="frame" x="93" y="274" width="81" height="31"/>
+                                        <rect key="frame" x="123" y="274.5" width="51" height="31"/>
                                         <color key="tintColor" red="0.0" green="0.2470588235" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
                                         <connections>
                                             <action selector="halfHourSwitch:" destination="gIA-1m-T9W" eventType="valueChanged" id="4NZ-5l-eGs"/>
@@ -422,46 +422,31 @@
                                         </connections>
                                     </switch>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Two Days Before Game" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nVi-uz-Ubk">
-                                        <rect key="frame" x="8" y="90.5" width="80" height="35.5"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="80" id="E9s-5O-IfS"/>
-                                        </constraints>
+                                        <rect key="frame" x="8" y="90.5" width="110" height="35.5"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-CondensedBold" family="Helvetica Neue" pointSize="15"/>
                                         <color key="textColor" red="0.0" green="0.2470588235" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="One Day Before Game" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P9l-7r-e4E">
-                                        <rect key="frame" x="8" y="136" width="80" height="35.5"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="80" id="Kjf-Nc-jkI"/>
-                                        </constraints>
+                                        <rect key="frame" x="8" y="136" width="110" height="35.5"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-CondensedBold" family="Helvetica Neue" pointSize="15"/>
                                         <color key="textColor" red="0.0" green="0.2470588235" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Two Hours Before Game" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WkQ-hm-wZG">
-                                        <rect key="frame" x="8" y="181.5" width="80" height="35.5"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="80" id="DvR-OJ-Wo4"/>
-                                        </constraints>
+                                        <rect key="frame" x="8" y="181.5" width="110" height="35.5"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-CondensedBold" family="Helvetica Neue" pointSize="15"/>
                                         <color key="textColor" red="0.0" green="0.2470588235" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="One Hour Before Game" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cU8-IB-wXW">
-                                        <rect key="frame" x="8" y="227" width="80" height="35.5"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="80" id="pVa-gd-eHQ"/>
-                                        </constraints>
+                                        <rect key="frame" x="8" y="227" width="110" height="35.5"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-CondensedBold" family="Helvetica Neue" pointSize="15"/>
                                         <color key="textColor" red="0.0" green="0.2470588235" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Half Hour Before Game" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wJ3-Df-768">
-                                        <rect key="frame" x="8" y="272.5" width="80" height="35.5"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="80" id="1eM-6D-ePA"/>
-                                        </constraints>
+                                        <rect key="frame" x="8" y="272.5" width="110" height="35.5"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue-CondensedBold" family="Helvetica Neue" pointSize="15"/>
                                         <color key="textColor" red="0.0" green="0.2470588235" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
@@ -569,6 +554,7 @@
                                     <constraint firstItem="fCj-xe-Z0t" firstAttribute="leading" secondItem="gIA-1m-T9W" secondAttribute="leading" id="wXp-tM-3we"/>
                                     <constraint firstItem="npl-4o-Enb" firstAttribute="leading" secondItem="gIA-1m-T9W" secondAttribute="leading" id="yVL-vd-jRI"/>
                                     <constraint firstItem="5bO-nl-JVM" firstAttribute="leading" secondItem="gIA-1m-T9W" secondAttribute="leading" constant="15" id="zXq-iE-XTp"/>
+                                    <constraint firstItem="wJ3-Df-768" firstAttribute="width" secondItem="cU8-IB-wXW" secondAttribute="width" id="zxD-Hu-af3"/>
                                 </constraints>
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="rTq-dq-CV2" appends="YES" id="YyL-cZ-XL0"/>
@@ -872,7 +858,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="U-20" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5zP-BK-58e">
-                                                <rect key="frame" x="5" y="218.5" width="35.5" height="34"/>
+                                                <rect key="frame" x="5" y="218.5" width="39" height="34"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue-CondensedBold" family="Helvetica Neue" pointSize="19"/>
                                                 <color key="textColor" red="0.0" green="0.2470588235" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -1168,6 +1154,7 @@
                                             <constraint firstItem="XcQ-ea-gx8" firstAttribute="leading" secondItem="Zb3-TJ-Yj6" secondAttribute="leading" id="wVt-h6-2aJ"/>
                                             <constraint firstItem="DMg-79-zQc" firstAttribute="top" secondItem="XcQ-ea-gx8" secondAttribute="bottom" constant="5" id="y3x-sY-ZJy"/>
                                             <constraint firstItem="FrU-v6-b3b" firstAttribute="leading" secondItem="bNu-7a-6gM" secondAttribute="trailing" constant="15" id="yFB-G4-sdo"/>
+                                            <constraint firstItem="12K-Zc-mVS" firstAttribute="leading" secondItem="5zP-BK-58e" secondAttribute="trailing" constant="10" id="zf1-j5-S1b"/>
                                         </constraints>
                                     </view>
                                 </subviews>
