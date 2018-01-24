@@ -42,7 +42,9 @@ class HomeVC: UIViewController {
     var sortedGames = [String: [SoccerGame]]()
     var soccerGames = [SoccerGame]()
     var teamArray = [Team]()
-    let currentUserSettings = CoreDataService.shared.fetchPerson()
+    var currentUserSettings : Person? {
+        return CoreDataService.shared.fetchPerson()
+    }
     //let notificationType = UIApplication.shared.currentUserNotificationSettings!.types
     var notificationAuthorizationStatus : UNAuthorizationStatus = .notDetermined
   
@@ -68,12 +70,27 @@ class HomeVC: UIViewController {
         tableView.dataSource = self
         tableView.separatorStyle = .none
         teamPicker.transform = CGAffineTransform(rotationAngle: rotationAngle)
-        teamPicker.frame = CGRect(x: -100, y: view.frame.height - 73, width: view.frame.width + 200, height: 68)
+        
+        switch UIScreen.main.nativeBounds.height {
+        /*case 1136:
+            print("iPhone 5 or 5S or 5C")
+        case 1334:
+            print("iPhone 6/6S/7/8")
+        case 2208:
+            print("iPhone 6+/6S+/7+/8+")*/
+        case 2436:
+            print("iPhone X")
+            teamPicker.frame = CGRect(x: -100, y: view.frame.height - 103, width: view.frame.width + 200, height: 68)
+        default:
+            teamPicker.frame = CGRect(x: -100, y: view.frame.height - 73, width: view.frame.width + 200, height: 68)
+        }
+        
+        
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationController?.navigationBar.isTranslucent = true
         self.navigationController?.view.backgroundColor = UIColor.clear
-        self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedStringKey.font: UIFont(name: "HelveticaNeue-CondensedBold", size: 30.0)!,NSAttributedStringKey.foregroundColor: UIColor.white]
+        self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedStringKey.font: UIFont(name: "HelveticaNeue-CondensedBold", size: 28.0)!,NSAttributedStringKey.foregroundColor: UIColor.white]
         
         twoDaySwitch.onTintColor = blueColor
         oneDaySwitch.onTintColor = blueColor
@@ -83,9 +100,9 @@ class HomeVC: UIViewController {
         let dict: [String: Bool] = ["TwoDayNotification": twoDayBool, "OneDayNotification": oneDayBool, "TwoHourNotification": twoHourBool, "OneHourNotification": oneHourBool, "HalfHourNotification": halfHourBool]
         notificationsRef.setValue(dict)
         
-        if currentUserSettings.firstTimeInApp == true {
+        if currentUserSettings?.firstTimeInApp == true {
             messageAlert(title: "Welcome To US Soccer", message: "US Soccer shows you a list of all USA National Soccer Teams games. \n Swipe left or right on the bottom to sort the list by the team. \n Click on a bell to set a notification for that game. \n\n Please give US Soccer permission to send notifications for the soccer games you select.", from: nil)
-            currentUserSettings.setValue(false, forKey: "firstTimeInApp")
+            currentUserSettings?.setValue(false, forKey: "firstTimeInApp")
             CoreDataService.shared.saveContext()
         }
         
@@ -115,7 +132,12 @@ class HomeVC: UIViewController {
             let dateFormated = formatter.date(from: currentDateResult)?.timeIntervalSince1970
             
             for (key,value) in sortedGames {
-                sortedGames[key] = value.sorted(by: { $0.timestamp?.timeIntervalSince1970 ?? 0.0 < $1.timestamp?.timeIntervalSince1970 ?? 0.0})
+                for game in value {
+                    print("\(game.timestamp?.description ?? "nothing - no date")")
+                }
+                
+                sortedGames[key] = value.sorted(by: {
+                    $0.timestamp?.timeIntervalSince1970 ?? 0.0 < $1.timestamp?.timeIntervalSince1970 ?? 0.0})
                 for (index, game) in value.enumerated() {
                     //                    if game.timestamp == nil {
                     //                        game.timestamp = Date(timeIntervalSince1970: 1511193000.0)
@@ -145,6 +167,10 @@ class HomeVC: UIViewController {
             existingKeys.insert(key)
             allGames += sortedGames[key]!
         }
+        
+        allGames = allGames.sorted(by: {
+            $0.timestamp?.timeIntervalSince1970 ?? 0.0 < $1.timestamp?.timeIntervalSince1970 ?? 0.0})
+        
         sortedGames["ALL TEAMS"] = allGames
         
         // Remove the missing ones
@@ -210,7 +236,7 @@ class HomeVC: UIViewController {
             view.addSubview(notificationMenuView)
             
             let trailingConstraint = NSLayoutConstraint(item: notificationMenuView, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: .trailing, multiplier: 1.0, constant: 0.0)
-            let topConstraint = NSLayoutConstraint(item: notificationMenuView, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: .top, multiplier: 1.0, constant: 0.0)
+            let topConstraint = NSLayoutConstraint(item: notificationMenuView, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: view.safeAreaLayoutGuide, attribute: .top, multiplier: 1.0, constant: -64.0)
             let bottomConstraint = NSLayoutConstraint(item: notificationMenuView, attribute: NSLayoutAttribute.bottom, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: 0.0)
             view.addConstraint(trailingConstraint)
             view.addConstraint(topConstraint)
@@ -261,9 +287,9 @@ class HomeVC: UIViewController {
                         messageAlert(title: "No Internet Connection", message: "Notifications Setting Menu is not available in Offline Mode.", from: nil)
                     } else {
                         self.openMenu()
-                        if self.currentUserSettings.firstTimeClickingSetting == true {
+                        if self.currentUserSettings?.firstTimeClickingSetting == true {
                             messageAlert(title: "Notifications Menu", message: "Set up when you want to recieve notifications, The default is two hours before a game \n Click on one of the Teams to recieve notifications for all their games.", from: nil)
-                            self.currentUserSettings.setValue(false, forKey: "firstTimeClickingSetting")
+                            self.currentUserSettings?.setValue(false, forKey: "firstTimeClickingSetting")
                             CoreDataService.shared.saveContext()
                         }
                     }
@@ -327,6 +353,13 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
         return soccerGames.count
     }
     
+    
+    /*
+     separeted the arrays by team
+     sorted the individual arrays
+     put the all together again to form a all teams array
+     */
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "GamesTVCell", for: indexPath) as? GamesTVCell else {
             fatalError("The Cell Failed to Deque")
@@ -342,7 +375,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
             cell.vsLbl.text = ""
             cell.opponentLbl.text = ""
         } else {
-            let usSoccerTitle = soccerGames[indexPath.row].title!.components(separatedBy: " ")
+            let usSoccerTitle = soccerGames[indexPath.row].title?.components(separatedBy: " ") ?? [String]()
             if usSoccerTitle.count > 1 {
                 if usSoccerTitle[1] != "vs" {
                     cell.gameTitleLbl.text = "\(usSoccerTitle[0].uppercased()) \(usSoccerTitle[1].uppercased())"
@@ -418,9 +451,9 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     private func handleNotifications(sender: UIButton) {
-        if currentUserSettings.firstTimeClickingBell == true {
+        if currentUserSettings?.firstTimeClickingBell == true {
             messageAlert(title: "Notification Set", message: "A notification has been set for this game. To update your notificaiton settings press the \"Gear\" icon in the top right corner", from: nil)
-            currentUserSettings.setValue(false, forKey: "firstTimeClickingBell")
+            currentUserSettings?.setValue(false, forKey: "firstTimeClickingBell")
             CoreDataService.shared.saveContext()
         }
             if notificationAuthorizationStatus != .authorized {

@@ -40,7 +40,7 @@ class CoreDataService {
         }
         return games
     }
-    func fetchPerson() -> Person {
+    func fetchPerson() -> Person? {
         var currentPerson = [Person]()
         let fetchPerson = NSFetchRequest<Person>(entityName: "Person")
         do {
@@ -48,7 +48,7 @@ class CoreDataService {
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
-        return currentPerson[0]
+        return currentPerson.first
     }
     
     func saveTeam(title: String) {

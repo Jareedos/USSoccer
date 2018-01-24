@@ -34,6 +34,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             if let user = user {
                 
                 
+                // Create the Person object if one doesn't exist already
+                if CoreDataService.shared.fetchPerson() == nil {
+                    CoreDataService.shared.savePerson(userID: user.uid)
+                }
+                
+                
                 // Recommend moving the below line to prompt for push after informing the user about
                 //   how your app will use them.
                 OneSignal.promptForPushNotifications(userResponse: { accepted in
@@ -58,8 +64,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                         
                         // This is your device's identification within OneSignal
                         guard let userID = status.subscriptionStatus.userId else { return }
-                        CoreDataService.shared.savePerson(userID: userID)
-                        if CoreDataService.shared.fetchPerson().userID != userID {
+                        if let person = CoreDataService.shared.fetchPerson(), person.userID != userID {
  //                           let pushToken = status.subscriptionStatus.pushToken
                             let userRef = Database.database().reference().child("users").child(user.uid)
                             // Set the one signal id
