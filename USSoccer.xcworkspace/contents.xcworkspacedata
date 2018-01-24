@@ -2,10 +2,10 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:USSoccer/Model/Person+CoreDataClass.swift">
+      location = "group:Person+CoreDataClass.swift">
    </FileRef>
    <FileRef
-      location = "group:USSoccer/Model/Person+CoreDataProperties.swift">
+      location = "group:Person+CoreDataProperties.swift">
    </FileRef>
    <FileRef
       location = "group:USSoccer.xcodeproj">

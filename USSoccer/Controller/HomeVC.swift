@@ -42,6 +42,7 @@ class HomeVC: UIViewController {
     var sortedGames = [String: [SoccerGame]]()
     var soccerGames = [SoccerGame]()
     var teamArray = [Team]()
+    let currentUserSettings = CoreDataService.shared.fetchPerson()
     //let notificationType = UIApplication.shared.currentUserNotificationSettings!.types
     var notificationAuthorizationStatus : UNAuthorizationStatus = .notDetermined
   
@@ -81,6 +82,53 @@ class HomeVC: UIViewController {
         halfHourSwitch.onTintColor = blueColor
         let dict: [String: Bool] = ["TwoDayNotification": twoDayBool, "OneDayNotification": oneDayBool, "TwoHourNotification": twoHourBool, "OneHourNotification": oneHourBool, "HalfHourNotification": halfHourBool]
         notificationsRef.setValue(dict)
+        
+        if currentUserSettings.firstTimeInApp == true {
+            messageAlert(title: "Welcome To US Soccer", message: "US Soccer shows you a list of all USA National Soccer Teams games. \n Swipe left or right on the bottom to sort the list by the team. \n Click on a bell to set a notification for that game. \n\n Please give US Soccer permission to send notifications for the soccer games you select.", from: nil)
+            currentUserSettings.setValue(false, forKey: "firstTimeInApp")
+            CoreDataService.shared.saveContext()
+        }
+        
+        if !ConnectionCheck.isConnectedToNetwork() {
+            messageAlert(title: "Offline Mode", message: "Games Information may not be accurate due to no internet connection. \n Please connect to the internet and restart USA Soccer for the full experience", from: nil)
+        } else {
+            ref.child("users").child("\(String(describing: currentUser))").observeSingleEvent(of: .value) { (snapshot) in
+                
+                guard let value = snapshot.value as? NSDictionary, let notifications = value["notificationSettings"] as? NSDictionary else { return }
+                
+                let halfHourNotification = notifications["HalfHourNotification"] as? Bool ?? false
+                let oneDayNotification = notifications["OneDayNotification"] as? Bool ?? false
+                let oneHourNotification = notifications["OneHourNotification"] as? Bool ?? false
+                let twoDayNotification = notifications["TwoDayNotification"] as? Bool ?? false
+                let twoHourNotification = notifications["TwoHourNotification"] as? Bool ?? true
+                
+                self.halfHourSwitch.setOn(halfHourNotification, animated: false)
+                self.oneDaySwitch.setOn(oneDayNotification, animated: false)
+                self.oneHourSwitch.setOn(oneHourNotification, animated: false)
+                self.twoDaySwitch.setOn(twoDayNotification, animated: false)
+                self.twoHourSwitch.setOn(twoHourNotification, animated: false)
+            }
+            
+            let currentDate = Date()
+            formatter.dateFormat = "MMMM dd, yyyy h:mm a ZZZ"
+            let currentDateResult = formatter.string(from: currentDate)
+            let dateFormated = formatter.date(from: currentDateResult)?.timeIntervalSince1970
+            
+            for (key,value) in sortedGames {
+                sortedGames[key] = value.sorted(by: { $0.timestamp?.timeIntervalSince1970 ?? 0.0 < $1.timestamp?.timeIntervalSince1970 ?? 0.0})
+                for (index, game) in value.enumerated() {
+                    //                    if game.timestamp == nil {
+                    //                        game.timestamp = Date(timeIntervalSince1970: 1511193000.0)
+                    //                    }
+                    if game.timestamp!.timeIntervalSince1970 < dateFormated! {
+                        sortedGames[key]!.remove(at: index)
+                        gamesRef.child("\(game.title!)\(game.date!)").removeValue()
+                        CoreDataService.shared.delete(object: game)
+                    }
+                }
+            }
+            
+        }
         
         //Checking to see if the Teams are set up in CoreData, Setting them up if they are not
         teamArray = CoreDataService.shared.fetchTeams()
@@ -137,47 +185,6 @@ class HomeVC: UIViewController {
         if (sortedGames["ALL TEAMS"]!.isEmpty) {
             let newGame = SoccerGame(title: "Internet Access Required For Game Info", date: "NA", time: "NA", venue: "NA", stations: "NA")
             sortedGames["ALL TEAMS"]!.append(newGame)
-        }
-        
-        if !ConnectionCheck.isConnectedToNetwork() {
-            messageAlert(title: "Offline Mode", message: "Games Information may not be accurate due to no internet connection. \n Please connect to the internet and restart USA Soccer for the full experience", from: nil)
-        } else {
-        ref.child("users").child("\(currentUser!.uid)").observeSingleEvent(of: .value) { (snapshot) in
-            
-            guard let value = snapshot.value as? NSDictionary, let notifications = value["notificationSettings"] as? NSDictionary else { return }
-            
-            let halfHourNotification = notifications["HalfHourNotification"] as? Bool ?? false
-            let oneDayNotification = notifications["OneDayNotification"] as? Bool ?? false
-            let oneHourNotification = notifications["OneHourNotification"] as? Bool ?? false
-            let twoDayNotification = notifications["TwoDayNotification"] as? Bool ?? false
-            let twoHourNotification = notifications["TwoHourNotification"] as? Bool ?? true
-            
-            self.halfHourSwitch.setOn(halfHourNotification, animated: false)
-            self.oneDaySwitch.setOn(oneDayNotification, animated: false)
-            self.oneHourSwitch.setOn(oneHourNotification, animated: false)
-            self.twoDaySwitch.setOn(twoDayNotification, animated: false)
-            self.twoHourSwitch.setOn(twoHourNotification, animated: false)
-        }
-
-        let currentDate = Date()
-        formatter.dateFormat = "MMMM dd, yyyy h:mm a ZZZ"
-        let currentDateResult = formatter.string(from: currentDate)
-        let dateFormated = formatter.date(from: currentDateResult)?.timeIntervalSince1970
-        
-            for (key,value) in sortedGames {
-                sortedGames[key] = value.sorted(by: { $0.timestamp?.timeIntervalSince1970 ?? 0.0 < $1.timestamp?.timeIntervalSince1970 ?? 0.0})
-                for (index, game) in value.enumerated() {
-                    if game.timestamp == nil {
-                        game.timestamp = Date(timeIntervalSince1970: 1511193000.0)
-                    }
-                    if game.timestamp!.timeIntervalSince1970 < dateFormated! {
-                        sortedGames[key]!.remove(at: index)
-                        gamesRef.child("\(game.title!)\(game.date!)").removeValue()
-                        CoreDataService.shared.delete(object: game)
-                    }
-                }
-            }
-            
         }
         tableView.reloadData()
     }
@@ -241,7 +248,6 @@ class HomeVC: UIViewController {
     }
     
     @IBAction func settingBtnPressed(_ sender: Any) {
-        
         UNUserNotificationCenter.current().getNotificationSettings { (settings) in
             self.notificationAuthorizationStatus = settings.authorizationStatus
             
@@ -255,6 +261,11 @@ class HomeVC: UIViewController {
                         messageAlert(title: "No Internet Connection", message: "Notifications Setting Menu is not available in Offline Mode.", from: nil)
                     } else {
                         self.openMenu()
+                        if self.currentUserSettings.firstTimeClickingSetting == true {
+                            messageAlert(title: "Notifications Menu", message: "Set up when you want to recieve notifications, The default is two hours before a game \n Click on one of the Teams to recieve notifications for all their games.", from: nil)
+                            self.currentUserSettings.setValue(false, forKey: "firstTimeClickingSetting")
+                            CoreDataService.shared.saveContext()
+                        }
                     }
                 }
             }
@@ -407,51 +418,53 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     private func handleNotifications(sender: UIButton) {
-        
-        if notificationAuthorizationStatus != .authorized {
-            messageAlert(title: "Notifications Permission Required", message: "In order to send a notificaiton, notification permission is required. \n\n Please go to your setting and turn on notifications for USSoccer.", from: nil)
-            print("notifications are NOT enabled")
-        } else {
-            if ConnectionCheck.isConnectedToNetwork() {
-                let buttonPosition = sender.convert(CGPoint.zero, to: tableView)
-                let indexPath: IndexPath! = tableView.indexPathForRow(at: buttonPosition)
-                let game = soccerGames[indexPath.row]
-                game.notification = NSNumber(value: !(game.notification?.boolValue ?? false))
-                CoreDataService.shared.saveContext()
-                if let team = team(forGame: game) {
-                    notificationAlertLbl.text = "\(team.title?.uppercased() ?? "Name not available") Notification Set"
-                }
-                
-                if game.notification!.boolValue {
-                    notificationAlertVisible = !notificationAlertVisible
-                    if notificationAlertVisible {
-                        // Showing
-                        notificationAlertTopConstraint.constant = 0.0
-                        UIView.animate(withDuration: 0.3, animations: {
-                            self.navigationController?.view.layoutIfNeeded()
-                        }, completion: { (finished: Bool) in
+        if currentUserSettings.firstTimeClickingBell == true {
+            messageAlert(title: "Notification Set", message: "A notification has been set for this game. To update your notificaiton settings press the \"Gear\" icon in the top right corner", from: nil)
+            currentUserSettings.setValue(false, forKey: "firstTimeClickingBell")
+            CoreDataService.shared.saveContext()
+        }
+            if notificationAuthorizationStatus != .authorized {
+                messageAlert(title: "Notifications Permission Required", message: "In order to send a notificaiton, notification permission is required. \n\n Please go to your setting and turn on notifications for USSoccer.", from: nil)
+                print("notifications are NOT enabled")
+            } else {
+                if ConnectionCheck.isConnectedToNetwork() {
+                    let buttonPosition = sender.convert(CGPoint.zero, to: tableView)
+                    let indexPath: IndexPath! = tableView.indexPathForRow(at: buttonPosition)
+                    let game = soccerGames[indexPath.row]
+                    game.notification = NSNumber(value: !(game.notification?.boolValue ?? false))
+                    CoreDataService.shared.saveContext()
+                    if let team = team(forGame: game) {
+                        notificationAlertLbl.text = "\(team.title?.uppercased() ?? "Name not available") Notification Set"
+                    }
+                    
+                    if game.notification!.boolValue {
+                        notificationAlertVisible = !notificationAlertVisible
+                        if notificationAlertVisible {
+                            // Showing
+                            notificationAlertTopConstraint.constant = 0.0
+                            UIView.animate(withDuration: 0.3, animations: {
+                                self.navigationController?.view.layoutIfNeeded()
+                            }, completion: { (finished: Bool) in
+                                
+                                self.notificationAlertHideTimer = Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(HomeVC.notificationAlertHideTimerFired), userInfo: nil, repeats: false)
+                            })
                             
-                            self.notificationAlertHideTimer = Timer.scheduledTimer(timeInterval: 1.5, target: self, selector: #selector(HomeVC.notificationAlertHideTimerFired), userInfo: nil, repeats: false)
-                        })
-                        
-                    } else {
-                        // Hiding
-                        notificationAlertTopConstraint.constant = -notificationView.frame.size.height
-                        UIView.animate(withDuration: 0.3) {
-                            self.navigationController?.view.layoutIfNeeded()
+                        } else {
+                            // Hiding
+                            notificationAlertTopConstraint.constant = -notificationView.frame.size.height
+                            UIView.animate(withDuration: 0.3) {
+                                self.navigationController?.view.layoutIfNeeded()
+                            }
                         }
                     }
+                    tableView.reloadData()
+                    print("I got here")
+                } else {
+                    messageAlert(title: "No Internet Connection", message: "Internet connection is required to update game notifications.", from: nil)
                 }
-                
-                
-                tableView.reloadData()
-                print("I got here")
-            } else {
-                messageAlert(title: "No Internet Connection", message: "Internet connection is required to update game notifications.", from: nil)
+                print("notifications are enabled")
             }
-            print("notifications are enabled")
         }
-    }
 }
 
 extension HomeVC: UIPickerViewDelegate, UIPickerViewDataSource {

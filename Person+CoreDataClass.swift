@@ -2,7 +2,7 @@
 //  Person+CoreDataClass.swift
 //  
 //
-//  Created by Jared Sobol on 12/6/17.
+//  Created by Jared Sobol on 1/18/18.
 //
 //
 

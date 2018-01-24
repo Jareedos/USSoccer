@@ -60,12 +60,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                         guard let userID = status.subscriptionStatus.userId else { return }
                         CoreDataService.shared.savePerson(userID: userID)
                         if CoreDataService.shared.fetchPerson().userID != userID {
-                            print("I DIDNT WORK FUCK FUCK FUCK FUCK FUCK")
-                            print("userID = \(userID)")
-                            let pushToken = status.subscriptionStatus.pushToken
-                            print("pushToken = \(pushToken ?? "")")
-                            
-                            
+ //                           let pushToken = status.subscriptionStatus.pushToken
                             let userRef = Database.database().reference().child("users").child(user.uid)
                             // Set the one signal id
                             

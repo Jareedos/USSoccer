@@ -65,24 +65,31 @@ class CoreDataService {
         saveContext()
     }
     
-    func saveGame(game: SoccerGame, timeStamp: Double) {
-        //let entity = NSEntityDescription.entity(forEntityName: "Game", in: managedContext!)!
-        //let game = SoccerGame(title: title, date: date, time: time, venue: venue, stations: stations)
-        /*let game = SoccerGame(entity: entity, insertInto: managedContext)
-        game.setValue(title, forKey: "title")
-        game.setValue(venue, forKey: "venue")
-        game.setValue(time, forKey: "string")
-        game.setValue(false, forKey: "notification")
-        game.setValue(date, forKey: "date")
-        game.setValue(timeStamp, forKey: "timeStamp")
-        */
-        saveContext()
-    }
+//    func saveGame(game: SoccerGame, timeStamp: Double) {
+//        //let entity = NSEntityDescription.entity(forEntityName: "Game", in: managedContext!)!
+//        //let game = SoccerGame(title: title, date: date, time: time, venue: venue, stations: stations)
+//        /*let game = SoccerGame(entity: entity, insertInto: managedContext)
+//        game.setValue(title, forKey: "title")
+//        game.setValue(venue, forKey: "venue")
+//        game.setValue(time, forKey: "string")
+//        game.setValue(false, forKey: "notification")
+//        game.setValue(date, forKey: "date")
+//        game.setValue(timeStamp, forKey: "timeStamp")
+//        */
+//        saveContext()
+//    }
     
     func savePerson(userID: String){
         let entity = NSEntityDescription.entity(forEntityName: "Person", in: managedContext!)!
         let person = Person(entity: entity, insertInto: managedContext)
         person.setValue(userID, forKey: "userID")
+        person.setValue(true, forKey: "firstTimeTogglingNotificationSettings")
+        person.setValue(true, forKey: "firstTimeSeeingSlideDown")
+        person.setValue(true, forKey: "firstTimeInApp")
+        person.setValue(true, forKey: "firstTimeClickingteam")
+        person.setValue(true, forKey: "firstTimeClickingSetting")
+        person.setValue(true, forKey: "firstTimeClickingInfo")
+        person.setValue(true, forKey: "firstTimeClickingBell")
         saveContext()
     }
     
