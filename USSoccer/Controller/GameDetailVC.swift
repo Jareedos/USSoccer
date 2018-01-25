@@ -19,6 +19,7 @@ class GameDetailVC: UIViewController {
     @IBOutlet weak var gameVenueCityState: UILabel!
     @IBOutlet weak var gameView: UIView!
     @IBOutlet weak var dateView: UIView!
+    @IBOutlet weak var channelView: UIView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +34,10 @@ class GameDetailVC: UIViewController {
         dateView.layer.borderWidth = 2.5
         dateView.layer.cornerRadius = 10
         dateView.layer.masksToBounds = true
+        channelView.layer.borderColor = UIColor.white.cgColor
+        channelView.layer.borderWidth = 2.5
+        channelView.layer.cornerRadius = 10
+        channelView.layer.masksToBounds = true
         let date = soccerGame.timestamp
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .none
@@ -41,12 +46,15 @@ class GameDetailVC: UIViewController {
         gameTimeLbl.text = strDate.uppercased()
         if soccerGame.stations == "ussoccer.com" {
             gameStaionsLbl.text = soccerGame.stations
-        } else {
-            
+        } else if (soccerGame.stations?.contains("Tickets"))! {
             // fix crash with out of index error
             var stationComponents = soccerGame.stations!.components(separatedBy: "Tickets")
+            print(stationComponents, "HERE")
             let removingSlash = stationComponents[1].replacingOccurrences(of: "\n", with: "")
-            gameStaionsLbl.text = stationComponents[1]
+            print(removingSlash)
+            gameStaionsLbl.text = removingSlash
+        } else {
+            gameStaionsLbl.text = soccerGame.stations
         }
         var venueComponents = soccerGame.venue!.components(separatedBy: ";")
         let removeFantasyCamp = venueComponents[1].replacingOccurrences(of: "\nFantasy Camp", with: "")

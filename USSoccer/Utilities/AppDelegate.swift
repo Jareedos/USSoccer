@@ -71,6 +71,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                             
                             userRef.child("oneSignalIds").child(userID).setValue(true)
                             
+                            
                             // Save the push notification settings
                             let dict: [String: Bool] = ["TwoDayNotification": false, "OneDayNotification": false, "TwoHourNotification": true, "OneHourNotification": false, "HalfHourNotification": false]
                             userRef.child("notificationSettings").setValue(dict)

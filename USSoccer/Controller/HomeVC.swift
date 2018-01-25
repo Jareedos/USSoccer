@@ -97,8 +97,8 @@ class HomeVC: UIViewController {
         twoHourSwitch.onTintColor = blueColor
         oneHourSwitch.onTintColor = blueColor
         halfHourSwitch.onTintColor = blueColor
-        let dict: [String: Bool] = ["TwoDayNotification": twoDayBool, "OneDayNotification": oneDayBool, "TwoHourNotification": twoHourBool, "OneHourNotification": oneHourBool, "HalfHourNotification": halfHourBool]
-        notificationsRef.setValue(dict)
+//        let dict: [String: Bool] = ["TwoDayNotification": twoDayBool, "OneDayNotification": oneDayBool, "TwoHourNotification": twoHourBool, "OneHourNotification": oneHourBool, "HalfHourNotification": halfHourBool]
+//        notificationsRef.setValue(dict)
         
         if currentUserSettings?.firstTimeInApp == true {
             messageAlert(title: "Welcome To US Soccer", message: "US Soccer shows you a list of all USA National Soccer Teams games. \n Swipe left or right on the bottom to sort the list by the team. \n Click on a bell to set a notification for that game. \n\n Please give US Soccer permission to send notifications for the soccer games you select.", from: nil)
@@ -109,8 +109,8 @@ class HomeVC: UIViewController {
         if !ConnectionCheck.isConnectedToNetwork() {
             messageAlert(title: "Offline Mode", message: "Games Information may not be accurate due to no internet connection. \n Please connect to the internet and restart USA Soccer for the full experience", from: nil)
         } else {
-            ref.child("users").child("\(String(describing: currentUser))").observeSingleEvent(of: .value) { (snapshot) in
-                
+            ref.child("users").child("\(currentUser)").observeSingleEvent(of: .value) { (snapshot) in
+                print("I AM GETTING HERE!")
                 guard let value = snapshot.value as? NSDictionary, let notifications = value["notificationSettings"] as? NSDictionary else { return }
                 
                 let halfHourNotification = notifications["HalfHourNotification"] as? Bool ?? false
@@ -118,6 +118,7 @@ class HomeVC: UIViewController {
                 let oneHourNotification = notifications["OneHourNotification"] as? Bool ?? false
                 let twoDayNotification = notifications["TwoDayNotification"] as? Bool ?? false
                 let twoHourNotification = notifications["TwoHourNotification"] as? Bool ?? true
+                print(twoDayNotification, "This is my value")
                 
                 self.halfHourSwitch.setOn(halfHourNotification, animated: false)
                 self.oneDaySwitch.setOn(oneDayNotification, animated: false)
@@ -139,9 +140,6 @@ class HomeVC: UIViewController {
                 sortedGames[key] = value.sorted(by: {
                     $0.timestamp?.timeIntervalSince1970 ?? 0.0 < $1.timestamp?.timeIntervalSince1970 ?? 0.0})
                 for (index, game) in value.enumerated() {
-                    //                    if game.timestamp == nil {
-                    //                        game.timestamp = Date(timeIntervalSince1970: 1511193000.0)
-                    //                    }
                     if game.timestamp!.timeIntervalSince1970 < dateFormated! {
                         sortedGames[key]!.remove(at: index)
                         gamesRef.child("\(game.title!)\(game.date!)").removeValue()
