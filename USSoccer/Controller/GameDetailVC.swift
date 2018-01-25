@@ -17,12 +17,22 @@ class GameDetailVC: UIViewController {
     @IBOutlet weak var gameStaionsLbl: UILabel!
     @IBOutlet weak var gameVenueLbl: UILabel!
     @IBOutlet weak var gameVenueCityState: UILabel!
+    @IBOutlet weak var gameView: UIView!
+    @IBOutlet weak var dateView: UIView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Game Details"
         gameTitleLbl.text = soccerGame.title!.uppercased()
         gameDateLbl.text = soccerGame.date!.uppercased()
+        gameView.layer.borderColor = UIColor.white.cgColor
+        gameView.layer.borderWidth = 2.5
+        gameView.layer.cornerRadius = 10
+        gameView.layer.masksToBounds = true
+        dateView.layer.borderColor = UIColor.white.cgColor
+        dateView.layer.borderWidth = 2.5
+        dateView.layer.cornerRadius = 10
+        dateView.layer.masksToBounds = true
         let date = soccerGame.timestamp
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .none
