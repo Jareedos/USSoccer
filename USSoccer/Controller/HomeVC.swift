@@ -11,6 +11,7 @@ import Firebase
 import FirebaseDatabase
 import CoreData
 import UserNotifications
+import OneSignal
 
 class HomeVC: UIViewController {
     
@@ -23,6 +24,7 @@ class HomeVC: UIViewController {
     @IBOutlet weak var twoHourSwitch: UISwitch!
     @IBOutlet weak var oneHourSwitch: UISwitch!
     @IBOutlet weak var halfHourSwitch: UISwitch!
+    @IBOutlet weak var infoBtn: UIBarButtonItem!
     
     @IBOutlet var menuShaddowView: UIView!
     @IBOutlet weak var notificationMenuTrailingConstraint: NSLayoutConstraint!
@@ -45,7 +47,6 @@ class HomeVC: UIViewController {
     var currentUserSettings : Person? {
         return CoreDataService.shared.fetchPerson()
     }
-    //let notificationType = UIApplication.shared.currentUserNotificationSettings!.types
     var notificationAuthorizationStatus : UNAuthorizationStatus = .notDetermined
   
     var notificationAlertVisible = false
@@ -97,13 +98,27 @@ class HomeVC: UIViewController {
         twoHourSwitch.onTintColor = blueColor
         oneHourSwitch.onTintColor = blueColor
         halfHourSwitch.onTintColor = blueColor
-//        let dict: [String: Bool] = ["TwoDayNotification": twoDayBool, "OneDayNotification": oneDayBool, "TwoHourNotification": twoHourBool, "OneHourNotification": oneHourBool, "HalfHourNotification": halfHourBool]
-//        notificationsRef.setValue(dict)
+        
+        NotificationCenter.default.addObserver(self,
+                                                 selector: #selector(HomeVC.appWillBecomeActive(_:)),
+                                                 name: NSNotification.Name.UIApplicationDidBecomeActive,
+                                                 object: nil)
         
         if currentUserSettings?.firstTimeInApp == true {
-            messageAlert(title: "Welcome To US Soccer", message: "US Soccer shows you a list of all USA National Soccer Teams games. \n Swipe left or right on the bottom to sort the list by the team. \n Click on a bell to set a notification for that game. \n\n Please give US Soccer permission to send notifications for the soccer games you select.", from: nil)
-            currentUserSettings?.setValue(false, forKey: "firstTimeInApp")
-            CoreDataService.shared.saveContext()
+            let introAlert = UIAlertController(title: "Welcome To US Soccer" , message: "US Soccer shows you a list of all USA National Soccer Teams games. \n Swipe left or right on the bottom to sort the list by the team. \n Click on a bell to set a notification for that game. \n\n Please give US Soccer permission to send notifications for the soccer games you select.", preferredStyle: UIAlertControllerStyle.alert)
+            
+            introAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (error) in
+                self.currentUserSettings?.setValue(false, forKey: "firstTimeInApp")
+                CoreDataService.shared.saveContext()
+                
+                // Ask for the push notification permission
+                OneSignal.promptPushNotificationAlert()
+                self.isWaitingForDismissPermissionsDialog = true
+                
+            }))
+             self.present(introAlert, animated: true, completion: nil)
+
+            
         }
         
         if !ConnectionCheck.isConnectedToNetwork() {
@@ -136,14 +151,17 @@ class HomeVC: UIViewController {
                 for game in value {
                     print("\(game.timestamp?.description ?? "nothing - no date")")
                 }
-                
+                //This fails intermitantly at line 161 saying fatal error index out of range. I don't know why
                 sortedGames[key] = value.sorted(by: {
                     $0.timestamp?.timeIntervalSince1970 ?? 0.0 < $1.timestamp?.timeIntervalSince1970 ?? 0.0})
                 for (index, game) in value.enumerated() {
                     if game.timestamp!.timeIntervalSince1970 < dateFormated! {
+                        //this is my solution, I think it will only remove the game if the array is not empty
+                        if !(sortedGames[key]?.isEmpty)! {
                         sortedGames[key]!.remove(at: index)
                         gamesRef.child("\(game.title!)\(game.date!)").removeValue()
                         CoreDataService.shared.delete(object: game)
+                        }
                     }
                 }
             }
@@ -213,8 +231,54 @@ class HomeVC: UIViewController {
         tableView.reloadData()
     }
     
+    private var isWaitingForDismissPermissionsDialog = false
+    private var isWaitingForDismissInfoTutorial = false
+    
+    @objc func appWillBecomeActive(_ notification: Notification) {
+        
+        
+        // Check if the
+        if isWaitingForDismissPermissionsDialog == true {
+            isWaitingForDismissPermissionsDialog = false
+            // Present the rest of the first time in app stuff
+            
+            if self.currentUserSettings?.firstTimeClickingInfo == true {
+                
+                let _ = UIAlertController.presentOKAlertWithTitle("App Info", message: "This list contains all of the Abriviations & Symbols used in the app and what they mean. \n\n click the X to close the window.", okTapped: {
+                    self.isWaitingForDismissInfoTutorial = true
+                    
+                    self.currentUserSettings?.setValue(false, forKey: "firstTimeClickingInfo")
+                    CoreDataService.shared.saveContext()
+                    self.performSegue(withIdentifier: "infoSegue", sender: nil)
+                })
+            }
+            
+            
+        }
+    }
+    
+    func presentNotificationTutorial() {
+        
+        
+        // Check if the
+        if isWaitingForDismissInfoTutorial == true {
+            isWaitingForDismissInfoTutorial = false
+            
+            
+            if self.currentUserSettings?.firstTimeClickingSetting == true {
+                messageAlert(title: "Notifications Menu", message: "Set up when you want to recieve notifications, The default is two hours before a game \n Click on one of the Teams below to recieve notifications for all their games.", from: nil)
+                self.currentUserSettings?.setValue(false, forKey: "firstTimeClickingSetting")
+                CoreDataService.shared.saveContext()
+                self.openMenu()
+            }
+        }
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        
+        
         
         if let view = navigationController?.view {
             view.addSubview(menuShaddowView)
@@ -311,8 +375,8 @@ class HomeVC: UIViewController {
     func openMenu() {
         menuShaddowView.isHidden = false
         menuShaddowView.alpha = 0.0
-        notificationMenuTrailingConstraint.constant = 0.0
-        notificationAlertTopConstraint.constant = -notificationView.frame.size.height
+        notificationMenuTrailingConstraint?.constant = 0.0
+        notificationAlertTopConstraint?.constant = -notificationView.frame.size.height
         UIView.animate(withDuration: 0.3, animations: {
             self.menuShaddowView.alpha = 1.0
             self.navigationController?.view.layoutIfNeeded()
@@ -341,6 +405,9 @@ class HomeVC: UIViewController {
             let soccerGame = soccerGames[(indexPath?.row)!]
             let detailViewController = segue.destination as! GameDetailVC
             detailViewController.soccerGame = soccerGame
+        }
+        if let vc = segue.destination as? InfoVC {
+            vc.presentingVC = self
         }
     }
 }

@@ -16,6 +16,7 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
 //    let isAnonymous = user!.isAnonymous  // true
 //    let uid = user!.uid
 //    let usersRef = ref.child(user.uid
+    var currentTeam = ""
     var twoDayBool = false
     var oneDayBool = false
     var twoHourBool = false
@@ -72,6 +73,12 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let teamTitle = self.teamsArray[indexPath.row]
+        let teams = CoreDataService.shared.fetchTeams()
+        for team in teams {
+            if stringTrimmer(stringToTrim: teamTitle)?.uppercased() == stringTrimmer(stringToTrim: team.title)?.uppercased() {
+                currentTeam = team.title!
+            }
+        }
         
         UNUserNotificationCenter.current().getNotificationSettings { (settings) in
             self.notificationAuthorizationStatus = settings.authorizationStatus
@@ -92,13 +99,23 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
                         let followingTeamRef = followingRef.child(teamTitle).child(self.currentUser!.uid)
                         
                         var isSelected = self.selectedTeams[teamTitle] ?? false
+                        
+                        
                         // Flip
                         isSelected = !isSelected
                         self.selectedTeams[teamTitle] = isSelected
                         if isSelected {
                             followingTeamRef.setValue(true)
+                            //CoreDataService.shared.saveTeam(title: self.currentTeam, following: true)
+                            //This should save if the user turned on Team notificicaitons
+//                            self.currentTeam.setValue(true, forKey: "notifications")
+//                            CoreDataService.shared.saveContext()
                         } else {
                             followingTeamRef.removeValue()
+                            //CoreDataService.shared.saveTeam(title: self.currentTeam, following: false)
+                              //This should save if the user turned off Team notifications
+//                            self.currentTeam.setValue(false, forKey: "notifications")
+//                            CoreDataService.shared.saveContext()
                         }
                         
                         tableView.reloadData()

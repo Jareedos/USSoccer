@@ -28,7 +28,7 @@ class ApiCaller{
             
             if let jsonData = response.result.value as? Dictionary<String, AnyObject> {
                 guard let data = jsonData["Data"] as? [[String: AnyObject]] else {
-                    completion()
+                    self.syncLocalDatabase(completion: completion)
                     return
                 }
                 let arrayLength = data.count
@@ -37,8 +37,25 @@ class ApiCaller{
          //       if its been only 3 days sense the lasttime data was updated then move on and load from coredata, else display alert about network error connection errror and needing to update data.
                 
                 if data.isEmpty {
-                    completion()
-                    return
+                    if ConnectionCheck.isConnectedToNetwork() {
+                    
+                        // Sync local database
+                        self.syncLocalDatabase(completion: completion)
+                        return
+                    } else {
+                        // No data to sync and not connected to network
+                        // we need to check if some data already exists in the local database
+                        let games = CoreDataService.shared.fetchGames()
+                        if games.count == 0 {
+                            // Show the alert and possibly try again
+                            
+                            let _ = UIAlertController.presentOKAlertWithTitle("No Connection", message: "Cannot load any games, please try again later.", okTapped: {
+                                self.ApiCall(completion: completion)
+                            })
+                            return
+                        }
+                    }
+                    
                 }
                 
                 ref.child("LastUpdate").observeSingleEvent(of: .value, with: { (snapShot) in
@@ -50,7 +67,7 @@ class ApiCaller{
                     let thresholdTimeInterval : TimeInterval = 24.0 * 3.0 * 3600.0
                     if currentDate.timeIntervalSince(lastUpdateDate) > thresholdTimeInterval {
                         // It's been more than 3 days
-                        //alert here
+                        messageAlert(title: "Carrier Server Error", message: "Your internet connection is not currently addiquate to update game information, \n\n Game information might be old.", from: nil)
                         completion()
                         return
                     }
@@ -66,7 +83,7 @@ class ApiCaller{
                         let date = currentArray["Date"] as! String
                         let stations = (currentArray["Stations"] as? String) ?? "ussoccer.com"
                         let teamSeperated = title.components(separatedBy: "vs")
-                        let team = stringTrimmer(stringToTrim: teamSeperated[0])
+                        let team = stringTrimmer(stringToTrim: teamSeperated[0])?.capitalized
                         let formatter = DateFormatter()
                         var castedTime = time as! String
                         

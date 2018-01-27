@@ -10,6 +10,7 @@ import UIKit
 
 class InfoVC: UIViewController {
 
+    weak var presentingVC: HomeVC?
     @IBOutlet weak var infoView: UIView!
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,7 +19,9 @@ class InfoVC: UIViewController {
     }
 
     @IBAction func cancelBtnPressed(_ sender: Any) {
-        dismiss(animated: true, completion: nil)
+        dismiss(animated: true, completion: {
+            self.presentingVC?.presentNotificationTutorial()
+        })
     }
     
     @IBAction func appKeyBtnPressed(_ sender: Any) {

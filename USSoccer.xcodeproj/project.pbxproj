@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		5E294B0EAE393A00C25830E2 /* Pods_USSoccer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 570DE21D74C2822D0662D8ED /* Pods_USSoccer.framework */; };
+		BF124FAA201CDFC600BF3AC8 /* UIViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF124FA9201CDFC600BF3AC8 /* UIViewControllerExtension.swift */; };
+		BF124FAC201CE2CF00BF3AC8 /* OneSignalExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF124FAB201CE2CF00BF3AC8 /* OneSignalExtension.swift */; };
 		BF19BF511FCDD219001B243E /* ApiCaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF19BF501FCDD219001B243E /* ApiCaller.swift */; };
 		BF23AF481FC9D4EB004C4F13 /* CoreDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF23AF471FC9D4EB004C4F13 /* CoreDataModel.swift */; };
 		BF3ABD771F8483CC00D46DD3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3ABD761F8483CC00D46DD3 /* AppDelegate.swift */; };
@@ -36,6 +38,8 @@
 		3097B29D3005A3B5804D9F8A /* Pods-USSoccer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-USSoccer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-USSoccer/Pods-USSoccer.debug.xcconfig"; sourceTree = "<group>"; };
 		39895979E6EF2F0585E73F94 /* Pods-USSoccer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-USSoccer.release.xcconfig"; path = "Pods/Target Support Files/Pods-USSoccer/Pods-USSoccer.release.xcconfig"; sourceTree = "<group>"; };
 		570DE21D74C2822D0662D8ED /* Pods_USSoccer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_USSoccer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BF124FA9201CDFC600BF3AC8 /* UIViewControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtension.swift; sourceTree = "<group>"; };
+		BF124FAB201CE2CF00BF3AC8 /* OneSignalExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneSignalExtension.swift; sourceTree = "<group>"; };
 		BF19BF501FCDD219001B243E /* ApiCaller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiCaller.swift; sourceTree = "<group>"; };
 		BF23AF471FC9D4EB004C4F13 /* CoreDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataModel.swift; sourceTree = "<group>"; };
 		BF3ABD731F8483CC00D46DD3 /* USSoccer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = USSoccer.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -166,9 +170,11 @@
 			children = (
 				BFD339181F85DEBE00EEAB3F /* Uitility.swift */,
 				BF3ABD761F8483CC00D46DD3 /* AppDelegate.swift */,
+				BF124FAB201CE2CF00BF3AC8 /* OneSignalExtension.swift */,
 				BFF710301F87E5110001EC0E /* Constants.swift */,
 				BFA55BA71FD70CF400E3411D /* NetworkCheck.swift */,
 				BFA55BA91FD7AC3D00E3411D /* NotificationService.swift */,
+				BF124FA9201CDFC600BF3AC8 /* UIViewControllerExtension.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -331,10 +337,12 @@
 				BFA55BA41FD60E5000E3411D /* TeamsTVC.swift in Sources */,
 				BFF710311F87E5110001EC0E /* Constants.swift in Sources */,
 				BF4A4B001FBA2CF100E93E18 /* GamesTVCell.swift in Sources */,
+				BF124FAC201CE2CF00BF3AC8 /* OneSignalExtension.swift in Sources */,
 				BF3ABD8C1F8538E500D46DD3 /* SoccerGame.swift in Sources */,
 				BF3ABD771F8483CC00D46DD3 /* AppDelegate.swift in Sources */,
 				BFD339191F85DEBE00EEAB3F /* Uitility.swift in Sources */,
 				BFA55BA61FD6119400E3411D /* NotificationMenuView.swift in Sources */,
+				BF124FAA201CDFC600BF3AC8 /* UIViewControllerExtension.swift in Sources */,
 				BF4A4AFB1FB7AF6500E93E18 /* LoadingVC.swift in Sources */,
 				BF68790E1FCF897300AC7C1A /* GameDetailVC.swift in Sources */,
 			);
