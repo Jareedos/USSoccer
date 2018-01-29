@@ -20,6 +20,7 @@ class GameDetailVC: UIViewController {
     @IBOutlet weak var gameView: UIView!
     @IBOutlet weak var dateView: UIView!
     @IBOutlet weak var channelView: UIView!
+    @IBOutlet weak var locationView: UIView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +39,10 @@ class GameDetailVC: UIViewController {
         channelView.layer.borderWidth = 2.5
         channelView.layer.cornerRadius = 10
         channelView.layer.masksToBounds = true
+        locationView.layer.borderColor = UIColor.white.cgColor
+        locationView.layer.borderWidth = 2.5
+        locationView.layer.cornerRadius = 10
+        locationView.layer.masksToBounds = true
         let date = soccerGame.timestamp
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .none

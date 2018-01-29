@@ -151,12 +151,13 @@ class HomeVC: UIViewController {
                 for game in value {
                     print("\(game.timestamp?.description ?? "nothing - no date")")
                 }
-                //This fails intermitantly at line 161 saying fatal error index out of range. I don't know why
+                //This fails intermitantly at line 162 saying fatal error index out of range. I don't know why
                 sortedGames[key] = value.sorted(by: {
                     $0.timestamp?.timeIntervalSince1970 ?? 0.0 < $1.timestamp?.timeIntervalSince1970 ?? 0.0})
                 for (index, game) in value.enumerated() {
                     if game.timestamp!.timeIntervalSince1970 < dateFormated! {
                         //this is my solution, I think it will only remove the game if the array is not empty
+                        // it didn't work still failing on line 162 for some reason.
                         if !(sortedGames[key]?.isEmpty)! {
                         sortedGames[key]!.remove(at: index)
                         gamesRef.child("\(game.title!)\(game.date!)").removeValue()
