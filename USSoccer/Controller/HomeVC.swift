@@ -105,7 +105,7 @@ class HomeVC: UIViewController {
                                                  object: nil)
         
         if currentUserSettings?.firstTimeInApp == true {
-            let introAlert = UIAlertController(title: "Welcome To US Soccer" , message: "US Soccer shows you a list of all USA National Soccer Teams games. \n Swipe left or right on the bottom to sort the list by the team. \n Click on a bell to set a notification for that game. \n\n Please give US Soccer permission to send notifications for the soccer games you select.", preferredStyle: UIAlertControllerStyle.alert)
+            let introAlert = UIAlertController(title: "Welcome To US Soccer" , message: "US Soccer shows you a list of all USA National Soccer Teams games. \n\n Swipe left or right on the bottom to sort the list by the team. \n Click on a \"bell\" icon to set a notification for that game. \n\n Please give US Soccer permission to send notifications for the soccer games you select.", preferredStyle: UIAlertControllerStyle.alert)
             
             introAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (error) in
                 self.currentUserSettings?.setValue(false, forKey: "firstTimeInApp")
@@ -124,7 +124,7 @@ class HomeVC: UIViewController {
         if !ConnectionCheck.isConnectedToNetwork() {
             messageAlert(title: "Offline Mode", message: "Games Information may not be accurate due to no internet connection. \n Please connect to the internet and restart USA Soccer for the full experience", from: nil)
         } else {
-            ref.child("users").child("\(currentUser)").observeSingleEvent(of: .value) { (snapshot) in
+            ref.child("users").child(String(describing: currentUser)).observeSingleEvent(of: .value) { (snapshot) in
                 print("I AM GETTING HERE!")
                 guard let value = snapshot.value as? NSDictionary, let notifications = value["notificationSettings"] as? NSDictionary else { return }
                 
@@ -152,9 +152,15 @@ class HomeVC: UIViewController {
                     print("\(game.timestamp?.description ?? "nothing - no date")")
                 }
                 //This fails intermitantly at line 162 saying fatal error index out of range. I don't know why
+                // This sometimes fails saying unexpectedly found nil on 159 it seems like the game.timestamps are nil & nil is less than the double value so it alows the the code to get too 159 and print nil. why is game.notification nil?
                 sortedGames[key] = value.sorted(by: {
                     $0.timestamp?.timeIntervalSince1970 ?? 0.0 < $1.timestamp?.timeIntervalSince1970 ?? 0.0})
                 for (index, game) in value.enumerated() {
+                    if game.title != "No Upcoming Games" {
+                    print(game.title)
+                    print(game.stations)
+                    print(game.timestamp)
+                    print(dateFormated)
                     if game.timestamp!.timeIntervalSince1970 < dateFormated! {
                         //this is my solution, I think it will only remove the game if the array is not empty
                         // it didn't work still failing on line 162 for some reason.
@@ -166,7 +172,7 @@ class HomeVC: UIViewController {
                     }
                 }
             }
-            
+            }
         }
         
         //Checking to see if the Teams are set up in CoreData, Setting them up if they are not
@@ -187,7 +193,11 @@ class HomeVC: UIViewController {
         
         allGames = allGames.sorted(by: {
             $0.timestamp?.timeIntervalSince1970 ?? 0.0 < $1.timestamp?.timeIntervalSince1970 ?? 0.0})
-        
+        for (index,game) in allGames.enumerated() {
+            if game.title == "No Upcoming Games" {
+                allGames.remove(at: index)
+            }
+        }
         sortedGames["ALL TEAMS"] = allGames
         
         // Remove the missing ones
@@ -216,17 +226,17 @@ class HomeVC: UIViewController {
             fatalError()
         }
         if (mensNational.isEmpty){
-            let newGame = SoccerGame(title: "No Upcoming Games Available", date: "NA", time: "NA", venue: "NA", stations: "NA")
+            let newGame = SoccerGame(title: "No Upcoming Games", date: "NA", time: "NA", venue: "NA", stations: "NA")
             sortedGames["MNT"]!.append(newGame)
         }
 
         if (sortedGames["WNT"]!.isEmpty) {
-            let newGame = SoccerGame(title: "No Upcoming Games Available", date: "NA", time: "NA", venue: "NA", stations: "NA")
+            let newGame = SoccerGame(title: "No Upcoming Games", date: "NA", time: "NA", venue: "NA", stations: "NA")
             sortedGames["WNT"]!.append(newGame)
         }
         
         if (sortedGames["ALL TEAMS"]!.isEmpty) {
-            let newGame = SoccerGame(title: "Internet Access Required For Game Info", date: "NA", time: "NA", venue: "NA", stations: "NA")
+            let newGame = SoccerGame(title: "Internet Access Required!", date: "NA", time: "NA", venue: "NA", stations: "NA")
             sortedGames["ALL TEAMS"]!.append(newGame)
         }
         tableView.reloadData()
@@ -244,13 +254,13 @@ class HomeVC: UIViewController {
             // Present the rest of the first time in app stuff
             
             if self.currentUserSettings?.firstTimeClickingInfo == true {
-                
-                let _ = UIAlertController.presentOKAlertWithTitle("App Info", message: "This list contains all of the Abriviations & Symbols used in the app and what they mean. \n\n click the X to close the window.", okTapped: {
+                sleep(UInt32(0.5))
+                self.performSegue(withIdentifier: "infoSegue", sender: nil)
+                let _ = UIAlertController.presentOKAlertWithTitle("App Info", message: "This list contains all of the Abriviations & Symbols used in the app and what they mean. \n\n Click on the \"i\" icon top left to open, click the \"X\" to close.", okTapped: {
                     self.isWaitingForDismissInfoTutorial = true
                     
                     self.currentUserSettings?.setValue(false, forKey: "firstTimeClickingInfo")
                     CoreDataService.shared.saveContext()
-                    self.performSegue(withIdentifier: "infoSegue", sender: nil)
                 })
             }
             
@@ -267,7 +277,7 @@ class HomeVC: UIViewController {
             
             
             if self.currentUserSettings?.firstTimeClickingSetting == true {
-                messageAlert(title: "Notifications Menu", message: "Set up when you want to recieve notifications, The default is two hours before a game \n Click on one of the Teams below to recieve notifications for all their games.", from: nil)
+                messageAlert(title: "Notifications Menu", message: "Set up when you want to recieve notifications, The default is two hours before a game \n Click on one of the Teams below to recieve notifications for all their games. \n\n To open this Notification Settings Menu press the \"Gear\" icon on the top right corner,\n to close the Menu press the \"X\"  or swipe to the right.", from: nil)
                 self.currentUserSettings?.setValue(false, forKey: "firstTimeClickingSetting")
                 CoreDataService.shared.saveContext()
                 self.openMenu()

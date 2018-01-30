@@ -23,8 +23,8 @@ class ApiCaller{
     }
     
     func ApiCall(completion: @escaping ()->Void) {
-        
-        Alamofire.request("https://www.parsehub.com/api/v2/projects/tZQ5VDy6j2JB/last_ready_run/data?api_key=trmNdK43wwBZ").responseJSON { response in
+        //real call "https://www.parsehub.com/api/v2/projects/tZQ5VDy6j2JB/last_ready_run/data?api_key=trmNdK43wwBZ"
+        Alamofire.request("https://www.parsehub.com/api/v2/runs/t1mY9HfR24H5/data?api_key=trmNdK43wwBZ").responseJSON { response in
             
             if let jsonData = response.result.value as? Dictionary<String, AnyObject> {
                 guard let data = jsonData["Data"] as? [[String: AnyObject]] else {
@@ -38,7 +38,8 @@ class ApiCaller{
                 
                 if data.isEmpty {
                     if ConnectionCheck.isConnectedToNetwork() {
-                    
+                        print("I got here there is no data, json is empty")
+                        print("\n\n\n\n\n\n\n\n\n\n")
                         // Sync local database
                         self.syncLocalDatabase(completion: completion)
                         return
@@ -48,7 +49,7 @@ class ApiCaller{
                         let games = CoreDataService.shared.fetchGames()
                         if games.count == 0 {
                             // Show the alert and possibly try again
-                            
+                            print("No Internet, No games to load")
                             let _ = UIAlertController.presentOKAlertWithTitle("No Connection", message: "Cannot load any games, please try again later.", okTapped: {
                                 self.ApiCall(completion: completion)
                             })
