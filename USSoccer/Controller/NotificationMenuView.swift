@@ -141,6 +141,7 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
                 
                 if self.notificationAuthorizationStatus != .authorized {
                     messageAlert(title: "Notifications Permission Required", message: "In order to update notification settings, notification permission is required. \n\n Please go to your setting and turn on notifications for USSoccer.", from: nil)
+                    sender.isOn = !sender.isOn
                     print("notifications are NOT enabled")
                 } else {
                     if ConnectionCheck.isConnectedToNetwork() {

@@ -21,25 +21,17 @@ extension OneSignal {
         // Recommend moving the below line to prompt for push after informing the user about
         //   how your app will use them.
         OneSignal.promptForPushNotifications(userResponse: { accepted in
-            print("User accepted notifications: \(accepted)")
             
             if accepted {
                 
                 OneSignal.setSubscription(true)
                 
                 let status: OSPermissionSubscriptionState = OneSignal.getPermissionSubscriptionState()
-                
-                let hasPrompted = status.permissionStatus.hasPrompted
-                print("hasPrompted = \(hasPrompted)")
-                let userStatus = status.permissionStatus.status
-                print("userStatus = \(userStatus)")
-                
-                let isSubscribed = status.subscriptionStatus.subscribed
-                print("isSubscribed = \(isSubscribed)")
-                let userSubscriptionSetting = status.subscriptionStatus.userSubscriptionSetting
-                print("userSubscriptionSetting = \(userSubscriptionSetting)")
-                
-                
+//                let hasPrompted = status.permissionStatus.hasPrompted
+//                let userStatus = status.permissionStatus.status
+//                let isSubscribed = status.subscriptionStatus.subscribed
+//                let userSubscriptionSetting = status.subscriptionStatus.userSubscriptionSetting
+
                 // This is your device's identification within OneSignal
                 guard let userID = status.subscriptionStatus.userId else { return }
                 if let person = CoreDataService.shared.fetchPerson(), person.userID != userID {

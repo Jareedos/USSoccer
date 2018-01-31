@@ -121,60 +121,34 @@ class HomeVC: UIViewController {
             
         }
         
-        if !ConnectionCheck.isConnectedToNetwork() {
-            messageAlert(title: "Offline Mode", message: "Games Information may not be accurate due to no internet connection. \n Please connect to the internet and restart USA Soccer for the full experience", from: nil)
-        } else {
-            ref.child("users").child(String(describing: currentUser)).observeSingleEvent(of: .value) { (snapshot) in
-                print("I AM GETTING HERE!")
-                guard let value = snapshot.value as? NSDictionary, let notifications = value["notificationSettings"] as? NSDictionary else { return }
-                
-                let halfHourNotification = notifications["HalfHourNotification"] as? Bool ?? false
-                let oneDayNotification = notifications["OneDayNotification"] as? Bool ?? false
-                let oneHourNotification = notifications["OneHourNotification"] as? Bool ?? false
-                let twoDayNotification = notifications["TwoDayNotification"] as? Bool ?? false
-                let twoHourNotification = notifications["TwoHourNotification"] as? Bool ?? true
-                print(twoDayNotification, "This is my value")
-                
-                self.halfHourSwitch.setOn(halfHourNotification, animated: false)
-                self.oneDaySwitch.setOn(oneDayNotification, animated: false)
-                self.oneHourSwitch.setOn(oneHourNotification, animated: false)
-                self.twoDaySwitch.setOn(twoDayNotification, animated: false)
-                self.twoHourSwitch.setOn(twoHourNotification, animated: false)
-            }
-            
-            let currentDate = Date()
-            formatter.dateFormat = "MMMM dd, yyyy h:mm a ZZZ"
-            let currentDateResult = formatter.string(from: currentDate)
-            let dateFormated = formatter.date(from: currentDateResult)?.timeIntervalSince1970
-            
-            for (key,value) in sortedGames {
-                for game in value {
-                    print("\(game.timestamp?.description ?? "nothing - no date")")
-                }
-                //This fails intermitantly at line 162 saying fatal error index out of range. I don't know why
-                // This sometimes fails saying unexpectedly found nil on 159 it seems like the game.timestamps are nil & nil is less than the double value so it alows the the code to get too 159 and print nil. why is game.notification nil?
-                sortedGames[key] = value.sorted(by: {
-                    $0.timestamp?.timeIntervalSince1970 ?? 0.0 < $1.timestamp?.timeIntervalSince1970 ?? 0.0})
-                for (index, game) in value.enumerated() {
-                    if game.title != "No Upcoming Games" {
-                    print(game.title)
-                    print(game.stations)
-                    print(game.timestamp)
-                    print(dateFormated)
-                    if game.timestamp!.timeIntervalSince1970 < dateFormated! {
-                        //this is my solution, I think it will only remove the game if the array is not empty
-                        // it didn't work still failing on line 162 for some reason.
-                        if !(sortedGames[key]?.isEmpty)! {
-                        sortedGames[key]!.remove(at: index)
-                        gamesRef.child("\(game.title!)\(game.date!)").removeValue()
-                        CoreDataService.shared.delete(object: game)
-                        }
-                    }
-                }
-            }
-            }
-        }
         
+        setupTeamPicker()
+    }
+    
+    
+    func refreshSettings() {
+        
+        ref.child("users").child(currentUser!.uid).observeSingleEvent(of: .value) { (snapshot) in
+            print("I AM GETTING HERE!")
+            guard let value = snapshot.value as? NSDictionary, let notifications = value["notificationSettings"] as? NSDictionary else { return }
+            print("I Am Getting here the Guard Statement above me isnt failing.")
+            let halfHourNotification = notifications["HalfHourNotification"] as? Bool ?? false
+            let oneDayNotification = notifications["OneDayNotification"] as? Bool ?? false
+            let oneHourNotification = notifications["OneHourNotification"] as? Bool ?? false
+            let twoDayNotification = notifications["TwoDayNotification"] as? Bool ?? false
+            let twoHourNotification = notifications["TwoHourNotification"] as? Bool ?? true
+            print(twoDayNotification, "This is my value")
+            
+            self.halfHourSwitch.setOn(halfHourNotification, animated: false)
+            self.oneDaySwitch.setOn(oneDayNotification, animated: false)
+            self.oneHourSwitch.setOn(oneHourNotification, animated: false)
+            self.twoDaySwitch.setOn(twoDayNotification, animated: false)
+            self.twoHourSwitch.setOn(twoHourNotification, animated: false)
+        }
+    }
+    
+    
+    func setupTeamPicker() {
         //Checking to see if the Teams are set up in CoreData, Setting them up if they are not
         teamArray = CoreDataService.shared.fetchTeams()
         if teamArray.isEmpty {
@@ -190,11 +164,16 @@ class HomeVC: UIViewController {
             existingKeys.insert(key)
             allGames += sortedGames[key]!
         }
-        
         allGames = allGames.sorted(by: {
             $0.timestamp?.timeIntervalSince1970 ?? 0.0 < $1.timestamp?.timeIntervalSince1970 ?? 0.0})
-        for (index,game) in allGames.enumerated() {
+        
+        for game in allGames {
+            let index = allGames.index(of: game)!
+            
             if game.title == "No Upcoming Games" {
+                allGames.remove(at: index)
+            } else
+            if game.title == "Internet Access Required!" {
                 allGames.remove(at: index)
             }
         }
@@ -213,23 +192,61 @@ class HomeVC: UIViewController {
             teamPicker.selectRow(index, inComponent: 0, animated: true)
         }
         
-        filterValue = "ALL TEAMS"
-        soccerGames = sortedGames[filterValue] ?? [SoccerGame]()
         if sortedGames["MNT"] == nil{
             sortedGames["MNT"] = [SoccerGame]()
         }
         if sortedGames["WNT"] == nil{
             sortedGames["WNT"] = [SoccerGame]()
         }
-        guard let mensNational = sortedGames["MNT"] else {
-            print("Men's national wasn't found")
-            fatalError()
-        }
-        if (mensNational.isEmpty){
+        
+        
+        
+        if !ConnectionCheck.isConnectedToNetwork() {
+            messageAlert(title: "Offline Mode", message: "Games Information may not be accurate due to no internet connection. \n Please connect to the internet and restart USA Soccer for the full experience", from: nil)
+        } else {
+            refreshSettings()
+            
+            let currentDate = Date()
+            formatter.dateFormat = "MMMM dd, yyyy h:mm a ZZZ"
+            let currentDateResult = formatter.string(from: currentDate)
+            let dateFormated = formatter.date(from: currentDateResult)?.timeIntervalSince1970
+            
+            for (key,value) in sortedGames {
+                for game in value {
+                    print("\(game.timestamp?.description ?? "nothing - no date")")
+                }
+                //This fails intermitantly at line 162 saying fatal error index out of range. I don't know why
+                // This sometimes fails saying unexpectedly found nil on 159 it seems like the game.timestamps are nil & nil is less than the double value so it alows the the code to get too 159 and print nil. why is game.notification nil?
+                sortedGames[key] = value.sorted(by: {
+                    $0.timestamp?.timeIntervalSince1970 ?? 0.0 < $1.timestamp?.timeIntervalSince1970 ?? 0.0})
+                for game in value {
+                    let index = value.index(of: game)!
+                    if game.title != "No Upcoming Games" && game.title != "Internet Access Required!" {
+                        if let timestamp = game.timestamp, timestamp.timeIntervalSince1970 < dateFormated! {
+                            //this is my solution, I think it will only remove the game if the array is not empty
+                            // it didn't work still failing on line 162 for some reason.
+                            if !(sortedGames[key]?.isEmpty)! {
+                                sortedGames[key]!.remove(at: index)
+                                gamesRef.child("\(game.title!)\(game.date!)").removeValue()
+                                CoreDataService.shared.delete(object: game)
+                            }
+                        }
+                    }
+                }// End for loop
+                
+            }
+            
+            
+            
+        }// End else statement
+        
+        
+        
+        if (sortedGames["MNT"]!.isEmpty){
             let newGame = SoccerGame(title: "No Upcoming Games", date: "NA", time: "NA", venue: "NA", stations: "NA")
             sortedGames["MNT"]!.append(newGame)
         }
-
+        
         if (sortedGames["WNT"]!.isEmpty) {
             let newGame = SoccerGame(title: "No Upcoming Games", date: "NA", time: "NA", venue: "NA", stations: "NA")
             sortedGames["WNT"]!.append(newGame)
@@ -239,6 +256,9 @@ class HomeVC: UIViewController {
             let newGame = SoccerGame(title: "Internet Access Required!", date: "NA", time: "NA", venue: "NA", stations: "NA")
             sortedGames["ALL TEAMS"]!.append(newGame)
         }
+        
+        filterValue = "ALL TEAMS"
+        soccerGames = sortedGames[filterValue] ?? [SoccerGame]()
         tableView.reloadData()
     }
     

@@ -12,7 +12,7 @@ import Alamofire
 import Firebase
 import CoreData
 
-class ApiCaller{
+class ApiCaller {
     static let shared = ApiCaller()
     private init () {}
     var currentGamesInFirebaseArray = [[String: Any]]()
@@ -23,27 +23,31 @@ class ApiCaller{
     }
     
     func ApiCall(completion: @escaping ()->Void) {
-        //real call "https://www.parsehub.com/api/v2/projects/tZQ5VDy6j2JB/last_ready_run/data?api_key=trmNdK43wwBZ"
-        Alamofire.request("https://www.parsehub.com/api/v2/runs/t1mY9HfR24H5/data?api_key=trmNdK43wwBZ").responseJSON { response in
+        //real call "https://www.parsehub.com/api/v2/projects/tZQ5VDy6j2JB/last_ready_run/data?api_key=trmNdK43wwBZ" "https://www.parsehub.com/api/v2/runs/t1mY9HfR24H5/data?api_key=trmNdK43wwBZ"
+        Alamofire.request("https://www.parsehub.com/api/v2/projects/tZQ5VDy6j2JB/last_ready_run/data?api_key=trmNdK43wwBZ").responseJSON { response in
+            
+            
+            
+            if ConnectionCheck.isConnectedToNetwork() == false && response.result.value == nil {
+                // No data to sync and not connected to network
+                // we need to check if some data already exists in the local database
+                let games = CoreDataService.shared.fetchGames()
+                if games.count == 0 {
+                    // Show the alert and possibly try again
+                    print("No Internet, No games to load")
+                    let _ = UIAlertController.presentOKAlertWithTitle("No Connection", message: "Cannot load any games, please try again later.", okTapped: {
+                        self.ApiCall(completion: completion)
+                    })
+                    return
+                }
+            }
             
             if let jsonData = response.result.value as? Dictionary<String, AnyObject> {
                 guard let data = jsonData["Data"] as? [[String: AnyObject]] else {
-                    self.syncLocalDatabase(completion: completion)
-                    return
-                }
-                let arrayLength = data.count
-                let currentDate = Date()
-                
-         //       if its been only 3 days sense the lasttime data was updated then move on and load from coredata, else display alert about network error connection errror and needing to update data.
-                
-                if data.isEmpty {
-                    if ConnectionCheck.isConnectedToNetwork() {
-                        print("I got here there is no data, json is empty")
-                        print("\n\n\n\n\n\n\n\n\n\n")
-                        // Sync local database
-                        self.syncLocalDatabase(completion: completion)
-                        return
-                    } else {
+                    print("I got here there is no data, json is empty")
+                    print("\n\n\n\n\n\n\n\n\n\n")
+                    
+                    if ConnectionCheck.isConnectedToNetwork() == false {
                         // No data to sync and not connected to network
                         // we need to check if some data already exists in the local database
                         let games = CoreDataService.shared.fetchGames()
@@ -55,9 +59,17 @@ class ApiCaller{
                             })
                             return
                         }
+                    } else {
+                        
+                        // Sync local database
+                        self.syncLocalDatabase(completion: completion)
                     }
-                    
+                    return
                 }
+                let arrayLength = data.count
+                let currentDate = Date()
+                
+         //       if its been only 3 days sense the lasttime data was updated then move on and load from coredata, else display alert about network error connection errror and needing to update data.
                 
                 ref.child("LastUpdate").observeSingleEvent(of: .value, with: { (snapShot) in
                     let lastUpdateTimeStamp : Double = snapShot.value as? Double ?? 0.0
@@ -146,27 +158,35 @@ class ApiCaller{
     
     
     func syncLocalDatabase(completion: @escaping ()->Void) {
-        gamesRef.observeSingleEvent(of: .value) { snapshot in
+        
+        if ConnectionCheck.isConnectedToNetwork() {
             
-            let currentGameSnapshots = snapshot.children.allObjects as! [DataSnapshot]
-            
-            // Check the local database and insert the new ones
-            let localGames = CoreDataService.shared.fetchGames()
-            let localGameTitles = (localGames as NSArray).mutableArrayValue(forKey: "title")
-            for currentGameSnapshot in currentGameSnapshots {
-                if let dict = currentGameSnapshot.value as? [String: Any], let title = dict["title"] {
-                    if localGameTitles.contains(title) == false {
-                        // We don't store this game locally yet
-                        // Insert into the local database
-                        SoccerGame.insert(snapShot: currentGameSnapshot)
-                        //let game = SoccerGame(snapShot: currentGameSnapshot)
-                        //print("game.title: \(game.title)")
+            gamesRef.observeSingleEvent(of: .value) { snapshot in
+                
+                let currentGameSnapshots = snapshot.children.allObjects as! [DataSnapshot]
+                
+                // Check the local database and insert the new ones
+                let localGames = CoreDataService.shared.fetchGames()
+                let localGameTitles = (localGames as NSArray).mutableArrayValue(forKey: "title")
+                for currentGameSnapshot in currentGameSnapshots {
+                    if let dict = currentGameSnapshot.value as? [String: Any], let title = dict["title"] {
+                        if localGameTitles.contains(title) == false {
+                            // We don't store this game locally yet
+                            // Insert into the local database
+                            SoccerGame.insert(snapShot: currentGameSnapshot)
+                            //let game = SoccerGame(snapShot: currentGameSnapshot)
+                            //print("game.title: \(game.title)")
+                        }
                     }
                 }
+                
+                
+                // All is finished :)
+                completion()
             }
+        } else {
             
-            
-            // All is finished :)
+            // No connection, so we need to call it quits
             completion()
         }
     }

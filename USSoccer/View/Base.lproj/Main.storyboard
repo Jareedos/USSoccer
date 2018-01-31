@@ -604,7 +604,7 @@
                                 <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="98c-hg-Rkk">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="504"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="596"/>
                                         <subviews>
                                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Back drop@4x" translatesAutoresizingMaskIntoConstraints="NO" id="EWy-iB-fSo">
                                                 <rect key="frame" x="0.0" y="-56" width="320" height="1000"/>
@@ -808,6 +808,7 @@
                                             <constraint firstAttribute="trailing" secondItem="AeW-4C-L4g" secondAttribute="trailing" id="FOc-Lh-EPi"/>
                                             <constraint firstItem="nj2-au-vdx" firstAttribute="leading" secondItem="98c-hg-Rkk" secondAttribute="leading" constant="5" id="FiG-Cq-qPM"/>
                                             <constraint firstItem="EWy-iB-fSo" firstAttribute="top" secondItem="98c-hg-Rkk" secondAttribute="top" constant="-56" id="GUr-ul-G7c"/>
+                                            <constraint firstAttribute="bottom" secondItem="dig-cL-PpW" secondAttribute="bottom" constant="8" id="Lzy-RV-zTp"/>
                                             <constraint firstItem="nj2-au-vdx" firstAttribute="top" secondItem="eNK-Jr-5za" secondAttribute="bottom" constant="17" id="PLS-ki-Dt6"/>
                                             <constraint firstItem="AeW-4C-L4g" firstAttribute="leading" secondItem="98c-hg-Rkk" secondAttribute="leading" id="VUw-ao-Rb2"/>
                                             <constraint firstAttribute="trailing" secondItem="eNK-Jr-5za" secondAttribute="trailing" constant="5" id="bOd-uR-Waj"/>
@@ -825,7 +826,6 @@
                                 <constraints>
                                     <constraint firstItem="98c-hg-Rkk" firstAttribute="leading" secondItem="LkR-CE-G0y" secondAttribute="leading" id="9ep-hj-MrF"/>
                                     <constraint firstItem="98c-hg-Rkk" firstAttribute="top" secondItem="LkR-CE-G0y" secondAttribute="top" id="Qu1-p6-Udy"/>
-                                    <constraint firstItem="98c-hg-Rkk" firstAttribute="height" secondItem="LkR-CE-G0y" secondAttribute="height" id="TqV-76-KWq"/>
                                     <constraint firstAttribute="bottom" secondItem="98c-hg-Rkk" secondAttribute="bottom" id="cfU-IJ-kW3"/>
                                     <constraint firstAttribute="trailing" secondItem="98c-hg-Rkk" secondAttribute="trailing" id="dap-vh-H1t"/>
                                 </constraints>

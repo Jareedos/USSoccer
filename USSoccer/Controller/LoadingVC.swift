@@ -18,16 +18,16 @@ class LoadingVC: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         startSpinning()
 
-         if ConnectionCheck.isConnectedToNetwork() {
+         //if ConnectionCheck.isConnectedToNetwork() {
         // call Api and Parse it
             ApiCaller.shared.ApiCall {
                 DispatchQueue.main.async {
                     self.finishLoading()
                 }
             }
-         } else {
+         /*} else {
             finishLoading()
-         }
+         }*/
     }
     
     func finishLoading() {

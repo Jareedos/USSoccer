@@ -38,6 +38,14 @@ class CoreDataService {
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
+        
+        games = games.filter { (game) -> Bool in
+            if game.title != "No Upcoming Games" && game.title != "Internet Access Required!" {
+                return true
+            }
+            return false
+        }
+        
         return games
     }
     func fetchPerson() -> Person? {
