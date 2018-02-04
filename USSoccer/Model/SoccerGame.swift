@@ -31,18 +31,26 @@ public class SoccerGame: NSManagedObject  {
         super.init(entity: entity, insertInto: context)
     }
     
-    init(snapShot: DataSnapshot) {
+    init?(snapShot: DataSnapshot) {let snapShotValue = snapShot.value as! [String: AnyObject]
+        
+        guard let title = snapShotValue["title"] as? String,
+            let date = snapShotValue["date"] as? String,
+            let time = snapShotValue["time"] as? String,
+            let venue = snapShotValue["venue"] as? String,
+            let stations = snapShotValue["stations"] as? String else {
+                print("empty stuff")
+                return nil
+        }
+        
         let managedContext = CoreDataService.shared.managedContext
         let entity = NSEntityDescription.entity(forEntityName: "Game", in: managedContext!)!
         super.init(entity: entity, insertInto: managedContext)
         
-//        ref = snapShot.ref
-        let snapShotValue = snapShot.value as! [String: AnyObject]
-        title = snapShotValue["title"] as? String
-        date = snapShotValue["date"] as? String
-        time = snapShotValue["time"] as? String
-        venue = snapShotValue["venue"] as? String
-        stations = snapShotValue["stations"] as? String
+        self.title = title
+        self.date = date
+        self.time = time
+        self.venue = venue
+        self.stations = stations
         if let ts = snapShotValue["timestamp"] as? Double {
             timestamp = Date(timeIntervalSince1970: ts)
         }
@@ -51,19 +59,34 @@ public class SoccerGame: NSManagedObject  {
     }
     
     static func insert(snapShot: DataSnapshot) {
+        let snapShotValue = snapShot.value as! [String: AnyObject]
+        
+        guard let title = snapShotValue["title"] as? String,
+        let date = snapShotValue["date"] as? String,
+        let time = snapShotValue["time"] as? String,
+        let venue = snapShotValue["venue"] as? String,
+            let stations = snapShotValue["stations"] as? String else {
+                print("empty stuff")
+                return
+        }
+        
         let managedContext = CoreDataService.shared.managedContext
         let game = NSEntityDescription.insertNewObject(forEntityName: "Game", into: managedContext!) as! SoccerGame
-        let snapShotValue = snapShot.value as! [String: AnyObject]
-        game.title = snapShotValue["title"] as? String
-        game.date = snapShotValue["date"] as? String
-        game.time = snapShotValue["time"] as? String
-        game.venue = snapShotValue["venue"] as? String
-        game.stations = snapShotValue["stations"] as? String
+        game.title = title
+        game.date = date
+        game.time = time
+        game.venue = venue
+        game.stations = stations
         if let ts = snapShotValue["timestamp"] as? Double {
             game.timestamp = Date(timeIntervalSince1970: ts)
         }
         
         try? managedContext?.save()
+        
+        print("-------")
+        print(snapShotValue)
+        print("fetchGames().count: \(CoreDataService.shared.fetchGames().count)")
+        
     }
     
     init(title: String, date: String, time: String, venue: String, stations: String) {
@@ -75,6 +98,8 @@ public class SoccerGame: NSManagedObject  {
         self.date = date
         self.time = time
         self.venue = venue
+        
+        try? managedContext?.save()
     }
     
     

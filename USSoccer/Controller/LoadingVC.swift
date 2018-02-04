@@ -15,6 +15,9 @@ class LoadingVC: UIViewController {
     var sortedGames = [String: [SoccerGame]]()
     let appenderArray = [SoccerGame]()
     
+    
+    var pickerTeamsArray = ["U-15 MNT", "U-16 MNT", "U-17 MNT", "U-18 MNT", "U-19 MNT", "U-20 MNT", "U-23 MNT", "MNT", "ALL TEAMS", "WNT", "U-23 WNT", "U-20 WNT", "U-19 WNT", "U-18 WNT", "U-17 WNT", "U-16 WNT", "U-15 WNT"]
+    
     override func viewDidAppear(_ animated: Bool) {
         startSpinning()
 
@@ -31,8 +34,56 @@ class LoadingVC: UIViewController {
     }
     
     func finishLoading() {
-        let soccerGamesCoreData = CoreDataService.shared.fetchGames()
-        for game in soccerGamesCoreData {
+        var allGames = CoreDataService.shared.fetchGames()
+        
+        
+        
+        
+        // Creating a set for all the Teams Titles that have games schedualed
+        var existingKeys : Set<String> = ["MNT", "ALL TEAMS", "WNT"]
+        allGames = allGames.sorted(by: {
+            $0.timestamp?.timeIntervalSince1970 ?? 0.0 < $1.timestamp?.timeIntervalSince1970 ?? 0.0})
+        
+        for game in allGames {
+            let index = allGames.index(of: game)!
+            
+            if game.title == "No Upcoming Games" {
+                allGames.remove(at: index)
+                continue
+            }
+            if game.title == "Internet Access Required!" {
+                allGames.remove(at: index)
+                continue
+            }
+            
+            let dateFormated = Date()
+            if let timestamp = game.timestamp, timestamp.timeIntervalSince1970 < dateFormated.timeIntervalSince1970 {
+                print(timestamp.timeIntervalSince1970, "this game should be deleted")
+                //this is my solution, I think it will only remove the game if the array is not empty
+                // it didn't work still failing on line 162 for some reason.
+                allGames.remove(at: index)
+                gamesRef.child("\(game.title!)\(game.date!)").removeValue()
+                CoreDataService.shared.delete(object: game)
+                continue
+            }
+            
+            existingKeys.insert(game.usTeam)
+        }
+        
+        
+        sortedGames["ALL TEAMS"] = allGames
+        
+        // Remove the missing ones
+        var updatedPickerTeamsArray = [String]()
+        for team in pickerTeamsArray {
+            if existingKeys.contains(team) {
+                updatedPickerTeamsArray.append(team)
+            }
+        }
+        pickerTeamsArray = updatedPickerTeamsArray
+        
+        
+        for game in allGames {
             let teamsTitles = game.title!.components(separatedBy: "vs")
             let trimmedTitle = stringTrimmer(stringToTrim: teamsTitles[0].uppercased())
             
@@ -60,6 +111,7 @@ class LoadingVC: UIViewController {
         if let navc = segue.destination as? UINavigationController,
             let detailViewController = navc.viewControllers.first as? HomeVC {
             detailViewController.sortedGames = toDoItemToPass
+            detailViewController.pickerTeamsArray = pickerTeamsArray
         }
         
     }

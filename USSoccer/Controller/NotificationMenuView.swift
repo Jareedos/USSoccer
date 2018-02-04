@@ -130,7 +130,7 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
     
     @IBAction func twoDaySwitch(_ sender: UISwitch) {
         if currentUserSettings?.firstTimeTogglingNotificationSettings == true {
-            messageAlert(title: "Notifications Setting Updated", message: "You have updated, one of your settings. \n If the toggle is blue the setting is on, if the toggle is white the setting is off.", from: nil)
+            messageAlert(title: "Notifications Setting Updated", message: "You have updated one of your settings. \n If the toggle is blue the setting is on, if the toggle is white the setting is off.", from: nil)
             currentUserSettings?.setValue(false, forKey: "firstTimeTogglingNotificationSettings")
             CoreDataService.shared.saveContext()
         }
@@ -142,12 +142,12 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
                 if self.notificationAuthorizationStatus != .authorized {
                     messageAlert(title: "Notifications Permission Required", message: "In order to update notification settings, notification permission is required. \n\n Please go to your setting and turn on notifications for USSoccer.", from: nil)
                     sender.isOn = !sender.isOn
-                    print("notifications are NOT enabled")
                 } else {
                     if ConnectionCheck.isConnectedToNetwork() {
                         self.twoDayBool = sender.isOn
                         ref.child("users").child((self.currentUser?.uid)!).child("notificationSettings").updateChildValues(["TwoDayNotification": self.twoDayBool])
                     } else {
+                        sender.isOn = !sender.isOn
                         messageAlert(title: "No Internet Connection", message: "Internet connection is required to update team notifications.", from: nil)
                     }
                 }
@@ -157,7 +157,7 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
     
     @IBAction func oneDaySwitch(_ sender: UISwitch) {
         if currentUserSettings?.firstTimeTogglingNotificationSettings == true {
-            messageAlert(title: "Notifications Setting Updated", message: "You have updated, one of your settings. \n If the toggle is blue the setting is on, if the toggle is white the setting is off.", from: nil)
+            messageAlert(title: "Notifications Setting Updated", message: "You have updated one of your settings. \n If the toggle is blue the setting is on, if the toggle is white the setting is off.", from: nil)
             currentUserSettings?.setValue(false, forKey: "firstTimeTogglingNotificationSettings")
             CoreDataService.shared.saveContext()
         }
@@ -168,12 +168,13 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
                 
                 if self.notificationAuthorizationStatus != .authorized {
                     messageAlert(title: "Notifications Permission Required", message: "In order to update notification settings, notification permission is required. \n\n Please go to your setting and turn on notifications for USSoccer.", from: nil)
-                    print("notifications are NOT enabled")
+                    sender.isOn = !sender.isOn
                 } else {
                     if ConnectionCheck.isConnectedToNetwork() {
                         self.oneDayBool = sender.isOn
                         ref.child("users").child((self.currentUser?.uid)!).child("notificationSettings").updateChildValues(["OneDayNotification": self.oneDayBool])
                     } else {
+                        sender.isOn = !sender.isOn
                         messageAlert(title: "No Internet Connection", message: "Internet connection is required to update team notifications.", from: nil)
                     }
                 }
@@ -183,7 +184,7 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
     
     @IBAction func twoHourSwitch(_ sender: UISwitch) {
         if currentUserSettings?.firstTimeTogglingNotificationSettings == true {
-            messageAlert(title: "Notifications Setting Updated", message: "You have updated, one of your settings. \n If the toggle is blue the setting is on, if the toggle is white the settings is off.", from: nil)
+            messageAlert(title: "Notifications Setting Updated", message: "You have updated one of your settings. \n If the toggle is blue the setting is on, if the toggle is white the settings is off.", from: nil)
             currentUserSettings?.setValue(false, forKey: "firstTimeTogglingNotificationSettings")
             CoreDataService.shared.saveContext()
         }
@@ -194,12 +195,13 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
                 
                 if self.notificationAuthorizationStatus != .authorized {
                     messageAlert(title: "Notifications Permission Required", message: "In order to update notification settings, notification permission is required. \n\n Please go to your setting and turn on notifications for USSoccer.", from: nil)
-                    print("notifications are NOT enabled")
+                    sender.isOn = !sender.isOn
                 } else {
                     if ConnectionCheck.isConnectedToNetwork() {
                         self.twoHourBool = sender.isOn
                         ref.child("users").child((self.currentUser?.uid)!).child("notificationSettings").updateChildValues(["TwoHourNotification": self.twoHourBool])
                     } else {
+                        sender.isOn = !sender.isOn
                         messageAlert(title: "No Internet Connection", message: "Internet connection is required to update team notifications.", from: nil)
                     }
                 }
@@ -209,7 +211,7 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
     
     @IBAction func oneHourSwitch(_ sender: UISwitch) {
         if currentUserSettings?.firstTimeTogglingNotificationSettings == true {
-            messageAlert(title: "Notifications Setting Updated", message: "You have updated, one of your settings. \n If the toggle is blue the setting is on, if the toggle is white the setting is off.", from: nil)
+            messageAlert(title: "Notifications Setting Updated", message: "You have updated one of your settings. \n If the toggle is blue the setting is on, if the toggle is white the setting is off.", from: nil)
             currentUserSettings?.setValue(false, forKey: "firstTimeTogglingNotificationSettings")
             CoreDataService.shared.saveContext()
         }
@@ -220,12 +222,13 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
                 
                 if self.notificationAuthorizationStatus != .authorized {
                     messageAlert(title: "Notifications Permission Required", message: "In order to update notification settings, notification permission is required. \n\n Please go to your setting and turn on notifications for USSoccer.", from: nil)
-                    print("notifications are NOT enabled")
+                    sender.isOn = !sender.isOn
                 } else {
                     if ConnectionCheck.isConnectedToNetwork() {
                         self.oneHourBool = sender.isOn
                         ref.child("users").child((self.currentUser?.uid)!).child("notificationSettings").updateChildValues(["OneHourNotification": self.oneHourBool])
                     } else {
+                        sender.isOn = !sender.isOn
                         messageAlert(title: "No Internet Connection", message: "Internet connection is required to update team notifications.", from: nil)
                     }
                 }
@@ -235,7 +238,7 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
     
     @IBAction func halfHourSwitch(_ sender: UISwitch) {
         if currentUserSettings?.firstTimeTogglingNotificationSettings == true {
-            messageAlert(title: "Notifications Setting Updated", message: "You have updated, one of your settings. \n If the toggle is blue the setting is on, if the toggle is white the setting is off.", from: nil)
+            messageAlert(title: "Notifications Setting Updated", message: "You have updated one of your settings. \n If the toggle is blue the setting is on, if the toggle is white the setting is off.", from: nil)
             currentUserSettings?.setValue(false, forKey: "firstTimeTogglingNotificationSettings")
             CoreDataService.shared.saveContext()
         }
@@ -246,12 +249,13 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
                 
                 if self.notificationAuthorizationStatus != .authorized {
                     messageAlert(title: "Notifications Permission Required", message: "In order to update notification settings, notification permission is required. \n\n Please go to your setting and turn on notifications for USSoccer.", from: nil)
-                    print("notifications are NOT enabled")
+                    sender.isOn = !sender.isOn
                 } else {
                     if ConnectionCheck.isConnectedToNetwork() {
                         self.halfHourBool = sender.isOn
                         ref.child("users").child((self.currentUser?.uid)!).child("notificationSettings").updateChildValues(["HalfHourNotification": self.halfHourBool])
                     } else {
+                        sender.isOn = !sender.isOn
                         messageAlert(title: "No Internet Connection", message: "Internet connection is required to update team notifications.", from: nil)
                     }
                 }

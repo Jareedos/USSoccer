@@ -104,6 +104,8 @@ class HomeVC: UIViewController {
                                                  name: NSNotification.Name.UIApplicationDidBecomeActive,
                                                  object: nil)
         
+        // FIXME: remove this line (just to speed up development)
+        currentUserSettings?.firstTimeInApp = false
         if currentUserSettings?.firstTimeInApp == true {
             let introAlert = UIAlertController(title: "Welcome To US Soccer" , message: "US Soccer shows you a list of all USA National Soccer Teams games. \n\n Swipe left or right on the bottom to sort the list by the team. \n Click on a \"bell\" icon to set a notification for that game. \n\n Please give US Soccer permission to send notifications for the soccer games you select.", preferredStyle: UIAlertControllerStyle.alert)
             
@@ -129,15 +131,12 @@ class HomeVC: UIViewController {
     func refreshSettings() {
         
         ref.child("users").child(currentUser!.uid).observeSingleEvent(of: .value) { (snapshot) in
-            print("I AM GETTING HERE!")
             guard let value = snapshot.value as? NSDictionary, let notifications = value["notificationSettings"] as? NSDictionary else { return }
-            print("I Am Getting here the Guard Statement above me isnt failing.")
             let halfHourNotification = notifications["HalfHourNotification"] as? Bool ?? false
             let oneDayNotification = notifications["OneDayNotification"] as? Bool ?? false
             let oneHourNotification = notifications["OneHourNotification"] as? Bool ?? false
             let twoDayNotification = notifications["TwoDayNotification"] as? Bool ?? false
             let twoHourNotification = notifications["TwoHourNotification"] as? Bool ?? true
-            print(twoDayNotification, "This is my value")
             
             self.halfHourSwitch.setOn(halfHourNotification, animated: false)
             self.oneDaySwitch.setOn(oneDayNotification, animated: false)
@@ -157,40 +156,6 @@ class HomeVC: UIViewController {
             }
         }
         
-        // Creating a set for all the Teams Titles that have games schedualed
-        var existingKeys : Set<String> = ["MNT", "ALL TEAMS", "WNT"]
-        var allGames = [SoccerGame]()
-        for key in sortedGames.keys {
-            existingKeys.insert(key)
-            allGames += sortedGames[key]!
-        }
-        allGames = allGames.sorted(by: {
-            $0.timestamp?.timeIntervalSince1970 ?? 0.0 < $1.timestamp?.timeIntervalSince1970 ?? 0.0})
-        
-        for game in allGames {
-            let index = allGames.index(of: game)!
-            
-            if game.title == "No Upcoming Games" {
-                allGames.remove(at: index)
-            } else
-            if game.title == "Internet Access Required!" {
-                allGames.remove(at: index)
-            }
-        }
-        sortedGames["ALL TEAMS"] = allGames
-        
-        // Remove the missing ones
-        var updatedPickerTeamsArray = [String]()
-        for team in pickerTeamsArray {
-            if existingKeys.contains(team) {
-                updatedPickerTeamsArray.append(team)
-            }
-        }
-        pickerTeamsArray = updatedPickerTeamsArray
-        
-        if let index = pickerTeamsArray.index(of: "ALL TEAMS") {
-            teamPicker.selectRow(index, inComponent: 0, animated: true)
-        }
         
         if sortedGames["MNT"] == nil{
             sortedGames["MNT"] = [SoccerGame]()
@@ -205,39 +170,6 @@ class HomeVC: UIViewController {
             messageAlert(title: "Offline Mode", message: "Games Information may not be accurate due to no internet connection. \n Please connect to the internet and restart USA Soccer for the full experience", from: nil)
         } else {
             refreshSettings()
-            
-            let currentDate = Date()
-            formatter.dateFormat = "MMMM dd, yyyy h:mm a ZZZ"
-            let currentDateResult = formatter.string(from: currentDate)
-            let dateFormated = formatter.date(from: currentDateResult)?.timeIntervalSince1970
-            
-            for (key,value) in sortedGames {
-                for game in value {
-                    print("\(game.timestamp?.description ?? "nothing - no date")")
-                }
-                //This fails intermitantly at line 162 saying fatal error index out of range. I don't know why
-                // This sometimes fails saying unexpectedly found nil on 159 it seems like the game.timestamps are nil & nil is less than the double value so it alows the the code to get too 159 and print nil. why is game.notification nil?
-                sortedGames[key] = value.sorted(by: {
-                    $0.timestamp?.timeIntervalSince1970 ?? 0.0 < $1.timestamp?.timeIntervalSince1970 ?? 0.0})
-                for game in value {
-                    let index = value.index(of: game)!
-                    if game.title != "No Upcoming Games" && game.title != "Internet Access Required!" {
-                        if let timestamp = game.timestamp, timestamp.timeIntervalSince1970 < dateFormated! {
-                            //this is my solution, I think it will only remove the game if the array is not empty
-                            // it didn't work still failing on line 162 for some reason.
-                            if !(sortedGames[key]?.isEmpty)! {
-                                sortedGames[key]!.remove(at: index)
-                                gamesRef.child("\(game.title!)\(game.date!)").removeValue()
-                                CoreDataService.shared.delete(object: game)
-                            }
-                        }
-                    }
-                }// End for loop
-                
-            }
-            
-            
-            
         }// End else statement
         
         
@@ -256,6 +188,14 @@ class HomeVC: UIViewController {
             let newGame = SoccerGame(title: "Internet Access Required!", date: "NA", time: "NA", venue: "NA", stations: "NA")
             sortedGames["ALL TEAMS"]!.append(newGame)
         }
+        
+        
+        
+        if let index = pickerTeamsArray.index(of: "ALL TEAMS") {
+            teamPicker.selectRow(index, inComponent: 0, animated: true)
+        }
+        
+        
         
         filterValue = "ALL TEAMS"
         soccerGames = sortedGames[filterValue] ?? [SoccerGame]()
@@ -471,7 +411,9 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
             cell.vsLbl.text = ""
             cell.opponentLbl.text = ""
         } else {
+            print(soccerGames[indexPath.row].title)
             let usSoccerTitle = soccerGames[indexPath.row].title?.components(separatedBy: " ") ?? [String]()
+            print(usSoccerTitle, "This is the title")
             if usSoccerTitle.count > 1 {
                 if usSoccerTitle[1] != "vs" {
                     cell.gameTitleLbl.text = "\(usSoccerTitle[0].uppercased()) \(usSoccerTitle[1].uppercased())"
@@ -491,7 +433,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
                     cell.notificationBtn.setImage(UIImage(named: "musical-bell-outline (2)"), for: .normal)
                 }
         }
-        let gameDate = soccerGames[indexPath.row].date!.components(separatedBy: " ")
+        let gameDate = soccerGames[indexPath.row].date?.components(separatedBy: " ") ?? ["NA"]
         //Checking for PlaceholderGame
         if gameDate[0] == "NA" {
             cell.gameTimeLbl.text = ""
@@ -554,7 +496,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
         }
             if notificationAuthorizationStatus != .authorized {
                 messageAlert(title: "Notifications Permission Required", message: "In order to send a notificaiton, notification permission is required. \n\n Please go to your setting and turn on notifications for USSoccer.", from: nil)
-                print("notifications are NOT enabled")
             } else {
                 if ConnectionCheck.isConnectedToNetwork() {
                     let buttonPosition = sender.convert(CGPoint.zero, to: tableView)
@@ -587,11 +528,9 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
                         }
                     }
                     tableView.reloadData()
-                    print("I got here")
                 } else {
                     messageAlert(title: "No Internet Connection", message: "Internet connection is required to update game notifications.", from: nil)
                 }
-                print("notifications are enabled")
             }
         }
 }
@@ -612,13 +551,12 @@ extension HomeVC: UIPickerViewDelegate, UIPickerViewDataSource {
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         
-        self.tableView.contentOffset = CGPoint.zero
-        
-        self.filterValue = self.pickerTeamsArray[row]
-        self.soccerGames = self.sortedGames[self.filterValue] ?? [SoccerGame]()
-        
-        
         DispatchQueue.main.async {
+            self.tableView.contentOffset = CGPoint.zero
+            
+            self.filterValue = self.pickerTeamsArray[row]
+            self.soccerGames = self.sortedGames[self.filterValue] ?? [SoccerGame]()
+            
             self.tableView.reloadData()
             self.view.layoutIfNeeded()
         }

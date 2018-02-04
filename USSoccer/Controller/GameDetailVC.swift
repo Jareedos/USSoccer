@@ -54,9 +54,7 @@ class GameDetailVC: UIViewController {
         } else if (soccerGame.stations?.contains("Tickets"))! {
             // fix crash with out of index error
             var stationComponents = soccerGame.stations!.components(separatedBy: "Tickets")
-            print(stationComponents, "HERE")
             let removingSlash = stationComponents[1].replacingOccurrences(of: "\n", with: "")
-            print(removingSlash)
             gameStaionsLbl.text = removingSlash
         } else {
             gameStaionsLbl.text = soccerGame.stations
@@ -65,12 +63,5 @@ class GameDetailVC: UIViewController {
         let removeFantasyCamp = venueComponents[1].replacingOccurrences(of: "\nFantasy Camp", with: "")
         gameVenueLbl.text = venueComponents[0]
         gameVenueCityState.text = removeFantasyCamp
-        // Do any additional setup after loading the view.
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
 }

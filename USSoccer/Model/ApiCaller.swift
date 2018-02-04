@@ -88,6 +88,11 @@ class ApiCaller {
                     
                     let dispatchGroup = DispatchGroup()
                     
+                    /*
+                     "Date": "March 4, 2018",
+                     "Time": "12:00 PM ET",
+                     */
+                    
                     for index in 0..<arrayLength {
                         var currentArray = data[index]
                         let title = currentArray["Title"] as! String
@@ -100,12 +105,12 @@ class ApiCaller {
                         let formatter = DateFormatter()
                         var castedTime = time as! String
                         
-                        if !castedTime.contains(":") {
-                            castedTime.insert(contentsOf: [":", "0", "0"], at: castedTime.index(castedTime.startIndex, offsetBy: 1))
+                        if let index = castedTime.index(of: " "), !castedTime.contains(":") {
+                            castedTime.insert(contentsOf: [":", "0", "0"], at: index)
                         }
                         let castedDate = date
                         let timeWithoutTimeZoneString = castedTime[..<castedTime.index(castedTime.endIndex, offsetBy: -2)]
-                        let dateAndTimeStringWithProperTimeZone = castedDate + " " + timeWithoutTimeZoneString + self.timezoneFromTimeString(timeString: castedTime)
+                        let dateAndTimeStringWithProperTimeZone = castedDate + " " + timeWithoutTimeZoneString + self.timezoneFromTimeString(timeString: castedTime, dateString: castedDate)
                         
                         // Date parsing, Time parsing
                         formatter.dateFormat = "MMMM dd, yyyy h:mm a ZZZ"
@@ -163,26 +168,29 @@ class ApiCaller {
             
             gamesRef.observeSingleEvent(of: .value) { snapshot in
                 
-                let currentGameSnapshots = snapshot.children.allObjects as! [DataSnapshot]
-                
-                // Check the local database and insert the new ones
-                let localGames = CoreDataService.shared.fetchGames()
-                let localGameTitles = (localGames as NSArray).mutableArrayValue(forKey: "title")
-                for currentGameSnapshot in currentGameSnapshots {
-                    if let dict = currentGameSnapshot.value as? [String: Any], let title = dict["title"] {
-                        if localGameTitles.contains(title) == false {
-                            // We don't store this game locally yet
-                            // Insert into the local database
-                            SoccerGame.insert(snapShot: currentGameSnapshot)
-                            //let game = SoccerGame(snapShot: currentGameSnapshot)
-                            //print("game.title: \(game.title)")
+                DispatchQueue.main.async {
+                    
+                    let currentGameSnapshots = snapshot.children.allObjects as! [DataSnapshot]
+                    
+                    // Check the local database and insert the new ones
+                    let localGames = CoreDataService.shared.fetchGames()
+                    let localGameTitles = (localGames as NSArray).mutableArrayValue(forKey: "title")
+                    for currentGameSnapshot in currentGameSnapshots {
+                        if let dict = currentGameSnapshot.value as? [String: Any], let title = dict["title"] {
+                            if localGameTitles.contains(title) == false {
+                                // We don't store this game locally yet
+                                // Insert into the local database
+                                SoccerGame.insert(snapShot: currentGameSnapshot)
+                                //let game = SoccerGame(snapShot: currentGameSnapshot)
+                                //print("game.title: \(game.title)")
+                            }
                         }
                     }
+                    
+                    
+                    // All is finished :)
+                    completion()
                 }
-                
-                
-                // All is finished :)
-                completion()
             }
         } else {
             
@@ -192,21 +200,56 @@ class ApiCaller {
     }
     
     
-    func timezoneFromTimeString(timeString: String) -> String {
+    func timezoneFromTimeString(timeString: String, dateString: String) -> String {
+        
+        let justDateString = (dateString as NSString).components(separatedBy: ",").first ?? ""
+        
         // Default Eastern Time Zone -0500
         let timeZoneString = (timeString as NSString).substring(from: timeString.count - 2)
         
-        switch timeZoneString {
-        case "ET":
-            return "-0500"
-        case "CT":
-            return "-0600"
-        case "MT":
-            return "-0700"
-        case "PT":
-            return "-0800"
-        default:
-            return "-0500"
+        // Adjust for Daylight Savings Time
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMMM dd"
+        let date = formatter.date(from: justDateString)
+        
+        let fromDate = formatter.date(from: "March 11")
+        let toDate = formatter.date(from: "November 4")
+        // March 11th November 4th
+        var daylightSavingsTime = false
+        if let date = date, let fromDate = fromDate, let toDate = toDate {
+            if fromDate.timeIntervalSince1970 < date.timeIntervalSince1970 && date.timeIntervalSince1970 < toDate.timeIntervalSince1970 {
+                // Daylight Savings Time
+                daylightSavingsTime = true
+            }
+        }
+        if daylightSavingsTime {
+            
+            switch timeZoneString {
+            case "ET":
+                return "-0400"
+            case "CT":
+                return "-0500"
+            case "MT":
+                return "-0600"
+            case "PT":
+                return "-0700"
+            default:
+                return "-0400"
+            }
+        } else {
+            
+            switch timeZoneString {
+            case "ET":
+                return "-0500"
+            case "CT":
+                return "-0600"
+            case "MT":
+                return "-0700"
+            case "PT":
+                return "-0800"
+            default:
+                return "-0500"
+            }
         }
     }
 }
