@@ -38,7 +38,6 @@ public class SoccerGame: NSManagedObject  {
             let time = snapShotValue["time"] as? String,
             let venue = snapShotValue["venue"] as? String,
             let stations = snapShotValue["stations"] as? String else {
-                print("empty stuff")
                 return nil
         }
         
@@ -66,7 +65,6 @@ public class SoccerGame: NSManagedObject  {
         let time = snapShotValue["time"] as? String,
         let venue = snapShotValue["venue"] as? String,
             let stations = snapShotValue["stations"] as? String else {
-                print("empty stuff")
                 return
         }
         
@@ -81,12 +79,7 @@ public class SoccerGame: NSManagedObject  {
             game.timestamp = Date(timeIntervalSince1970: ts)
         }
         
-        try? managedContext?.save()
-        
-        print("-------")
-        print(snapShotValue)
-        print("fetchGames().count: \(CoreDataService.shared.fetchGames().count)")
-        
+        try? managedContext?.save()        
     }
     
     init(title: String, date: String, time: String, venue: String, stations: String) {

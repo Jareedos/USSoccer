@@ -105,7 +105,7 @@ class HomeVC: UIViewController {
                                                  object: nil)
         
         // FIXME: remove this line (just to speed up development)
-        currentUserSettings?.firstTimeInApp = false
+//        currentUserSettings?.firstTimeInApp = false
         if currentUserSettings?.firstTimeInApp == true {
             let introAlert = UIAlertController(title: "Welcome To US Soccer" , message: "US Soccer shows you a list of all USA National Soccer Teams games. \n\n Swipe left or right on the bottom to sort the list by the team. \n Click on a \"bell\" icon to set a notification for that game. \n\n Please give US Soccer permission to send notifications for the soccer games you select.", preferredStyle: UIAlertControllerStyle.alert)
             
@@ -314,7 +314,6 @@ class HomeVC: UIViewController {
                 
                 if self.notificationAuthorizationStatus != .authorized {
                     messageAlert(title: "Notifications Permission Required", message: "In order to update notification settings, notification permission is required. \n\n Please go to your setting and turn on notifications for USSoccer.", from: nil)
-                    print("notifications are NOT enabled")
                 } else {
                     if !ConnectionCheck.isConnectedToNetwork() {
                         messageAlert(title: "No Internet Connection", message: "Notifications Setting Menu is not available in Offline Mode.", from: nil)
@@ -366,20 +365,27 @@ class HomeVC: UIViewController {
             self.notificationMenuVisible = false
             self.menuShaddowView.isHidden = true
         }
+        
+        tableView.reloadData()
     }
     
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "gameDetail" {
-            let gameCellThatWasClicked = sender as! UITableViewCell
-            let indexPath = self.tableView.indexPath(for: gameCellThatWasClicked)
-            let soccerGame = soccerGames[(indexPath?.row)!]
-            let detailViewController = segue.destination as! GameDetailVC
-            detailViewController.soccerGame = soccerGame
-        }
-        if let vc = segue.destination as? InfoVC {
-            vc.presentingVC = self
-        }
+//        let gameCellThatWasClicked = sender as! UITableViewCell
+//        let indexPath = self.tableView.indexPath(for: gameCellThatWasClicked)
+//        let soccerGame = soccerGames[(indexPath?.row)!]
+//        if soccerGame.title! != "No Upcoming Games" && soccerGame.title! != "Internet Access Required!" {
+            if segue.identifier == "gameDetail" {
+                let gameCellThatWasClicked = sender as! UITableViewCell
+                let indexPath = self.tableView.indexPath(for: gameCellThatWasClicked)
+                let soccerGame = soccerGames[(indexPath?.row)!]
+                let detailViewController = segue.destination as! GameDetailVC
+                detailViewController.soccerGame = soccerGame
+            }
+            if let vc = segue.destination as? InfoVC {
+                vc.presentingVC = self
+            }
+//        }
     }
 }
 
@@ -411,9 +417,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
             cell.vsLbl.text = ""
             cell.opponentLbl.text = ""
         } else {
-            print(soccerGames[indexPath.row].title)
             let usSoccerTitle = soccerGames[indexPath.row].title?.components(separatedBy: " ") ?? [String]()
-            print(usSoccerTitle, "This is the title")
             if usSoccerTitle.count > 1 {
                 if usSoccerTitle[1] != "vs" {
                     cell.gameTitleLbl.text = "\(usSoccerTitle[0].uppercased()) \(usSoccerTitle[1].uppercased())"
@@ -426,8 +430,10 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
                 }
             }
             
-            let currentGame = soccerGames[indexPath.row] 
-                if currentGame.notification == true {
+            let currentGame = soccerGames[indexPath.row]
+            
+            
+                if isGameSelectedForNotifications(game: currentGame) {
                     cell.notificationBtn.setImage(UIImage(named: "bell-musical-tool (1)"), for: .normal)
                 } else {
                     cell.notificationBtn.setImage(UIImage(named: "musical-bell-outline (2)"), for: .normal)
@@ -453,10 +459,37 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
+    func isGameSelectedForNotifications(game: SoccerGame) -> Bool {
+        
+        var isSelected = false
+        if let isGameSelected = game.notification?.boolValue {
+            isSelected = isGameSelected
+        } else {
+            var teamIsSelected = false
+            if let team = team(forGame: game) {
+                teamIsSelected = team.notifications
+            }
+            var allTeamsAreSelected = false
+            if let team = team(forGameName: "ALL TEAMS") {
+                allTeamsAreSelected = team.notifications
+            }
+            
+            isSelected = teamIsSelected || allTeamsAreSelected
+        }
+        return isSelected
+    }
+    
     func team(forGame game: SoccerGame) -> Team? {
+        return team(forGameName: game.usTeam)
+    }
+    
+    func team(forGameName name: String) -> Team? {
+        if teamArray.count == 0 {
+            teamArray = CoreDataService.shared.fetchTeams()
+        }
         // Get the team from
         let teams = teamArray.filter { (team: Team) -> Bool in
-            return team.title == game.usTeam
+            return team.title == name
         }
         return teams.first
     }
@@ -552,13 +585,19 @@ extension HomeVC: UIPickerViewDelegate, UIPickerViewDataSource {
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         
         DispatchQueue.main.async {
-            self.tableView.contentOffset = CGPoint.zero
-            
             self.filterValue = self.pickerTeamsArray[row]
-            self.soccerGames = self.sortedGames[self.filterValue] ?? [SoccerGame]()
+            self.soccerGames = [SoccerGame]()
             
             self.tableView.reloadData()
-            self.view.layoutIfNeeded()
+            
+            //self.tableView.contentOffset = CGPoint.zero
+            
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.001, execute: {
+                
+                self.soccerGames = self.sortedGames[self.filterValue] ?? [SoccerGame]()
+                self.tableView.reloadData()
+                self.tableView.setContentOffset(CGPoint.zero, animated: false)
+            })
         }
     }
     

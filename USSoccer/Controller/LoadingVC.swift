@@ -58,7 +58,6 @@ class LoadingVC: UIViewController {
             
             let dateFormated = Date()
             if let timestamp = game.timestamp, timestamp.timeIntervalSince1970 < dateFormated.timeIntervalSince1970 {
-                print(timestamp.timeIntervalSince1970, "this game should be deleted")
                 //this is my solution, I think it will only remove the game if the array is not empty
                 // it didn't work still failing on line 162 for some reason.
                 allGames.remove(at: index)

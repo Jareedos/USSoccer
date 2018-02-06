@@ -63,13 +63,7 @@ class CoreDataService {
         let entity = NSEntityDescription.entity(forEntityName: "Team", in: managedContext!)!
         let team = Team(entity: entity, insertInto: managedContext)
         team.setValue(title, forKey: "title")
-        team.setValue(false, forKey: "notifications")
-//        team.setValue(false, forKey: "twoDay")
-//        team.setValue(false, forKey: "oneDay")
-//        team.setValue(true, forKey: "twoHour")
-//        team.setValue(false, forKey: "oneHour")
-//        team.setValue(false, forKey: "thirtyMinutes")
-        
+        team.setValue(false, forKey: "notifications")        
         saveContext()
     }
     

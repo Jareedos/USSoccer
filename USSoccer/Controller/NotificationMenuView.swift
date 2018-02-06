@@ -13,10 +13,8 @@ import UserNotifications
 
 class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
     var currentUser = Auth.auth().currentUser
-//    let isAnonymous = user!.isAnonymous  // true
-//    let uid = user!.uid
-//    let usersRef = ref.child(user.uid
-    var currentTeam = ""
+    
+    var currentTeam : Team?
     var twoDayBool = false
     var oneDayBool = false
     var twoHourBool = false
@@ -76,7 +74,7 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
         let teams = CoreDataService.shared.fetchTeams()
         for team in teams {
             if stringTrimmer(stringToTrim: teamTitle)?.uppercased() == stringTrimmer(stringToTrim: team.title)?.uppercased() {
-                currentTeam = team.title!
+                currentTeam = team
             }
         }
         
@@ -91,10 +89,10 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
                 }
                 if self.notificationAuthorizationStatus != .authorized {
                     messageAlert(title: "Notifications Permission Required", message: "In order to update notification settings, notification permission is required. \n\n Please go to your setting and turn on notifications for USSoccer.", from: nil)
-                    print("notifications are NOT enabled")
                 } else {
                     
                     if ConnectionCheck.isConnectedToNetwork() {
+                        // Toggle selection
                         
                         let followingTeamRef = followingRef.child(teamTitle).child(self.currentUser!.uid)
                         
@@ -106,19 +104,18 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
                         self.selectedTeams[teamTitle] = isSelected
                         if isSelected {
                             followingTeamRef.setValue(true)
-                            //CoreDataService.shared.saveTeam(title: self.currentTeam, following: true)
                             //This should save if the user turned on Team notificicaitons
-//                            self.currentTeam.setValue(true, forKey: "notifications")
-//                            CoreDataService.shared.saveContext()
+                            self.currentTeam?.setValue(true, forKey: "notifications")
+                            CoreDataService.shared.saveContext()
                         } else {
                             followingTeamRef.removeValue()
-                            //CoreDataService.shared.saveTeam(title: self.currentTeam, following: false)
-                              //This should save if the user turned off Team notifications
-//                            self.currentTeam.setValue(false, forKey: "notifications")
-//                            CoreDataService.shared.saveContext()
+                            
+                            self.currentTeam?.setValue(false, forKey: "notifications")
+                            CoreDataService.shared.saveContext()
                         }
                         
                         tableView.reloadData()
+                        
                         
                     } else {
                         messageAlert(title: "No Internet Connection", message: "Internet connection is required to update team notifications.", from: nil)

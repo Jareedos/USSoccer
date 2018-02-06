@@ -34,7 +34,6 @@ class ApiCaller {
                 let games = CoreDataService.shared.fetchGames()
                 if games.count == 0 {
                     // Show the alert and possibly try again
-                    print("No Internet, No games to load")
                     let _ = UIAlertController.presentOKAlertWithTitle("No Connection", message: "Cannot load any games, please try again later.", okTapped: {
                         self.ApiCall(completion: completion)
                     })
@@ -44,8 +43,6 @@ class ApiCaller {
             
             if let jsonData = response.result.value as? Dictionary<String, AnyObject> {
                 guard let data = jsonData["Data"] as? [[String: AnyObject]] else {
-                    print("I got here there is no data, json is empty")
-                    print("\n\n\n\n\n\n\n\n\n\n")
                     
                     if ConnectionCheck.isConnectedToNetwork() == false {
                         // No data to sync and not connected to network
@@ -53,7 +50,6 @@ class ApiCaller {
                         let games = CoreDataService.shared.fetchGames()
                         if games.count == 0 {
                             // Show the alert and possibly try again
-                            print("No Internet, No games to load")
                             let _ = UIAlertController.presentOKAlertWithTitle("No Connection", message: "Cannot load any games, please try again later.", okTapped: {
                                 self.ApiCall(completion: completion)
                             })
@@ -181,8 +177,6 @@ class ApiCaller {
                                 // We don't store this game locally yet
                                 // Insert into the local database
                                 SoccerGame.insert(snapShot: currentGameSnapshot)
-                                //let game = SoccerGame(snapShot: currentGameSnapshot)
-                                //print("game.title: \(game.title)")
                             }
                         }
                     }
