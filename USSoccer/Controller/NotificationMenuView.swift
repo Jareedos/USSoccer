@@ -44,23 +44,13 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
             cell.configure(selected: isSelected)
         } else {
             
-            followingRef.child(teamsArray[indexPath.row]).observeSingleEvent(of: .value) { (snapshot) in
-                let value = snapshot.value as? NSDictionary
-                if value == nil {
-                    cell.configure(selected: false)
-                    self.selectedTeams[teamTitle] = false
-                } else {
-                    if let userFollowing = value![self.currentUser!.uid] {
-                        if userFollowing as! Bool {
-                            cell.configure(selected: true)
-                            self.selectedTeams[teamTitle] = true
-                        } else {
-                            cell.configure(selected: false)
-                            self.selectedTeams[teamTitle] = false
-                        }
-                    } else {
-                        cell.configure(selected: false)
-                        self.selectedTeams[teamTitle] = false
+            if let uid = Auth.auth().currentUser?.uid {
+                
+                followingRef.child(teamsArray[indexPath.row]).child(uid).observeSingleEvent(of: .value) { (snapshot) in
+                    let value = snapshot.value as? Bool ?? false
+                    DispatchQueue.main.async {
+                        cell.configure(selected: value)
+                        self.selectedTeams[teamTitle] = value
                     }
                 }
             }

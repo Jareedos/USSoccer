@@ -155,6 +155,11 @@ class HomeVC: UIViewController {
                 CoreDataService.shared.saveTeam(title: teamTitle)
             }
         }
+        ApiCaller.shared.updateLocalTeamsNotificationSettings(completion: { [weak self] in
+            DispatchQueue.main.async {
+                self?.tableView.reloadData()
+            }
+        })
         
         
         if sortedGames["MNT"] == nil{
@@ -460,7 +465,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     func isGameSelectedForNotifications(game: SoccerGame) -> Bool {
-        
         var isSelected = false
         if let isGameSelected = game.notification?.boolValue {
             isSelected = isGameSelected
@@ -534,7 +538,8 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
                     let buttonPosition = sender.convert(CGPoint.zero, to: tableView)
                     let indexPath: IndexPath! = tableView.indexPathForRow(at: buttonPosition)
                     let game = soccerGames[indexPath.row]
-                    game.notification = NSNumber(value: !(game.notification?.boolValue ?? false))
+                    let isSelected = self.isGameSelectedForNotifications(game: game)
+                    game.notification = NSNumber(value: !isSelected)
                     CoreDataService.shared.saveContext()
                     if let team = team(forGame: game) {
                         notificationAlertLbl.text = "\(team.title?.uppercased() ?? "Name not available") Notification Set"

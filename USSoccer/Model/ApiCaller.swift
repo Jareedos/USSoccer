@@ -153,8 +153,29 @@ class ApiCaller {
     }
     
     
-    func asdf() {
+    func updateLocalTeamsNotificationSettings(completion: @escaping ()->Void) {
         
+        guard let uid = Auth.auth().currentUser?.uid else { completion(); return }
+        
+        let group = DispatchGroup()
+        
+        let teams = CoreDataService.shared.fetchTeams()
+        for team in teams {
+            guard let title = team.title else { return }
+            
+            group.enter()
+            
+            followingRef.child(title).child(uid).observeSingleEvent(of: .value) { (snapshot) in
+                if let value = snapshot.value as? Bool {
+                    team.notifications = value
+                    CoreDataService.shared.saveContext()
+                }
+                
+                group.leave()
+            }// End of observation
+        }// End of for loop
+        
+        group.notify(queue: DispatchQueue.main, execute: completion)
     }
     
     
