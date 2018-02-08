@@ -381,9 +381,7 @@ class HomeVC: UIViewController {
 //        let soccerGame = soccerGames[(indexPath?.row)!]
 //        if soccerGame.title! != "No Upcoming Games" && soccerGame.title! != "Internet Access Required!" {
             if segue.identifier == "gameDetail" {
-                let gameCellThatWasClicked = sender as! UITableViewCell
-                let indexPath = self.tableView.indexPath(for: gameCellThatWasClicked)
-                let soccerGame = soccerGames[(indexPath?.row)!]
+                let soccerGame = sender as! SoccerGame
                 let detailViewController = segue.destination as! GameDetailVC
                 detailViewController.soccerGame = soccerGame
             }
@@ -395,6 +393,13 @@ class HomeVC: UIViewController {
 }
 
 extension HomeVC: UITableViewDelegate, UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let game = soccerGames[indexPath.row]
+        if game.isPlaceholder() == false {
+            performSegue(withIdentifier: "gameDetail", sender: game)
+        }
+    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return soccerGames.count
@@ -437,12 +442,21 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
             
             let currentGame = soccerGames[indexPath.row]
             
-            
-                if isGameSelectedForNotifications(game: currentGame) {
-                    cell.notificationBtn.setImage(UIImage(named: "bell-musical-tool (1)"), for: .normal)
-                } else {
+            if isGameSelectedForNotifications(game: currentGame) {
+                // Notifications ON
+                cell.notificationBtn.setImage(UIImage(named: "bell-musical-tool (1)"), for: .normal)
+            } else {
+                if currentGame.notification == nil {
+                    // Undefined
                     cell.notificationBtn.setImage(UIImage(named: "musical-bell-outline (2)"), for: .normal)
+                } else {
+                    // Notifications OFF
+                    // currentGame.notification == false
+                    cell.notificationBtn.setImage(UIImage(named: "canclednotifications"), for: .normal)
                 }
+            }
+            
+            // canclednotifications
         }
         let gameDate = soccerGames[indexPath.row].date?.components(separatedBy: " ") ?? ["NA"]
         //Checking for PlaceholderGame
@@ -505,11 +519,13 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
     
     @objc func notificationAlertHideTimerFired() {
         // Hide after some time
-        UIView.animate(withDuration: 0.3, animations: {
-            self.notificationAlertTopConstraint.constant = -self.notificationView.frame.size.height
-            self.navigationController?.view.layoutIfNeeded()
-        }, completion: { (finished: Bool) in
-            self.notificationAlertVisible = false
+        UIView.animate(withDuration: 0.3, animations: { [weak self] in
+            if let height = self?.notificationView?.frame.size.height {
+                self?.notificationAlertTopConstraint?.constant = -height
+            }
+            self?.navigationController?.view.layoutIfNeeded()
+        }, completion: { [weak self] (finished: Bool) in
+            self?.notificationAlertVisible = false
         })
     }
     
@@ -593,16 +609,14 @@ extension HomeVC: UIPickerViewDelegate, UIPickerViewDataSource {
             self.filterValue = self.pickerTeamsArray[row]
             self.soccerGames = [SoccerGame]()
             
-            self.tableView.reloadData()
+//            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.001, execute: {
+                DispatchQueue.main.async {
             
-            //self.tableView.contentOffset = CGPoint.zero
-            
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.001, execute: {
-                
                 self.soccerGames = self.sortedGames[self.filterValue] ?? [SoccerGame]()
                 self.tableView.reloadData()
                 self.tableView.setContentOffset(CGPoint.zero, animated: false)
-            })
+               }
+//            })
         }
     }
     

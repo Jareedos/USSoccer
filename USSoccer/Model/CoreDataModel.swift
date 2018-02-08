@@ -40,10 +40,7 @@ class CoreDataService {
         }
         
         games = games.filter { (game) -> Bool in
-            if game.title != "No Upcoming Games" && game.title != "Internet Access Required!" {
-                return true
-            }
-            return false
+            return game.isPlaceholder() == false
         }
         
         return games

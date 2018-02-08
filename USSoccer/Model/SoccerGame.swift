@@ -95,5 +95,12 @@ public class SoccerGame: NSManagedObject  {
         try? managedContext?.save()
     }
     
+    func isPlaceholder() -> Bool {
+        if title == "No Upcoming Games" || title == "Internet Access Required!" {
+            return true
+        }
+        return false
+    }
+    
     
 }

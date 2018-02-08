@@ -42,6 +42,7 @@
 		BF124FAB201CE2CF00BF3AC8 /* OneSignalExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OneSignalExtension.swift; sourceTree = "<group>"; };
 		BF19BF501FCDD219001B243E /* ApiCaller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiCaller.swift; sourceTree = "<group>"; };
 		BF23AF471FC9D4EB004C4F13 /* CoreDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataModel.swift; sourceTree = "<group>"; };
+		BF2B3E1E202B88A3002B3B6E /* USSoccer-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "USSoccer-Bridging-Header.h"; sourceTree = "<group>"; };
 		BF3ABD731F8483CC00D46DD3 /* USSoccer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = USSoccer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF3ABD761F8483CC00D46DD3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BF3ABD7B1F8483CC00D46DD3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -175,6 +176,7 @@
 				BFA55BA71FD70CF400E3411D /* NetworkCheck.swift */,
 				BFA55BA91FD7AC3D00E3411D /* NotificationService.swift */,
 				BF124FA9201CDFC600BF3AC8 /* UIViewControllerExtension.swift */,
+				BF2B3E1E202B88A3002B3B6E /* USSoccer-Bridging-Header.h */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -214,6 +216,7 @@
 				TargetAttributes = {
 					BF3ABD721F8483CC00D46DD3 = {
 						CreatedOnToolsVersion = 9.0;
+						LastSwiftMigration = 0920;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -482,6 +485,7 @@
 			baseConfigurationReference = 3097B29D3005A3B5804D9F8A /* Pods-USSoccer.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = USSoccer/USSoccer.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
@@ -492,6 +496,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "USSoccer/Utilities/USSoccer-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -502,6 +508,7 @@
 			baseConfigurationReference = 39895979E6EF2F0585E73F94 /* Pods-USSoccer.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = USSoccer/USSoccer.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
@@ -512,6 +519,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "USSoccer/Utilities/USSoccer-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import FirebaseDatabase
 import UserNotifications
+import OneSignal
 
 class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
     var currentUser = Auth.auth().currentUser
@@ -92,6 +93,8 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
                         // Flip
                         isSelected = !isSelected
                         self.selectedTeams[teamTitle] = isSelected
+                        
+                        // Update Core data
                         if isSelected {
                             followingTeamRef.setValue(true)
                             //This should save if the user turned on Team notificicaitons
@@ -104,6 +107,12 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
                             CoreDataService.shared.saveContext()
                         }
                         
+                        // Update OneSignal
+                        
+                        // Create a list of time interval toggles
+                        let intervalToggles = [self.twoDayBool, self.oneDayBool, self.twoHourBool, self.oneHourBool, self.halfHourBool]
+                        OneSignal.updateSubsription(subscription: isSelected, team: teamTitle, timeIntervalToggles: intervalToggles)
+                        
                         tableView.reloadData()
                         
                         
@@ -111,6 +120,17 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
                         messageAlert(title: "No Internet Connection", message: "Internet connection is required to update team notifications.", from: nil)
                     }
                 }
+            }
+        }
+    }
+    
+    func updateSubscriptions() {
+        // Create a list of time interval toggles
+        let intervalToggles = [self.twoDayBool, self.oneDayBool, self.twoHourBool, self.oneHourBool, self.halfHourBool]
+        
+        for (_, element) in selectedTeams.enumerated() {
+            if element.value {
+                OneSignal.updateSubsription(subscription: true, team: element.key, timeIntervalToggles: intervalToggles)
             }
         }
     }
@@ -138,9 +158,11 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
                         messageAlert(title: "No Internet Connection", message: "Internet connection is required to update team notifications.", from: nil)
                     }
                 }
+                self.updateSubscriptions()
             }
         }
     }
+    
     
     @IBAction func oneDaySwitch(_ sender: UISwitch) {
         if currentUserSettings?.firstTimeTogglingNotificationSettings == true {
@@ -165,6 +187,7 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
                         messageAlert(title: "No Internet Connection", message: "Internet connection is required to update team notifications.", from: nil)
                     }
                 }
+                self.updateSubscriptions()
             }
         }
     }
@@ -192,6 +215,7 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
                         messageAlert(title: "No Internet Connection", message: "Internet connection is required to update team notifications.", from: nil)
                     }
                 }
+                self.updateSubscriptions()
             }
         }
     }
@@ -219,7 +243,9 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
                         messageAlert(title: "No Internet Connection", message: "Internet connection is required to update team notifications.", from: nil)
                     }
                 }
+                self.updateSubscriptions()
             }
+            
         }
     }
     
@@ -246,6 +272,7 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
                         messageAlert(title: "No Internet Connection", message: "Internet connection is required to update team notifications.", from: nil)
                     }
                 }
+                self.updateSubscriptions()
             }
         }
     }

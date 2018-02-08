@@ -11,6 +11,7 @@ import UIKit
 import Alamofire
 import Firebase
 import CoreData
+import OneSignal
 
 class ApiCaller {
     static let shared = ApiCaller()
@@ -97,7 +98,7 @@ class ApiCaller {
                         let date = currentArray["Date"] as! String
                         let stations = (currentArray["Stations"] as? String) ?? "ussoccer.com"
                         let teamSeperated = title.components(separatedBy: "vs")
-                        let team = stringTrimmer(stringToTrim: teamSeperated[0])?.capitalized
+                        let team = stringTrimmer(stringToTrim: teamSeperated[0])?.uppercased()
                         let formatter = DateFormatter()
                         var castedTime = time as! String
                         
@@ -116,6 +117,13 @@ class ApiCaller {
                         
                         dispatchGroup.enter()
                         let gameKey = self.gameKey(title: title, date: date)
+                        
+                        // Schedule a notification
+                        if let team = team, let dateFormated = dateFormated {
+                            OneSignal.scheduleAllPushNotificationReminders(toGameTitle: title, team: team, timestamp: dateFormated)
+                        }
+                       
+                        // Save the game to the Firebase
                         gamesRef.child(gameKey).observeSingleEvent(of: .value, with: { (snapshot: DataSnapshot) in
                             
                             if let dict = snapshot.value as? [String: Any] {

@@ -257,7 +257,6 @@
                                             <outlet property="notificationBtn" destination="HxC-mw-aj0" id="DlR-Uu-a2B"/>
                                             <outlet property="opponentLbl" destination="7Ch-Wb-TwP" id="o5Q-SV-owM"/>
                                             <outlet property="vsLbl" destination="dxo-Ot-Eqb" id="R5j-N1-G0z"/>
-                                            <segue destination="hHJ-5m-7BH" kind="show" identifier="gameDetail" id="KXB-Ep-hhe"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -582,6 +581,7 @@
                         <outlet property="teamPicker" destination="9sp-UI-TnC" id="xRw-0P-vrr"/>
                         <outlet property="twoDaySwitch" destination="1Dr-h9-KRe" id="7OR-sh-nHf"/>
                         <outlet property="twoHourSwitch" destination="H3p-ia-HK5" id="yDi-0P-d31"/>
+                        <segue destination="hHJ-5m-7BH" kind="show" identifier="gameDetail" id="qaT-5u-Ckc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kUe-Ug-Pf0" userLabel="First Responder" sceneMemberID="firstResponder"/>
