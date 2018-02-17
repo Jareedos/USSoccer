@@ -16,18 +16,32 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
     var currentUser = Auth.auth().currentUser
     
     var currentTeam : Team?
-    var twoDayBool = false
-    var oneDayBool = false
-    var twoHourBool = false
-    var oneHourBool = false
-    var halfHourBool = false
     var notificationAuthorizationStatus : UNAuthorizationStatus = .notDetermined
     var currentUserSettings : Person? {
         return CoreDataService.shared.fetchPerson()
     }
     
     var teamsArray = ["ALL TEAMS", "MNT", "WNT", "U-23 MNT", "U-23 WNT", "U-20 MNT", "U-20 WNT", "U-19 MNT", "U-19 WNT", "U-18 MNT", "U-18 WNT", "U-17 MNT", "U-17 WNT", "U-16 MNT", "U-16 WNT","U-15 MNT", "U-15 WNT"]
-    var selectedTeams = [String : Bool]()
+    private var selectedTeams = [String : Bool]()
+    
+    @IBOutlet weak var tableView: UITableView?
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        if let uid = Auth.auth().currentUser?.uid {
+            
+            for team in teamsArray {
+                followingRef.child(team).child(uid).observeSingleEvent(of: .value) { (snapshot) in
+                    DispatchQueue.main.async {
+                        let value = (snapshot.value as? Bool) ?? false
+                        self.selectedTeams[team] = value
+                        self.tableView?.reloadData()
+                    }
+                }
+            }
+        }
+    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return teamsArray.count
@@ -37,25 +51,12 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "TeamTVC", for: indexPath) as? TeamsTVC else {
             fatalError("The Cell Failed to Deque")
         }
+        
         let teamTitle = teamsArray[indexPath.row]
         cell.teamTitle.text = teamTitle
         
-        
-        if let isSelected = selectedTeams[teamTitle] {
-            cell.configure(selected: isSelected)
-        } else {
-            
-            if let uid = Auth.auth().currentUser?.uid {
-                
-                followingRef.child(teamsArray[indexPath.row]).child(uid).observeSingleEvent(of: .value) { (snapshot) in
-                    let value = snapshot.value as? Bool ?? false
-                    DispatchQueue.main.async {
-                        cell.configure(selected: value)
-                        self.selectedTeams[teamTitle] = value
-                    }
-                }
-            }
-        }
+        let isSelected = selectedTeams[teamTitle] ?? false
+        cell.configure(selected: isSelected)
         
         return cell
     }
@@ -108,10 +109,7 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
                         }
                         
                         // Update OneSignal
-                        
-                        // Create a list of time interval toggles
-                        let intervalToggles = [self.twoDayBool, self.oneDayBool, self.twoHourBool, self.oneHourBool, self.halfHourBool]
-                        OneSignal.updateSubsription(subscription: isSelected, team: teamTitle, timeIntervalToggles: intervalToggles)
+                        self.updateSubscriptions()
                         
                         tableView.reloadData()
                         
@@ -126,13 +124,7 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
     
     func updateSubscriptions() {
         // Create a list of time interval toggles
-        let intervalToggles = [self.twoDayBool, self.oneDayBool, self.twoHourBool, self.oneHourBool, self.halfHourBool]
-        
-        for (_, element) in selectedTeams.enumerated() {
-            if element.value {
-                OneSignal.updateSubsription(subscription: true, team: element.key, timeIntervalToggles: intervalToggles)
-            }
-        }
+        ReminderService.shared.updateSubsription(selectedTeams: selectedTeams)
     }
     
     @IBAction func twoDaySwitch(_ sender: UISwitch) {
@@ -151,14 +143,14 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
                     sender.isOn = !sender.isOn
                 } else {
                     if ConnectionCheck.isConnectedToNetwork() {
-                        self.twoDayBool = sender.isOn
-                        ref.child("users").child((self.currentUser?.uid)!).child("notificationSettings").updateChildValues(["TwoDayNotification": self.twoDayBool])
+                        ReminderService.shared.twoDayBool = sender.isOn
+                        self.updateSubscriptions()
+                        ref.child("users").child((self.currentUser?.uid)!).child("notificationSettings").updateChildValues(["TwoDayNotification": ReminderService.shared.twoDayBool])
                     } else {
                         sender.isOn = !sender.isOn
                         messageAlert(title: "No Internet Connection", message: "Internet connection is required to update team notifications.", from: nil)
                     }
                 }
-                self.updateSubscriptions()
             }
         }
     }
@@ -178,16 +170,16 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
                 if self.notificationAuthorizationStatus != .authorized {
                     messageAlert(title: "Notifications Permission Required", message: "In order to update notification settings, notification permission is required. \n\n Please go to your setting and turn on notifications for USSoccer.", from: nil)
                     sender.isOn = !sender.isOn
+                    self.updateSubscriptions()
                 } else {
                     if ConnectionCheck.isConnectedToNetwork() {
-                        self.oneDayBool = sender.isOn
-                        ref.child("users").child((self.currentUser?.uid)!).child("notificationSettings").updateChildValues(["OneDayNotification": self.oneDayBool])
+                        ReminderService.shared.oneDayBool = sender.isOn
+                        ref.child("users").child((self.currentUser?.uid)!).child("notificationSettings").updateChildValues(["OneDayNotification": ReminderService.shared.oneDayBool])
                     } else {
                         sender.isOn = !sender.isOn
                         messageAlert(title: "No Internet Connection", message: "Internet connection is required to update team notifications.", from: nil)
                     }
                 }
-                self.updateSubscriptions()
             }
         }
     }
@@ -208,14 +200,14 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
                     sender.isOn = !sender.isOn
                 } else {
                     if ConnectionCheck.isConnectedToNetwork() {
-                        self.twoHourBool = sender.isOn
-                        ref.child("users").child((self.currentUser?.uid)!).child("notificationSettings").updateChildValues(["TwoHourNotification": self.twoHourBool])
+                        ReminderService.shared.twoHourBool = sender.isOn
+                        self.updateSubscriptions()
+                        ref.child("users").child((self.currentUser?.uid)!).child("notificationSettings").updateChildValues(["TwoHourNotification": ReminderService.shared.twoHourBool])
                     } else {
                         sender.isOn = !sender.isOn
                         messageAlert(title: "No Internet Connection", message: "Internet connection is required to update team notifications.", from: nil)
                     }
                 }
-                self.updateSubscriptions()
             }
         }
     }
@@ -236,14 +228,14 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
                     sender.isOn = !sender.isOn
                 } else {
                     if ConnectionCheck.isConnectedToNetwork() {
-                        self.oneHourBool = sender.isOn
-                        ref.child("users").child((self.currentUser?.uid)!).child("notificationSettings").updateChildValues(["OneHourNotification": self.oneHourBool])
+                        ReminderService.shared.oneHourBool = sender.isOn
+                        self.updateSubscriptions()
+                        ref.child("users").child((self.currentUser?.uid)!).child("notificationSettings").updateChildValues(["OneHourNotification": ReminderService.shared.oneHourBool])
                     } else {
                         sender.isOn = !sender.isOn
                         messageAlert(title: "No Internet Connection", message: "Internet connection is required to update team notifications.", from: nil)
                     }
                 }
-                self.updateSubscriptions()
             }
             
         }
@@ -265,14 +257,14 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
                     sender.isOn = !sender.isOn
                 } else {
                     if ConnectionCheck.isConnectedToNetwork() {
-                        self.halfHourBool = sender.isOn
-                        ref.child("users").child((self.currentUser?.uid)!).child("notificationSettings").updateChildValues(["HalfHourNotification": self.halfHourBool])
+                        ReminderService.shared.halfHourBool = sender.isOn
+                        self.updateSubscriptions()
+                        ref.child("users").child((self.currentUser?.uid)!).child("notificationSettings").updateChildValues(["HalfHourNotification": ReminderService.shared.halfHourBool])
                     } else {
                         sender.isOn = !sender.isOn
                         messageAlert(title: "No Internet Connection", message: "Internet connection is required to update team notifications.", from: nil)
                     }
                 }
-                self.updateSubscriptions()
             }
         }
     }

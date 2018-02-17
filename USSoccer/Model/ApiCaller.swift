@@ -19,14 +19,19 @@ class ApiCaller {
     var currentGamesInFirebaseArray = [[String: Any]]()
     var updatedGamesFromAPIArray = [[String: Any]]()
     
-    func gameKey(title: String, date: String) -> String {
-        return stringTrimmer(stringToTrim: title + date)!
+    func getFakeResponse() -> [[String: AnyObject]] {
+        
+//        let fakeGameData : [[String: Any]] = [["Date": "February 14, 2018", "Time": "9:00 AM PT", "Title": "MNT vs Hatti", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]
+        /*let fakeGameData1 = ["Data": [["Date": "February 14, 2018", "Time": "9:30 AM PT", "Title": "U-17 MNT VS Spain", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]]
+        let fakeGameData2 = ["Data": [["Date": "February 14, 2018", "Time": "10:00 AM PT", "Title": "U-17 MNT VS Canada", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]]*/
+        let fakeGameData : [[String: Any]] = [["Date": "February 14, 2018", "Time": "11:00 AM PT", "Title": "U-23 MNT vs China", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]
+        
+        return fakeGameData as [[String : AnyObject]]
     }
     
     func ApiCall(completion: @escaping ()->Void) {
         //real call "https://www.parsehub.com/api/v2/projects/tZQ5VDy6j2JB/last_ready_run/data?api_key=trmNdK43wwBZ" "https://www.parsehub.com/api/v2/runs/t1mY9HfR24H5/data?api_key=trmNdK43wwBZ"
         Alamofire.request("https://www.parsehub.com/api/v2/projects/tZQ5VDy6j2JB/last_ready_run/data?api_key=trmNdK43wwBZ").responseJSON { response in
-            
             
             
             if ConnectionCheck.isConnectedToNetwork() == false && response.result.value == nil {
@@ -43,6 +48,7 @@ class ApiCaller {
             }
             
             if let jsonData = response.result.value as? Dictionary<String, AnyObject> {
+                // FIXME: rename data2 to data
                 guard let data = jsonData["Data"] as? [[String: AnyObject]] else {
                     
                     if ConnectionCheck.isConnectedToNetwork() == false {
@@ -63,6 +69,9 @@ class ApiCaller {
                     }
                     return
                 }
+                // FIXME: remove this line (only for debugging purposes)
+//                let data = self.getFakeResponse()
+                
                 let arrayLength = data.count
                 let currentDate = Date()
                 
@@ -74,11 +83,11 @@ class ApiCaller {
                     
                     ref.child("LastUpdate").setValue(currentDate.timeIntervalSince1970)
                     
-                    let thresholdTimeInterval : TimeInterval = 24.0 * 3.0 * 3600.0
-                    if currentDate.timeIntervalSince(lastUpdateDate) > thresholdTimeInterval {
-                        // It's been more than 3 days
-                        messageAlert(title: "Carrier Server Error", message: "Your internet connection is not currently addiquate to update game information, \n\n Game information might be old.", from: nil)
-                        completion()
+                    let thresholdTimeInterval : TimeInterval = 24.0 * 3600.0
+                    if currentDate.timeIntervalSince(lastUpdateDate) < thresholdTimeInterval {
+                        // It's been less than a day
+                        //messageAlert(title: "Carrier Server Error", message: "Your internet connection is not currently addiquate to update game information, \n\n Game information might be old.", from: nil)
+                        self.syncLocalDatabase(completion: completion)
                         return
                     }
                     
@@ -93,6 +102,11 @@ class ApiCaller {
                     for index in 0..<arrayLength {
                         var currentArray = data[index]
                         let title = currentArray["Title"] as! String
+                        
+                        if title == "MNT vs France" {
+                            print("")
+                        }
+                        
                         let venue = currentArray["Venue"]
                         let time = currentArray["Time"]
                         let date = currentArray["Date"] as! String
@@ -101,6 +115,10 @@ class ApiCaller {
                         let team = stringTrimmer(stringToTrim: teamSeperated[0])?.uppercased()
                         let formatter = DateFormatter()
                         var castedTime = time as! String
+                        if castedTime == "TBD" || date == "TBD" {
+                            // Skip this game (the time hasn't been confirmed)
+                            continue
+                        }
                         
                         if let index = castedTime.index(of: " "), !castedTime.contains(":") {
                             castedTime.insert(contentsOf: [":", "0", "0"], at: index)
@@ -116,11 +134,11 @@ class ApiCaller {
                         self.updatedGamesFromAPIArray.append(dict)
                         
                         dispatchGroup.enter()
-                        let gameKey = self.gameKey(title: title, date: date)
+                        let gameKey = SoccerGame.gameKey(title: title, date: date)
                         
                         // Schedule a notification
                         if let team = team, let dateFormated = dateFormated {
-                            OneSignal.scheduleAllPushNotificationReminders(toGameTitle: title, team: team, timestamp: dateFormated)
+                            ReminderService.shared.scheduleAllPushNotificationReminders(toGameKey: gameKey, gameTitle: title, team: team, timestamp: dateFormated)
                         }
                        
                         // Save the game to the Firebase
@@ -144,7 +162,7 @@ class ApiCaller {
                             let date = dict["date"] as! String
                             if !titles.contains(title) {
                                 
-                                let gameKey = self.gameKey(title: title, date: date)
+                                let gameKey = SoccerGame.gameKey(title: title, date: date)
                                 gamesRef.child(gameKey).setValue(dict)
                             }
                         }

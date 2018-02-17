@@ -513,6 +513,7 @@
                                     <constraint firstItem="wJ3-Df-768" firstAttribute="width" secondItem="cU8-IB-wXW" secondAttribute="width" id="zxD-Hu-af3"/>
                                 </constraints>
                                 <connections>
+                                    <outlet property="tableView" destination="ybL-Rg-j7u" id="etG-gH-t1V"/>
                                     <outletCollection property="gestureRecognizers" destination="rTq-dq-CV2" appends="YES" id="YyL-cZ-XL0"/>
                                 </connections>
                             </view>
@@ -597,7 +598,7 @@
         <!--Game DetailVC-->
         <scene sceneID="EWM-1i-HDB">
             <objects>
-                <viewController id="hHJ-5m-7BH" customClass="GameDetailVC" customModule="USSoccer" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="GameDetailVC" id="hHJ-5m-7BH" customClass="GameDetailVC" customModule="USSoccer" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="EaV-Mr-e8E">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

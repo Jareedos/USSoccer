@@ -103,4 +103,12 @@ public class SoccerGame: NSManagedObject  {
     }
     
     
+    func gameKey() -> String {
+        return SoccerGame.gameKey(title: title ?? "", date: date ?? "")
+    }
+    
+    static func gameKey(title: String, date: String) -> String {
+        return stringTrimmer(stringToTrim: title + date)!
+    }
+    
 }

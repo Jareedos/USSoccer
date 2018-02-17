@@ -10,7 +10,12 @@ import Foundation
 
 import OneSignal
 
-class NotificationService: UNNotificationServiceExtension {
+class NotificationService: UNNotificationServiceExtension, UNUserNotificationCenterDelegate {
+    static let shared = NotificationService()
+    private override init() {
+        super.init()
+        UNUserNotificationCenter.current().delegate = self
+    }
     
     var contentHandler: ((UNNotificationContent) -> Void)?
     var receivedRequest: UNNotificationRequest!
@@ -36,4 +41,15 @@ class NotificationService: UNNotificationServiceExtension {
         }
     }
     
+    // MARK: - UNUserNotificationCenterDelegate
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        //
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        if let data = response.notification.request.content.userInfo as? [String : Any] {
+            NavigationService.shared.handle(notificationData: data)
+        }
+    }
 }

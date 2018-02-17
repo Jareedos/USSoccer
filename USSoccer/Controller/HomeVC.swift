@@ -7,11 +7,12 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseAuth
 import FirebaseDatabase
 import CoreData
 import UserNotifications
 import OneSignal
+import UserNotifications
 
 class HomeVC: UIViewController {
     
@@ -34,11 +35,6 @@ class HomeVC: UIViewController {
     let notificationVC = NotificationMenuView()
     let customHeight: CGFloat = 100
     let customWidth: CGFloat = 100
-    var twoDayBool = false
-    var oneDayBool = false
-    var twoHourBool = false
-    var oneHourBool = false
-    var halfHourBool = false
     let formatter = DateFormatter()
     var filterValue: String!
     var sortedGames = [String: [SoccerGame]]()
@@ -131,18 +127,23 @@ class HomeVC: UIViewController {
     func refreshSettings() {
         
         ref.child("users").child(currentUser!.uid).observeSingleEvent(of: .value) { (snapshot) in
-            guard let value = snapshot.value as? NSDictionary, let notifications = value["notificationSettings"] as? NSDictionary else { return }
-            let halfHourNotification = notifications["HalfHourNotification"] as? Bool ?? false
-            let oneDayNotification = notifications["OneDayNotification"] as? Bool ?? false
-            let oneHourNotification = notifications["OneHourNotification"] as? Bool ?? false
-            let twoDayNotification = notifications["TwoDayNotification"] as? Bool ?? false
-            let twoHourNotification = notifications["TwoHourNotification"] as? Bool ?? true
-            
-            self.halfHourSwitch.setOn(halfHourNotification, animated: false)
-            self.oneDaySwitch.setOn(oneDayNotification, animated: false)
-            self.oneHourSwitch.setOn(oneHourNotification, animated: false)
-            self.twoDaySwitch.setOn(twoDayNotification, animated: false)
-            self.twoHourSwitch.setOn(twoHourNotification, animated: false)
+            DispatchQueue.main.async {
+                
+                let value = snapshot.value as? NSDictionary
+                let notifications = value?["notificationSettings"] as? NSDictionary
+                
+                ReminderService.shared.oneDayBool = notifications?["HalfHourNotification"] as? Bool ?? false
+                ReminderService.shared.oneDayBool = notifications?["OneDayNotification"] as? Bool ?? false
+                ReminderService.shared.oneHourBool = notifications?["OneHourNotification"] as? Bool ?? false
+                ReminderService.shared.twoDayBool = notifications?["TwoDayNotification"] as? Bool ?? false
+                ReminderService.shared.twoHourBool = notifications?["TwoHourNotification"] as? Bool ?? true
+                
+                self.halfHourSwitch.setOn(ReminderService.shared.halfHourBool, animated: false)
+                self.oneDaySwitch.setOn(ReminderService.shared.oneDayBool, animated: false)
+                self.oneHourSwitch.setOn(ReminderService.shared.oneHourBool, animated: false)
+                self.twoDaySwitch.setOn(ReminderService.shared.twoDayBool, animated: false)
+                self.twoHourSwitch.setOn(ReminderService.shared.twoHourBool, animated: false)
+            }
         }
     }
     
@@ -428,8 +429,8 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
             cell.opponentLbl.text = ""
         } else {
             let usSoccerTitle = soccerGames[indexPath.row].title?.components(separatedBy: " ") ?? [String]()
-            if usSoccerTitle.count > 1 {
-                if usSoccerTitle[1] != "vs" {
+            if usSoccerTitle.count > 2 {
+                if usSoccerTitle[1].lowercased() != "vs" {
                     cell.gameTitleLbl.text = "\(usSoccerTitle[0].uppercased()) \(usSoccerTitle[1].uppercased())"
                     cell.vsLbl.text = "\(usSoccerTitle[2].uppercased())"
                     cell.opponentLbl.text = "\(usSoccerTitle[3].uppercased())"
@@ -438,6 +439,8 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
                     cell.vsLbl.text = "\(usSoccerTitle[1].uppercased())"
                     cell.opponentLbl.text = "\(usSoccerTitle[2].uppercased())"
                 }
+            } else {
+                print("\(usSoccerTitle)")
             }
             
             let currentGame = soccerGames[indexPath.row]
@@ -466,12 +469,13 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
         } else {
             let formatedMonth = gameDate[0].prefix(3)
             cell.gameDateLbl.text = "\(formatedMonth.uppercased()) \(gameDate[1]) \(gameDate[2])"
-            let date = soccerGames[indexPath.row].timestamp
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateStyle = .none
-            dateFormatter.timeStyle = .short
-            let strDate = dateFormatter.string(from: date!)
-            cell.gameTimeLbl.text = strDate
+            if let date = soccerGames[indexPath.row].timestamp {
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateStyle = .none
+                dateFormatter.timeStyle = .short
+                let strDate = dateFormatter.string(from: date)
+                cell.gameTimeLbl.text = strDate
+            }
             cell.notificationBtn.isHidden = false
         }
         
@@ -551,17 +555,42 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
                 messageAlert(title: "Notifications Permission Required", message: "In order to send a notificaiton, notification permission is required. \n\n Please go to your setting and turn on notifications for USSoccer.", from: nil)
             } else {
                 if ConnectionCheck.isConnectedToNetwork() {
+                    // Get the game
                     let buttonPosition = sender.convert(CGPoint.zero, to: tableView)
                     let indexPath: IndexPath! = tableView.indexPathForRow(at: buttonPosition)
                     let game = soccerGames[indexPath.row]
-                    let isSelected = self.isGameSelectedForNotifications(game: game)
-                    game.notification = NSNumber(value: !isSelected)
+                    
+                    // Set the notification toggle
+                    let isSelected = !self.isGameSelectedForNotifications(game: game)
+                    game.notification = NSNumber(value: isSelected)
                     CoreDataService.shared.saveContext()
-                    if let team = team(forGame: game) {
+                    
+                    
+                    if let team = team(forGame: game), let uid = Auth.auth().currentUser?.uid {
+                        
+                        // Configure the notification alert tab
                         notificationAlertLbl.text = "\(team.title?.uppercased() ?? "Name not available") Notification Set"
+                    
+                        if isSelected {
+                            
+                            // Schedule a local notification, but only if this user doesn't observe the team changes
+                            // We want to prevent double notifications
+                            let ref : DatabaseReference = followingRef.child(team.title!).child(uid)
+                            ref.observeSingleEvent(of: .value, with: { (snapshot : DataSnapshot) in
+                                let isFollowing = snapshot.value as? Bool ?? false
+                                if isFollowing == false {
+                                    ReminderService.shared.scheduleAllLocalNotifications(forGame: game)
+                                }
+                            })
+                        } else {
+                            // Cancel notifications
+                            ReminderService.shared.cancelAllSchduledLocalNotifications(ofGame: game)
+                        }
                     }
                     
+                    
                     if game.notification!.boolValue {
+                        // Showing the notification tab - we're telling the user that it's been scheduled
                         notificationAlertVisible = !notificationAlertVisible
                         if notificationAlertVisible {
                             // Showing
@@ -604,20 +633,12 @@ extension HomeVC: UIPickerViewDelegate, UIPickerViewDataSource {
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        
-        DispatchQueue.main.async {
-            self.filterValue = self.pickerTeamsArray[row]
-            self.soccerGames = [SoccerGame]()
-            
-//            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.001, execute: {
-                DispatchQueue.main.async {
-            
-                self.soccerGames = self.sortedGames[self.filterValue] ?? [SoccerGame]()
-                self.tableView.reloadData()
-                self.tableView.setContentOffset(CGPoint.zero, animated: false)
-               }
-//            })
-        }
+        self.tableView.setContentOffset(CGPoint.zero, animated: false)
+        self.filterValue = self.pickerTeamsArray[row]
+        self.soccerGames = self.sortedGames[self.filterValue] ?? [SoccerGame]()
+        let indexPath = IndexPath(row: 0, section: 0)
+        self.tableView.reloadData()
+        self.tableView.scrollToRow(at: indexPath, at: .top, animated: false)
     }
     
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {

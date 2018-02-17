@@ -22,9 +22,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FirebaseApp.configure()
         let onesignalInitSettings = [kOSSettingsKeyAutoPrompt: false]
         
+        let notificationOpenedBlock: OSHandleNotificationActionBlock = { result in
+            // This block gets called when the user reacts to a notification received
+            let payload: OSNotificationPayload = result!.notification.payload
+            if let data = payload.additionalData as? [String : Any] {
+                NavigationService.shared.handle(notificationData: data)
+            }
+        }
+        
+        
         OneSignal.initWithLaunchOptions(launchOptions,
                                         appId: "28bbbff3-5e9e-468c-b99d-beb9d034f404",
-                                        handleNotificationAction: nil,
+                                        handleNotificationAction: notificationOpenedBlock,
                                         settings: onesignalInitSettings)
         
         OneSignal.inFocusDisplayType = OSNotificationDisplayType.notification;
@@ -45,6 +54,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         return true
     }
+    
+    
 
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

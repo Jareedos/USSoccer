@@ -9,6 +9,8 @@
 import UIKit
 import FirebaseDatabase
 
+var g_isLoadingData = true
+
 class LoadingVC: UIViewController {
     
     @IBOutlet weak var soccerBallImage: UIImageView!
@@ -34,6 +36,8 @@ class LoadingVC: UIViewController {
     }
     
     func finishLoading() {
+        g_isLoadingData = false
+        NavigationService.shared.handleAllPendingNotificationsData()
         var allGames = CoreDataService.shared.fetchGames()
         
         

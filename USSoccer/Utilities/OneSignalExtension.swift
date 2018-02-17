@@ -27,60 +27,33 @@ extension OneSignal {
      - When it's ticked off again, the local notifications for the games that are supposed to be followed are schedled again
      */
     
-    static let timeIntervals : [TimeInterval] = [
-        2 * 24 * 3600,  // two days
-        24 * 3600, // one day
-        2 * 3600, // two hours
-        3600, // one hour
-        1800, // half an hour
-    ]
-    
-    static func updateSubsription(subscription: Bool, team: String, timeIntervalToggles : [Bool]) {
-        
-        for (i, toggle) in timeIntervalToggles.enumerated() {
-            let timeInterval = timeIntervals[i]
-            let key = "\(team)\(timeInterval)"
-            if subscription && toggle {
-                sendTag(key, value: "true")
-            } else {
-                deleteTag(key)
-            }
-        }
-    }
-    
     // FIXME: remove this (only for debug purposes)
-    static var notificationSentToTeams = Set<String>()
+    //static var notificationSentToTeams = Set<String>()
     
-    static func scheduleAllPushNotificationReminders(toGameTitle gameTitle: String, team: String, timestamp: Date) {
+    static func schedulePushNotification(title: String, text: String, tag: String, timestamp: Date, data: [String: Any]? = nil) {
         
         // FIXME: remove this (only for debug purposes)
-        // To fake it you can use this timestamp variable
-        let timestamp = Date().addingTimeInterval(24 * 3600)
-        
-        for timeInterval in timeIntervals {
-            // The key here is the team + time interval in seconds that the Reminder should be fired at
-            schedulePushNotification(toGameTitle: gameTitle, team: "\(team)\(timeInterval)", timestamp: timestamp.addingTimeInterval(-timeInterval))
-        }
-    }
-    
-    static func schedulePushNotification(toGameTitle gameTitle: String, team: String, timestamp: Date) {
-        
-        // FIXME: remove this (only for debug purposes)
-        if notificationSentToTeams.contains(team) == true {
+        /*
+        if notificationSentToTeams.contains(tag) == true {
             return
         }
-        notificationSentToTeams.insert(team)
+        notificationSentToTeams.insert(tag)*/
         
-        let params : [String : Any] = [
+        print("sending to tag \(tag)")
+        
+        var params : [String : Any] = [
             //"included_segments" : "All Users",
             
             "filters" : [[
-             "field": "tag", "key": team, "relation": "exists"
+             "field": "tag", "key": tag, "relation": "exists"
             ]],
-                      "contents": ["en": "\(gameTitle) starts in an hour"],
+                      "contents": ["en": text],
+                      "headings": ["en": title],
+                      //"subtitle": ["en": subtitle],
                       //"send_after" : Date().addingTimeInterval(60).description, // Debug - sending the notification one minute from now
                       "send_after" : timestamp.description // The correct schedule time
         ]
+        params["data"] = data
         
         postServerNotification(params: params, onSuccess: { result in
             if let result = result {
@@ -127,11 +100,14 @@ extension OneSignal {
         
         guard let user = Auth.auth().currentUser else { return }
         
+        
         // Recommend moving the below line to prompt for push after informing the user about
         //   how your app will use them.
         OneSignal.promptForPushNotifications(userResponse: { accepted in
             
-            if accepted {
+            let userRef = Database.database().reference().child("users").child(user.uid)
+            
+            //if accepted {
                 
                 OneSignal.setSubscription(true)
                 
@@ -142,30 +118,38 @@ extension OneSignal {
 //                let userSubscriptionSetting = status.subscriptionStatus.userSubscriptionSetting
 
                 // This is your device's identification within OneSignal
-                guard let userID = status.subscriptionStatus.userId else { return }
+            if let userID = status.subscriptionStatus.userId {
                 if let person = CoreDataService.shared.fetchPerson(), person.userID != userID {
                     //                           let pushToken = status.subscriptionStatus.pushToken
-                    let userRef = Database.database().reference().child("users").child(user.uid)
                     // Set the one signal id
                     
                     userRef.child("oneSignalIds").child(userID).setValue(true)
-                    
-                    
-                    // Save the push notification settings
-                    let dict: [String: Bool] = ["TwoDayNotification": false, "OneDayNotification": false, "TwoHourNotification": true, "OneHourNotification": false, "HalfHourNotification": false]
-                    userRef.child("notificationSettings").setValue(dict)
-                    
-                    // Set the following of the teams
-                    let teams = CoreDataService.shared.fetchTeams()
-                    for team in teams {
-                        if let key = team.firebaseKey() {
-                            let teamFollowingRef = followingRef.child(key).child(user.uid)
-                            if team.notifications {
-                                teamFollowingRef.setValue(true)
-                            } else {
-                                teamFollowingRef.removeValue()
-                            }
-                        }
+                }
+            }
+            //}
+            
+            
+            OneSignal.idsAvailable { (userId: String?, pushToken: String?) in
+                if let userId = userId, let uid = Auth.auth().currentUser?.uid {
+                    let userRef = Database.database().reference().child("users").child(uid)
+                    userRef.child("oneSignalIds").child(userId).setValue(true)
+                }
+            }
+            
+            
+            // Save the default push notification settings
+            let dict: [String: Bool] = ["TwoDayNotification": false, "OneDayNotification": false, "TwoHourNotification": true, "OneHourNotification": false, "HalfHourNotification": false]
+            userRef.child("notificationSettings").setValue(dict)
+            
+            // Set the following of the teams
+            let teams = CoreDataService.shared.fetchTeams()
+            for team in teams {
+                if let key = team.firebaseKey() {
+                    let teamFollowingRef = followingRef.child(key).child(user.uid)
+                    if team.notifications {
+                        teamFollowingRef.setValue(true)
+                    } else {
+                        teamFollowingRef.removeValue()
                     }
                 }
             }
