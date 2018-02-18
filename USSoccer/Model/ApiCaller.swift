@@ -21,10 +21,10 @@ class ApiCaller {
     
     func getFakeResponse() -> [[String: AnyObject]] {
         
-//        let fakeGameData : [[String: Any]] = [["Date": "February 14, 2018", "Time": "9:00 AM PT", "Title": "MNT vs Hatti", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]
-        /*let fakeGameData1 = ["Data": [["Date": "February 14, 2018", "Time": "9:30 AM PT", "Title": "U-17 MNT VS Spain", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]]
-        let fakeGameData2 = ["Data": [["Date": "February 14, 2018", "Time": "10:00 AM PT", "Title": "U-17 MNT VS Canada", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]]*/
-        let fakeGameData : [[String: Any]] = [["Date": "February 14, 2018", "Time": "11:00 AM PT", "Title": "U-23 MNT vs China", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]
+      let fakeGameData : [[String: Any]] = [["Date": "February 18, 2018", "Time": "9:00 AM PT", "Title": "MNT vs Hatti", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"] , ["Date": "February 18, 2018", "Time": "9:30 AM PT", "Title": "U-17 MNT VS Spain", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"], ["Date": "February 18, 2018", "Time": "10:00 AM PT", "Title": "U-17 MNT VS Canada", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"], ["Date": "February 18, 2018", "Time": "11:00 AM PT", "Title": "U-23 MNT vs China", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]
+      //let fakeGameData1 = ["Data": [["Date": "February 18, 2018", "Time": "9:30 AM PT", "Title": "U-17 MNT VS Spain", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]]
+    //  let fakeGameData2 = ["Data": [["Date": "February 18, 2018", "Time": "10:00 AM PT", "Title": "U-17 MNT VS Canada", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]]
+       // let fakeGameData : [[String: Any]] = [["Date": "February 18, 2018", "Time": "11:00 AM PT", "Title": "U-23 MNT vs China", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]
         
         return fakeGameData as [[String : AnyObject]]
     }
@@ -49,7 +49,7 @@ class ApiCaller {
             
             if let jsonData = response.result.value as? Dictionary<String, AnyObject> {
                 // FIXME: rename data2 to data
-                guard let data = jsonData["Data"] as? [[String: AnyObject]] else {
+                guard let dat2a = jsonData["Data"] as? [[String: AnyObject]] else {
                     
                     if ConnectionCheck.isConnectedToNetwork() == false {
                         // No data to sync and not connected to network
@@ -70,7 +70,7 @@ class ApiCaller {
                     return
                 }
                 // FIXME: remove this line (only for debugging purposes)
-//                let data = self.getFakeResponse()
+                let data = self.getFakeResponse()
                 
                 let arrayLength = data.count
                 let currentDate = Date()

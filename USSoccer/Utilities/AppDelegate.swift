@@ -30,7 +30,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         
-        
         OneSignal.initWithLaunchOptions(launchOptions,
                                         appId: "28bbbff3-5e9e-468c-b99d-beb9d034f404",
                                         handleNotificationAction: notificationOpenedBlock,
@@ -51,6 +50,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 
             }
         }
+        
+        // Inilializing the services
+        let _ = NotificationService.shared
+        let _ = NavigationService.shared
         
         return true
     }

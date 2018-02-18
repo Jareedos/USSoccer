@@ -22,7 +22,8 @@ public class SoccerGame: NSManagedObject  {
     @NSManaged public var timestamp: Date?
 //    var ref: DataReference?
     var usTeam : String! {
-        let teamsTitles = title!.components(separatedBy: "vs")
+        let changedTitle = title!.replacingOccurrences(of: "VS", with: "vs")
+        let teamsTitles = changedTitle.components(separatedBy: "vs")
         let trimmedTitle = stringTrimmer(stringToTrim: teamsTitles[0].uppercased())
         return trimmedTitle
     }

@@ -18,6 +18,12 @@ class CoreDataService {
         managedContext = appDelegate?.persistentContainer.viewContext
     }
     
+    func team(name: String) -> Team? {
+        return fetchTeams().filter({ (team) -> Bool in
+            return team.title == name
+        }).first
+    }
+    
     func fetchTeams() -> [Team] {
         var teams = [Team]()
         let fetchTeams = NSFetchRequest<Team>(entityName: "Team")

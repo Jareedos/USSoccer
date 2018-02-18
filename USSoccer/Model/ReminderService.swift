@@ -83,10 +83,25 @@ class ReminderService {
         }
         
         
-        OneSignal.sendTags(tags, onSuccess: { (result) in
+        switch tags.keys.count {
+        case 0:
+            break
+        case 1:
+            let tag = tags.values.first!
+            OneSignal.sendTag(tag, value: tags[tag], onSuccess: { (result) in
+                if let result = result { print("OneSignal.sendTag \(result)") }
+            }) { (error: Error?) in
+                if let error = error { print("OneSignal.sendTag \(error)") }
+            }
+            break
+        default:
             
-        }) { (error: Error?) in
-            
+            OneSignal.sendTags(tags, onSuccess: { (result) in
+                if let result = result { print("OneSignal.sendTags \(result)") }
+            }) { (error: Error?) in
+                if let error = error { print("OneSignal.sendTags \(error)") }
+            }
+            break
         }
     }
     
@@ -177,9 +192,9 @@ class ReminderService {
             "gameKey" : SoccerGame.gameKey(title: title, date: date)
         ]
         //
-        //let reminderTimestamp = timestamp.addingTimeInterval(-timeIntervals[timeIntervalIndex])
+        let reminderTimestamp = timestamp.addingTimeInterval(-timeIntervals[timeIntervalIndex])
         // FIXME:
-        let reminderTimestamp = Date().addingTimeInterval(60)
+        //let reminderTimestamp = Date().addingTimeInterval(60)
         
         let components = Calendar.current.dateComponents([.day, .month, .year, .hour, .minute, .second], from: reminderTimestamp)
         let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)

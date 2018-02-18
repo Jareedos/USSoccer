@@ -39,7 +39,6 @@ class HomeVC: UIViewController {
     var filterValue: String!
     var sortedGames = [String: [SoccerGame]]()
     var soccerGames = [SoccerGame]()
-    var teamArray = [Team]()
     var currentUserSettings : Person? {
         return CoreDataService.shared.fetchPerson()
     }
@@ -132,11 +131,11 @@ class HomeVC: UIViewController {
                 let value = snapshot.value as? NSDictionary
                 let notifications = value?["notificationSettings"] as? NSDictionary
                 
-                ReminderService.shared.oneDayBool = notifications?["HalfHourNotification"] as? Bool ?? false
+                ReminderService.shared.halfHourBool = notifications?["HalfHourNotification"] as? Bool ?? false
                 ReminderService.shared.oneDayBool = notifications?["OneDayNotification"] as? Bool ?? false
                 ReminderService.shared.oneHourBool = notifications?["OneHourNotification"] as? Bool ?? false
                 ReminderService.shared.twoDayBool = notifications?["TwoDayNotification"] as? Bool ?? false
-                ReminderService.shared.twoHourBool = notifications?["TwoHourNotification"] as? Bool ?? true
+                ReminderService.shared.twoHourBool = notifications?["TwoHourNotification"] as? Bool ?? false
                 
                 self.halfHourSwitch.setOn(ReminderService.shared.halfHourBool, animated: false)
                 self.oneDaySwitch.setOn(ReminderService.shared.oneDayBool, animated: false)
@@ -150,12 +149,20 @@ class HomeVC: UIViewController {
     
     func setupTeamPicker() {
         //Checking to see if the Teams are set up in CoreData, Setting them up if they are not
-        teamArray = CoreDataService.shared.fetchTeams()
-        if teamArray.isEmpty {
-            for teamTitle in pickerTeamsArray {
+        let teams = CoreDataService.shared.fetchTeams()
+        
+        let existingTeamTitles = teams.flatMap { (team: Team) -> String? in
+            return team.title
+        }
+        for teamTitle in pickerTeamsArray {
+            
+            if existingTeamTitles.contains(teamTitle) == false {
                 CoreDataService.shared.saveTeam(title: teamTitle)
             }
         }
+        
+        
+        
         ApiCaller.shared.updateLocalTeamsNotificationSettings(completion: { [weak self] in
             DispatchQueue.main.async {
                 self?.tableView.reloadData()
@@ -198,7 +205,7 @@ class HomeVC: UIViewController {
         
         
         if let index = pickerTeamsArray.index(of: "ALL TEAMS") {
-            teamPicker.selectRow(index, inComponent: 0, animated: true)
+            teamPicker?.selectRow(index, inComponent: 0, animated: true)
         }
         
         
@@ -398,7 +405,8 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let game = soccerGames[indexPath.row]
         if game.isPlaceholder() == false {
-            performSegue(withIdentifier: "gameDetail", sender: game)
+            NavigationService.shared.navigate(toGame: game)
+            //performSegue(withIdentifier: "gameDetail", sender: game)
         }
     }
     
@@ -492,7 +500,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
                 teamIsSelected = team.notifications
             }
             var allTeamsAreSelected = false
-            if let team = team(forGameName: "ALL TEAMS") {
+            if let team = CoreDataService.shared.team(name: "ALL TEAMS") {
                 allTeamsAreSelected = team.notifications
             }
             
@@ -502,18 +510,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     func team(forGame game: SoccerGame) -> Team? {
-        return team(forGameName: game.usTeam)
-    }
-    
-    func team(forGameName name: String) -> Team? {
-        if teamArray.count == 0 {
-            teamArray = CoreDataService.shared.fetchTeams()
-        }
-        // Get the team from
-        let teams = teamArray.filter { (team: Team) -> Bool in
-            return team.title == name
-        }
-        return teams.first
+        return CoreDataService.shared.team(name: game.usTeam)
     }
     
     
@@ -554,7 +551,9 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
             if notificationAuthorizationStatus != .authorized {
                 messageAlert(title: "Notifications Permission Required", message: "In order to send a notificaiton, notification permission is required. \n\n Please go to your setting and turn on notifications for USSoccer.", from: nil)
             } else {
+                
                 if ConnectionCheck.isConnectedToNetwork() {
+                    
                     // Get the game
                     let buttonPosition = sender.convert(CGPoint.zero, to: tableView)
                     let indexPath: IndexPath! = tableView.indexPathForRow(at: buttonPosition)
@@ -564,7 +563,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
                     let isSelected = !self.isGameSelectedForNotifications(game: game)
                     game.notification = NSNumber(value: isSelected)
                     CoreDataService.shared.saveContext()
-                    
                     
                     if let team = team(forGame: game), let uid = Auth.auth().currentUser?.uid {
                         
@@ -589,7 +587,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
                     }
                     
                     
-                    if game.notification!.boolValue {
+                    if isSelected {
                         // Showing the notification tab - we're telling the user that it's been scheduled
                         notificationAlertVisible = !notificationAlertVisible
                         if notificationAlertVisible {
@@ -610,7 +608,8 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
                             }
                         }
                     }
-                    tableView.reloadData()
+                    
+                    tableView.reloadRows(at: [indexPath], with: .none)
                 } else {
                     messageAlert(title: "No Internet Connection", message: "Internet connection is required to update game notifications.", from: nil)
                 }
@@ -633,12 +632,15 @@ extension HomeVC: UIPickerViewDelegate, UIPickerViewDataSource {
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        self.tableView.setContentOffset(CGPoint.zero, animated: false)
-        self.filterValue = self.pickerTeamsArray[row]
-        self.soccerGames = self.sortedGames[self.filterValue] ?? [SoccerGame]()
+        tableView.setContentOffset(CGPoint.zero, animated: false)
+        filterValue = pickerTeamsArray[row]
+        soccerGames = sortedGames[filterValue] ?? [SoccerGame]()
         let indexPath = IndexPath(row: 0, section: 0)
-        self.tableView.reloadData()
-        self.tableView.scrollToRow(at: indexPath, at: .top, animated: false)
+        tableView.reloadData()
+        
+        if tableView.numberOfSections > 0 && tableView.numberOfRows(inSection: 0) > 0 {
+            tableView.scrollToRow(at: indexPath, at: .top, animated: false)
+        }
     }
     
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {

@@ -66,6 +66,16 @@ class NavigationService {
      Shows the given View Controller based on the current top VC, we are simulating the "Show" segue
      */
     func show(viewController: UIViewController, animated: Bool, completion: (()->Void)? = nil) {
+        if let _ = UIViewController.topMostController().navigationController {
+            // Push
+            push(viewController: viewController, animated: animated, completion: completion)
+        } else {
+            // Present Modally
+            presentModally(viewController: viewController, animated: animated, completion: completion)
+        }
+    }
+    
+    func push(viewController: UIViewController, animated: Bool, completion: (()->Void)? = nil) {
         if let nc = UIViewController.topMostController().navigationController {
             // Push
             nc.pushViewController(viewController, animated: true)
@@ -76,9 +86,6 @@ class NavigationService {
                     completion()
                 }
             }
-        } else {
-            // Present Modally
-            presentModally(viewController: viewController, animated: animated, completion: completion)
         }
     }
     

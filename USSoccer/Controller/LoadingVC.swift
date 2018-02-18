@@ -41,8 +41,6 @@ class LoadingVC: UIViewController {
         var allGames = CoreDataService.shared.fetchGames()
         
         
-        
-        
         // Creating a set for all the Teams Titles that have games schedualed
         var existingKeys : Set<String> = ["MNT", "ALL TEAMS", "WNT"]
         allGames = allGames.sorted(by: {
@@ -87,7 +85,8 @@ class LoadingVC: UIViewController {
         
         
         for game in allGames {
-            let teamsTitles = game.title!.components(separatedBy: "vs")
+            let changedTitle = game.title!.replacingOccurrences(of: "VS", with: "vs")
+            let teamsTitles = changedTitle.components(separatedBy: "vs")
             let trimmedTitle = stringTrimmer(stringToTrim: teamsTitles[0].uppercased())
             
             if var appenderArray = self.sortedGames[trimmedTitle!] {
@@ -106,7 +105,8 @@ class LoadingVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        
+        
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

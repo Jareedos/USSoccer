@@ -12,6 +12,10 @@ import FirebaseDatabase
 import UserNotifications
 import OneSignal
 
+
+
+var NotificationMenuView_selectedTeams = [String : Bool]()
+
 class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
     var currentUser = Auth.auth().currentUser
     
@@ -22,7 +26,6 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
     }
     
     var teamsArray = ["ALL TEAMS", "MNT", "WNT", "U-23 MNT", "U-23 WNT", "U-20 MNT", "U-20 WNT", "U-19 MNT", "U-19 WNT", "U-18 MNT", "U-18 WNT", "U-17 MNT", "U-17 WNT", "U-16 MNT", "U-16 WNT","U-15 MNT", "U-15 WNT"]
-    private var selectedTeams = [String : Bool]()
     
     @IBOutlet weak var tableView: UITableView?
     
@@ -35,12 +38,32 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
                 followingRef.child(team).child(uid).observeSingleEvent(of: .value) { (snapshot) in
                     DispatchQueue.main.async {
                         let value = (snapshot.value as? Bool) ?? false
-                        self.selectedTeams[team] = value
+                        self.select(select: value, team: team)
                         self.tableView?.reloadData()
                     }
                 }
             }
         }
+    }
+    
+    func select(select: Bool, team: String) {
+        NotificationMenuView_selectedTeams[team] = select
+        
+        let currentTeam = CoreDataService.shared.team(name: team)
+        
+        // Update Core data
+        if select {
+            //This should save if the user turned on Team notificicaitons
+            currentTeam?.setValue(true, forKey: "notifications")
+            CoreDataService.shared.saveContext()
+        } else {
+            
+            currentTeam?.setValue(false, forKey: "notifications")
+            CoreDataService.shared.saveContext()
+        }
+        
+        // Update OneSignal
+        self.updateSubscriptions()
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -55,7 +78,7 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
         let teamTitle = teamsArray[indexPath.row]
         cell.teamTitle.text = teamTitle
         
-        let isSelected = selectedTeams[teamTitle] ?? false
+        let isSelected = NotificationMenuView_selectedTeams[teamTitle] ?? false
         cell.configure(selected: isSelected)
         
         return cell
@@ -88,28 +111,19 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
                         
                         let followingTeamRef = followingRef.child(teamTitle).child(self.currentUser!.uid)
                         
-                        var isSelected = self.selectedTeams[teamTitle] ?? false
+                        var isSelected = NotificationMenuView_selectedTeams[teamTitle] ?? false
                         
                         
                         // Flip
                         isSelected = !isSelected
-                        self.selectedTeams[teamTitle] = isSelected
+                        self.select(select: isSelected, team: teamTitle)
                         
                         // Update Core data
                         if isSelected {
                             followingTeamRef.setValue(true)
-                            //This should save if the user turned on Team notificicaitons
-                            self.currentTeam?.setValue(true, forKey: "notifications")
-                            CoreDataService.shared.saveContext()
                         } else {
                             followingTeamRef.removeValue()
-                            
-                            self.currentTeam?.setValue(false, forKey: "notifications")
-                            CoreDataService.shared.saveContext()
                         }
-                        
-                        // Update OneSignal
-                        self.updateSubscriptions()
                         
                         tableView.reloadData()
                         
@@ -124,7 +138,7 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
     
     func updateSubscriptions() {
         // Create a list of time interval toggles
-        ReminderService.shared.updateSubsription(selectedTeams: selectedTeams)
+        ReminderService.shared.updateSubsription(selectedTeams: NotificationMenuView_selectedTeams)
     }
     
     @IBAction func twoDaySwitch(_ sender: UISwitch) {
