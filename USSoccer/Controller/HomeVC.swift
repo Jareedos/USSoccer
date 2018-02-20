@@ -448,7 +448,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
                     cell.opponentLbl.text = "\(usSoccerTitle[2].uppercased())"
                 }
             } else {
-                print("\(usSoccerTitle)")
+//                print("\(usSoccerTitle)")
             }
             
             let currentGame = soccerGames[indexPath.row]

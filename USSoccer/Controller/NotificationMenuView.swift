@@ -34,15 +34,26 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
         
         if let uid = Auth.auth().currentUser?.uid {
             
+            let group = DispatchGroup()
+            
             for team in teamsArray {
+                group.enter()
                 followingRef.child(team).child(uid).observeSingleEvent(of: .value) { (snapshot) in
                     DispatchQueue.main.async {
                         let value = (snapshot.value as? Bool) ?? false
                         self.select(select: value, team: team)
                         self.tableView?.reloadData()
+                        
+                        group.leave()
                     }
                 }
             }
+            
+            group.notify(queue: DispatchQueue.main, execute: {
+                
+                // Update OneSignal
+                self.updateSubscriptions()
+            })
         }
     }
     
@@ -61,9 +72,6 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
             currentTeam?.setValue(false, forKey: "notifications")
             CoreDataService.shared.saveContext()
         }
-        
-        // Update OneSignal
-        self.updateSubscriptions()
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -117,6 +125,9 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
                         // Flip
                         isSelected = !isSelected
                         self.select(select: isSelected, team: teamTitle)
+                        
+                        // Update OneSignal
+                        self.updateSubscriptions()
                         
                         // Update Core data
                         if isSelected {

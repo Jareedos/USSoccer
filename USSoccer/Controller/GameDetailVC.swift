@@ -52,7 +52,6 @@ class GameDetailVC: UIViewController {
         if soccerGame.stations == "ussoccer.com" {
             gameStaionsLbl.text = soccerGame.stations
         } else if (soccerGame.stations?.contains("Tickets"))! {
-            // fix crash with out of index error
             var stationComponents = soccerGame.stations!.components(separatedBy: "Tickets")
             let removingSlash = stationComponents[1].replacingOccurrences(of: "\n", with: "")
             gameStaionsLbl.text = removingSlash
@@ -61,7 +60,8 @@ class GameDetailVC: UIViewController {
         }
         var venueComponents = soccerGame.venue!.components(separatedBy: ";")
         let removeFantasyCamp = venueComponents[1].replacingOccurrences(of: "\nFantasy Camp", with: "")
+        let removeMatchGuide = removeFantasyCamp.replacingOccurrences(of: "\nMatch Guide", with: "")
         gameVenueLbl.text = venueComponents[0]
-        gameVenueCityState.text = removeFantasyCamp
+        gameVenueCityState.text = removeMatchGuide
     }
 }

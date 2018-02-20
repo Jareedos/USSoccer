@@ -21,7 +21,7 @@ class ApiCaller {
     
     func getFakeResponse() -> [[String: AnyObject]] {
         
-      let fakeGameData : [[String: Any]] = [["Date": "February 19, 2018", "Time": "2:30 PM PT", "Title": "U-20 MNT VS Japan", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"], ["Date": "February 19, 2018", "Time": "3:00 PM PT", "Title": "U-20 MNT VS Ghana", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]
+        let fakeGameData : [[String: Any]] = [["Date": "February 21, 2018", "Time": "10:00 AM PT", "Title": "U-17 MNT vs Brazil", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"], ["Date": "February 21, 2018", "Time": "10:30 AM PT", "Title": "U-17 MNT VS Russia", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]
       //let fakeGameData1 = ["Data": [["Date": "February 18, 2018", "Time": "9:30 AM PT", "Title": "U-17 MNT VS Spain", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]]
     //  let fakeGameData2 = ["Data": [["Date": "February 18, 2018", "Time": "10:00 AM PT", "Title": "U-17 MNT VS Canada", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]]
        // let fakeGameData : [[String: Any]] = [["Date": "February 18, 2018", "Time": "11:00 AM PT", "Title": "U-23 MNT vs China", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]
@@ -103,15 +103,16 @@ class ApiCaller {
                         var currentArray = data[index]
                         let title = currentArray["Title"] as! String
                         
-                        if title == "MNT vs France" {
-                            print("")
-                        }
+//                        if title == "MNT vs France" {
+//                            print("")
+//                        }
                         
                         let venue = currentArray["Venue"]
                         let time = currentArray["Time"]
                         let date = currentArray["Date"] as! String
                         let stations = (currentArray["Stations"] as? String) ?? "ussoccer.com"
-                        let teamSeperated = title.components(separatedBy: "vs")
+                        let fixedTitle = title.replacingOccurrences(of: "VS", with: "vs")
+                        let teamSeperated = fixedTitle.components(separatedBy: "vs")
                         let team = stringTrimmer(stringToTrim: teamSeperated[0])?.uppercased()
                         let formatter = DateFormatter()
                         var castedTime = time as! String

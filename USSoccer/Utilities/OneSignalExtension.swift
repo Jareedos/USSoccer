@@ -39,7 +39,7 @@ extension OneSignal {
         }
         notificationSentToTeams.insert(tag)*/
         
-        print("sending to tag \(tag)")
+//        print("sending to tag \(tag)")
         
         var params : [String : Any] = [
             //"included_segments" : "All Users",

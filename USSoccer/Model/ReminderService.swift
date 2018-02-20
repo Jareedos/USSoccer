@@ -55,53 +55,67 @@ class ReminderService {
      This method should be used when the user changes the subscription to a team notifications
      */
     func updateSubsription(selectedTeams: [String : Bool]) {
-        var tags = [String : String]()
         
-        for (_, element) in selectedTeams.enumerated() {
-            let isSelected = element.value
-            let team = element.key
+        UNUserNotificationCenter.current().getPendingNotificationRequests { (requests: [UNNotificationRequest]) in
+        
+//            print("----- |||  updateSubsription selectedTeams: \(selectedTeams)")
+            var tags = [String : String]()
             
-            // Subscribing to tags of the selected time intervals
-            for (i, toggle) in intervalToggles.enumerated() {
-                let timeInterval = timeIntervals[i]
-                let key = self.key(team: team, timeInterval: timeInterval)
-                if isSelected && toggle {
-                    tags[key] = "true"
-                } else {
-                    tags[key] = ""
+            for (_, element) in selectedTeams.enumerated() {
+                let isSelected = element.value
+                let team = element.key
+                
+                // Subscribing to tags of the selected time intervals
+                for (i, toggle) in self.intervalToggles.enumerated() {
+                    let timeInterval = self.timeIntervals[i]
+                    let key = self.key(team: team, timeInterval: timeInterval)
+                    if isSelected && toggle {
+                        tags[key] = "true"
+                    } else {
+                        tags[key] = ""
+                    }
+                }
+                
+                // We have to prevent duplicity notifications for games
+                // We are cancelling either way, because in case we are scheduling again
+                self.cancelAllScheduledLocalNotifications(ofTeam: team, existingRequests: requests)
+                
+//                if team == "U-20 MNT" {
+//                    print("WNT")
+//                }
+                
+                if isSelected == false {
+                    // When the team notification is off, the local notification for each game is enough
+                    self.scheduleLocalNotificationsForAllSelectedGames(ofTeam: team)
                 }
             }
             
-            // We have to prevent duplicity notifications for games
-            // We are cancelling either way, because in case we are scheduling again
-            cancelAllScheduledLocalNotifications(ofTeam: team)
             
-            if isSelected == false {
-                // When the team notification is off, the local notification for each game is enough
-                scheduleLocalNotificationsForAllSelectedGames(ofTeam: team)
+            switch tags.keys.count {
+            case 0:
+                break
+            case 1:
+                let tag = tags.values.first!
+                OneSignal.sendTag(tag, value: tags[tag], onSuccess: { (result) in
+                    if let result = result { print("OneSignal.sendTag \(result)") }
+                }) { (error: Error?) in
+                    if let error = error { print("OneSignal.sendTag \(error)") }
+                }
+                break
+            default:
+                
+                OneSignal.sendTags(tags, onSuccess: { (result) in
+                    if let result = result { print("OneSignal.sendTags \(result)") }
+                }) { (error: Error?) in
+                    if let error = error { print("OneSignal.sendTags \(error)") }
+                }
+                break
             }
-        }
-        
-        
-        switch tags.keys.count {
-        case 0:
-            break
-        case 1:
-            let tag = tags.values.first!
-            OneSignal.sendTag(tag, value: tags[tag], onSuccess: { (result) in
-                if let result = result { print("OneSignal.sendTag \(result)") }
-            }) { (error: Error?) in
-                if let error = error { print("OneSignal.sendTag \(error)") }
-            }
-            break
-        default:
             
-            OneSignal.sendTags(tags, onSuccess: { (result) in
-                if let result = result { print("OneSignal.sendTags \(result)") }
-            }) { (error: Error?) in
-                if let error = error { print("OneSignal.sendTags \(error)") }
+            
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5) {
+                self.printAllLocalNotifications()
             }
-            break
         }
     }
     
@@ -114,7 +128,10 @@ class ReminderService {
      Schedules all notifications for selelected games of a team, it also takes the time intervals into account.
      */
     func scheduleLocalNotificationsForAllSelectedGames(ofTeam team: String) {
-        let games = CoreDataService.shared.fetchGames()
+        //print("scheduleLocalNotificationsForAllSelectedGames of team: \(team)")
+        let games = CoreDataService.shared.fetchGames().filter { (game) -> Bool in
+            game.usTeam == team
+        }
         for game in games {
             if let notification = game.notification, notification.boolValue {
                 // Schedule
@@ -143,24 +160,37 @@ class ReminderService {
     /**
      Cancels all scheduled ones
      */
-    func cancelAllScheduledLocalNotifications(ofTeam team: String) {
+    func cancelAllScheduledLocalNotifications(ofTeam team: String, existingRequests requests: [UNNotificationRequest]) {
+        //print("cancelAllScheduledLocalNotifications(ofTeam \(team)")
+        
+        // Get all the scheduled local notifications
+        
+        var identifiers = [String]()
+        
+        // Select those that contain the same team
+        for request in requests {
+            if (request.identifier as NSString).contains(team) {
+                // Same team
+                identifiers.append(request.identifier)
+            }
+        }
+        
+        // Cancel these notifications
+        if identifiers.count > 0 {
+            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: identifiers)
+            
+//            print("cancelAllScheduledLocalNotifications of games: \(identifiers)")
+        }
+    }
+    
+    func printAllLocalNotifications() {
         
         // Get all the scheduled local notifications
         UNUserNotificationCenter.current().getPendingNotificationRequests { (requests: [UNNotificationRequest]) in
-            
-            var identifiers = [String]()
-            
-            // Select those that contain the same team
-            for request in requests {
-                if (request.identifier as NSString).contains(team) {
-                    // Same team
-                    identifiers.append(request.identifier)
-                }
-            }
-            
-            // Cancel these notifications
-            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: identifiers)
-        } //
+//            print("printAllLocalNotifications   begin")
+//            print(requests.count)
+//            print("printAllLocalNotifications   end")
+        }
     }
     
     
@@ -168,6 +198,10 @@ class ReminderService {
      Schedules all local notifications for a given game
      */
     func scheduleAllLocalNotifications(forGame game: SoccerGame) {
+        if let title = game.title, title == "U-20 MNT VS Ghana" {
+//            print("asdf")
+        }
+        // print("scheduleAllLocalNotifications forGame: \(game.title ?? "")")
         
         for (i, _) in timeIntervals.enumerated() {
             // If enabled
@@ -182,6 +216,7 @@ class ReminderService {
      */
     func scheduleLocalNotification(forGame game: SoccerGame, timeIntervalIndex: Int) {
         guard let timestamp = game.timestamp, let title = game.title, let date = game.date else { return }
+        
         
         // Schedule a local notification
         let content = UNMutableNotificationContent()
@@ -202,6 +237,7 @@ class ReminderService {
         let identifier = self.key(team: game.title!, timeInterval: timeIntervals[timeIntervalIndex])
         let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
         UNUserNotificationCenter.current().add(request, withCompletionHandler: { (error: Error?) in
+            
             if let error = error {
                 print(error)
             }
