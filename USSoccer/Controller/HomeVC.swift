@@ -135,7 +135,7 @@ class HomeVC: UIViewController {
                 ReminderService.shared.oneDayBool = notifications?["OneDayNotification"] as? Bool ?? false
                 ReminderService.shared.oneHourBool = notifications?["OneHourNotification"] as? Bool ?? false
                 ReminderService.shared.twoDayBool = notifications?["TwoDayNotification"] as? Bool ?? false
-                ReminderService.shared.twoHourBool = notifications?["TwoHourNotification"] as? Bool ?? false
+                ReminderService.shared.twoHourBool = notifications?["TwoHourNotification"] as? Bool ?? true
                 
                 self.halfHourSwitch.setOn(ReminderService.shared.halfHourBool, animated: false)
                 self.oneDaySwitch.setOn(ReminderService.shared.oneDayBool, animated: false)
@@ -428,7 +428,25 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
         cell.notificationBtn.addTarget(self, action: #selector(notificationButtonClicked(sender:)), for: .touchUpInside)
         
         // Checking for PlaceHolderGame and adjusting displayed text accordingly
-        let gameTime = soccerGames[indexPath.row].time
+        let game = soccerGames[indexPath.row]
+        let gameTime = game.time
+        
+        if game.isInThePast() {
+            
+            cell.gameDateLbl.alpha = 0.5
+            cell.gameTitleLbl.alpha = 0.5
+            cell.vsLbl.alpha = 0.5
+            cell.opponentLbl.alpha = 0.5
+            cell.gameTimeLbl.alpha = 0.5
+            cell.notificationBtn.isHidden = true
+        } else {
+            cell.gameDateLbl.alpha = 1.0
+            cell.gameTitleLbl.alpha = 1.0
+            cell.vsLbl.alpha = 1.0
+            cell.opponentLbl.alpha = 1.0
+            cell.gameTimeLbl.alpha = 1.0
+            cell.notificationBtn.isHidden = false
+        }
         
         if gameTime == "NA" {
             cell.gameDateLbl.text = soccerGames[indexPath.row].title
@@ -484,7 +502,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
                 let strDate = dateFormatter.string(from: date)
                 cell.gameTimeLbl.text = strDate
             }
-            cell.notificationBtn.isHidden = false
         }
         
         return cell
@@ -543,7 +560,18 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     private func handleNotifications(sender: UIButton) {
-        if currentUserSettings?.firstTimeClickingBell == true {
+        
+        // Get the game
+        let buttonPosition = sender.convert(CGPoint.zero, to: tableView)
+        let indexPath: IndexPath! = tableView.indexPathForRow(at: buttonPosition)
+        let game = soccerGames[indexPath.row]
+        
+        // Get the notification toggle
+        let isSelected = self.isGameSelectedForNotifications(game: game)
+        
+        
+        
+        if currentUserSettings?.firstTimeClickingBell == true && isSelected == false {
             messageAlert(title: "Notification Set", message: "A notification has been set for this game. To update your notificaiton settings press the \"Gear\" icon in the top right corner", from: nil)
             currentUserSettings?.setValue(false, forKey: "firstTimeClickingBell")
             CoreDataService.shared.saveContext()
@@ -554,13 +582,9 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
                 
                 if ConnectionCheck.isConnectedToNetwork() {
                     
-                    // Get the game
-                    let buttonPosition = sender.convert(CGPoint.zero, to: tableView)
-                    let indexPath: IndexPath! = tableView.indexPathForRow(at: buttonPosition)
-                    let game = soccerGames[indexPath.row]
-                    
                     // Set the notification toggle
                     let isSelected = !self.isGameSelectedForNotifications(game: game)
+                    
                     game.notification = NSNumber(value: isSelected)
                     CoreDataService.shared.saveContext()
                     
@@ -583,6 +607,15 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
                         } else {
                             // Cancel notifications
                             ReminderService.shared.cancelAllSchduledLocalNotifications(ofGame: game)
+                            
+                            
+                            if currentUserSettings?.firstTimeDisablingNotif == true {
+                                
+                                messageAlert(title: "Notification Disabled", message: "A notification has been set for this game. To update your notificaiton settings press the \"Gear\" icon in the top right corner", from: nil)
+                                
+                                currentUserSettings?.setValue(false, forKey: "firstTimeDisablingNotif")
+                                CoreDataService.shared.saveContext()
+                            }
                         }
                     }
                     

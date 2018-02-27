@@ -14,6 +14,8 @@ import FirebaseDatabase
 
 extension OneSignal {
     
+    
+    
     /*
      Game Notifications
      - scheduled locally
@@ -30,7 +32,7 @@ extension OneSignal {
     // FIXME: remove this (only for debug purposes)
     //static var notificationSentToTeams = Set<String>()
     
-    static func schedulePushNotification(title: String, text: String, tag: String, timestamp: Date, data: [String: Any]? = nil) {
+    static func schedulePushNotification(title: String, text: String, tags: [String], timestamp: Date, data: [String: Any]? = nil) {
         
         // FIXME: remove this (only for debug purposes)
         /*
@@ -39,14 +41,25 @@ extension OneSignal {
         }
         notificationSentToTeams.insert(tag)*/
         
+        let orOperator = ["operator": "OR"]
+        
+        var filters = [[String : Any]]()
+        for tag in tags {
+            filters.append([
+                "field": "tag", "key": tag, "relation": "exists"
+            ])
+            filters.append(orOperator)
+        }
+        // Remove the last OR operator
+        filters.removeLast()
+        
+        
 //        print("sending to tag \(tag)")
         
         var params : [String : Any] = [
             //"included_segments" : "All Users",
             
-            "filters" : [[
-             "field": "tag", "key": tag, "relation": "exists"
-            ]],
+            "filters" : filters,
                       "contents": ["en": text],
                       "headings": ["en": title],
                       //"subtitle": ["en": subtitle],
@@ -100,6 +113,7 @@ extension OneSignal {
         
         guard let user = Auth.auth().currentUser else { return }
         
+        OneSignal.add(NotificationService.shared)
         
         // Recommend moving the below line to prompt for push after informing the user about
         //   how your app will use them.
@@ -110,31 +124,16 @@ extension OneSignal {
             //if accepted {
                 
                 OneSignal.setSubscription(true)
-                
-                let status: OSPermissionSubscriptionState = OneSignal.getPermissionSubscriptionState()
+            
 //                let hasPrompted = status.permissionStatus.hasPrompted
 //                let userStatus = status.permissionStatus.status
 //                let isSubscribed = status.subscriptionStatus.subscribed
 //                let userSubscriptionSetting = status.subscriptionStatus.userSubscriptionSetting
 
                 // This is your device's identification within OneSignal
-            if let userID = status.subscriptionStatus.userId {
-                if let person = CoreDataService.shared.fetchPerson(), person.userID != userID {
-                    //                           let pushToken = status.subscriptionStatus.pushToken
-                    // Set the one signal id
-                    
-                    userRef.child("oneSignalIds").child(userID).setValue(true)
-                }
-            }
+            
             //}
             
-            
-            OneSignal.idsAvailable { (userId: String?, pushToken: String?) in
-                if let userId = userId, let uid = Auth.auth().currentUser?.uid {
-                    let userRef = Database.database().reference().child("users").child(uid)
-                    userRef.child("oneSignalIds").child(userId).setValue(true)
-                }
-            }
             
             
             // Save the default push notification settings

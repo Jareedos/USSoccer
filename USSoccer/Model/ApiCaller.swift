@@ -21,7 +21,7 @@ class ApiCaller {
     
     func getFakeResponse() -> [[String: AnyObject]] {
         
-        let fakeGameData : [[String: Any]] = [["Date": "February 21, 2018", "Time": "10:00 AM PT", "Title": "U-17 MNT vs Brazil", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"], ["Date": "February 21, 2018", "Time": "10:30 AM PT", "Title": "U-17 MNT VS Russia", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]
+        let fakeGameData : [[String: Any]] = [["Date": "February 26, 2018", "Time": "9:00 AM PT", "Title": "U-17 MNT vs Russia", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"], ["Date": "February 27, 2018", "Time": "10:30 AM PT", "Title": "U-20 MNT VS Norway", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]
       //let fakeGameData1 = ["Data": [["Date": "February 18, 2018", "Time": "9:30 AM PT", "Title": "U-17 MNT VS Spain", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]]
     //  let fakeGameData2 = ["Data": [["Date": "February 18, 2018", "Time": "10:00 AM PT", "Title": "U-17 MNT VS Canada", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]]
        // let fakeGameData : [[String: Any]] = [["Date": "February 18, 2018", "Time": "11:00 AM PT", "Title": "U-23 MNT vs China", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]
@@ -29,8 +29,19 @@ class ApiCaller {
         return fakeGameData as [[String : AnyObject]]
     }
     
+    
     func ApiCall(completion: @escaping ()->Void) {
         //real call "https://www.parsehub.com/api/v2/projects/tZQ5VDy6j2JB/last_ready_run/data?api_key=trmNdK43wwBZ" "https://www.parsehub.com/api/v2/runs/t1mY9HfR24H5/data?api_key=trmNdK43wwBZ"
+        
+        // TImeout
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5.0) {
+            if g_isLoadingData {
+                // We should just let the user in the app
+                completion()
+            }
+        }
+        
+        
         Alamofire.request("https://www.parsehub.com/api/v2/projects/tZQ5VDy6j2JB/last_ready_run/data?api_key=trmNdK43wwBZ").responseJSON { response in
             
             

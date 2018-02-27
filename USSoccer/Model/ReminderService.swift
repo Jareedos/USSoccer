@@ -259,7 +259,11 @@ class ReminderService {
             
             // The key here is the team + time interval in seconds that the Reminder should be fired at
             let text = notificationText(forGameTitle: gameTitle, timeIntervalIndex: i)
-            OneSignal.schedulePushNotification(title: notificationTitle(), text: text, tag: key(team: team, timeInterval: timeInterval), timestamp: timestamp.addingTimeInterval(-timeInterval), data: [
+            let teamTag = key(team: team, timeInterval: timeInterval)
+            let allTeamsTag = key(team: "ALL TEAMS", timeInterval: timeInterval)
+            let tags = [teamTag, allTeamsTag]
+            
+            OneSignal.schedulePushNotification(title: notificationTitle(), text: text, tags: tags, timestamp: timestamp.addingTimeInterval(-timeInterval), data: [
                 "action" : NotificationAction.openGame.rawValue,
                 "gameKey" : gameKey
                 ])
@@ -282,7 +286,7 @@ class ReminderService {
      Merely formats the verbiage for the push notification text
      */
     func notificationText(forGameTitle gameTitle: String, timeIntervalIndex: Int) -> String {
-        return "\(gameTitle) kicks off in \(timeIntervalDescriptions[timeIntervalIndex]) \n\n Click here to see the details."
+        return "\(gameTitle) kicks off in \(timeIntervalDescriptions[timeIntervalIndex])! \n\n Click here to see the details."
     }
     
     

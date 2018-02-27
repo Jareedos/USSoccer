@@ -26,8 +26,11 @@ class LoadingVC: UIViewController {
          //if ConnectionCheck.isConnectedToNetwork() {
         // call Api and Parse it
             ApiCaller.shared.ApiCall {
-                DispatchQueue.main.async {
-                    self.finishLoading()
+                if g_isLoadingData {
+                    g_isLoadingData = false
+                    DispatchQueue.main.async {
+                        self.finishLoading()
+                    }
                 }
             }
          /*} else {
@@ -36,15 +39,14 @@ class LoadingVC: UIViewController {
     }
     
     func finishLoading() {
-        g_isLoadingData = false
-        NavigationService.shared.handleAllPendingNotificationsData()
         var allGames = CoreDataService.shared.fetchGames()
         
         
         // Creating a set for all the Teams Titles that have games schedualed
         var existingKeys : Set<String> = ["MNT", "ALL TEAMS", "WNT"]
         allGames = allGames.sorted(by: {
-            $0.timestamp?.timeIntervalSince1970 ?? 0.0 < $1.timestamp?.timeIntervalSince1970 ?? 0.0})
+            $0.order() < $1.order()
+        })
         
         for game in allGames {
             let index = allGames.index(of: game)!
@@ -59,7 +61,10 @@ class LoadingVC: UIViewController {
             }
             
             let dateFormated = Date()
-            if let timestamp = game.timestamp, timestamp.timeIntervalSince1970 < dateFormated.timeIntervalSince1970 {
+            //#FixMe check this below
+            // adding more time too wait before the game is deleted
+            let dayInSeconds: TimeInterval = 24.0 * 3600.0
+            if let timestamp = game.timestamp, timestamp.timeIntervalSince1970 < (dateFormated.timeIntervalSince1970 - (dayInSeconds * 2.0)) {
                 //this is my solution, I think it will only remove the game if the array is not empty
                 // it didn't work still failing on line 162 for some reason.
                 allGames.remove(at: index)
@@ -115,6 +120,11 @@ class LoadingVC: UIViewController {
             let detailViewController = navc.viewControllers.first as? HomeVC {
             detailViewController.sortedGames = toDoItemToPass
             detailViewController.pickerTeamsArray = pickerTeamsArray
+            
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5, execute: {
+                
+                NavigationService.shared.handleAllPendingNotificationsData()
+            })
         }
         
     }

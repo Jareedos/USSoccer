@@ -7,10 +7,10 @@
 //
 
 import Foundation
-
 import OneSignal
+import Firebase
 
-class NotificationService: UNNotificationServiceExtension, UNUserNotificationCenterDelegate {
+class NotificationService: UNNotificationServiceExtension, UNUserNotificationCenterDelegate, OSSubscriptionObserver {
     static let shared = NotificationService()
     private override init() {
         super.init()
@@ -50,6 +50,24 @@ class NotificationService: UNNotificationServiceExtension, UNUserNotificationCen
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         if let data = response.notification.request.content.userInfo as? [String : Any] {
             NavigationService.shared.handle(notificationData: data)
+        }
+    }
+    
+    // MARK: - OSSubscriptionObserver
+    
+    func onOSSubscriptionChanged(_ stateChanges: OSSubscriptionStateChanges!) {
+        
+        guard let user = Auth.auth().currentUser else { return }
+        let userRef = Database.database().reference().child("users").child(user.uid)
+        let status: OSPermissionSubscriptionState = OneSignal.getPermissionSubscriptionState()
+        
+        if let userID = status.subscriptionStatus.userId {
+            if let person = CoreDataService.shared.fetchPerson(), person.userID != userID {
+                //                           let pushToken = status.subscriptionStatus.pushToken
+                // Set the one signal id
+                
+                userRef.child("oneSignalIds").child(userID).setValue(true)
+            }
         }
     }
 }

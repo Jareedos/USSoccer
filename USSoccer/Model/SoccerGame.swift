@@ -112,4 +112,37 @@ public class SoccerGame: NSManagedObject  {
         return stringTrimmer(stringToTrim: title + date)!
     }
     
+    
+    /**
+     Artificial sorting function - we're determining how high should the game appear in the list
+     The higher the number, the more to the top it should be displayed
+     */
+    func order() -> Double {
+        if let timestamp = timestamp {
+            let now = Date()
+            // Check if the timestamp is in the past
+            if timestamp.compare(now) == .orderedAscending {
+                return timestamp.timeIntervalSince1970 * 2
+            } else {
+                // It's in the future
+                return timestamp.timeIntervalSince1970
+            }
+        } else {
+            return 0
+        }
+    }
+    
+    func isInThePast() -> Bool {
+        if let timestamp = timestamp {
+            let now = Date()
+            // Check if the timestamp is in the past
+            if timestamp.compare(now) == .orderedAscending {
+                return true
+            } else {
+                return false
+            }
+        }
+        return true
+    }
+    
 }

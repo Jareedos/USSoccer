@@ -81,6 +81,7 @@ class CoreDataService {
         person.setValue(true, forKey: "firstTimeClickingSetting")
         person.setValue(true, forKey: "firstTimeClickingInfo")
         person.setValue(true, forKey: "firstTimeClickingBell")
+        person.setValue(true, forKey: "firstTimeDisablingNotif")
         saveContext()
     }
     

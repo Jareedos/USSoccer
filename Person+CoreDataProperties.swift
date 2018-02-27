@@ -24,5 +24,6 @@ extension Person {
     @NSManaged public var firstTimeSeeingSlideDown: Bool
     @NSManaged public var firstTimeTogglingNotificationSettings: Bool
     @NSManaged public var firstTimeClickingteam: Bool
+    @NSManaged public var firstTimeDisablingNotif: Bool
 
 }
