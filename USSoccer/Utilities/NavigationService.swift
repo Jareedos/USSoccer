@@ -48,7 +48,7 @@ class NavigationService {
     func navigate(toGameKey gameKey: String) {
         // Fetch the locally stored game
         if let soccerGame = CoreDataService.shared.fetchGames().filter( { (game) -> Bool in
-            return game.gameKey() == gameKey
+            return game.gameKey == gameKey
         }).first {
             navigate(toGame: soccerGame)
         }

@@ -652,7 +652,6 @@
                                                 <constraints>
                                                     <constraint firstItem="p6E-5o-hGl" firstAttribute="centerX" secondItem="AqL-GC-Rf8" secondAttribute="centerX" id="FVE-hT-OwG"/>
                                                     <constraint firstAttribute="trailing" secondItem="2uE-OF-dng" secondAttribute="trailing" id="Fhd-43-37b"/>
-                                                    <constraint firstAttribute="trailing" secondItem="DQ8-mD-lDU" secondAttribute="trailing" constant="5" id="RVi-Eq-uHW"/>
                                                     <constraint firstItem="2uE-OF-dng" firstAttribute="leading" secondItem="AqL-GC-Rf8" secondAttribute="leading" id="TO4-aW-wJb"/>
                                                     <constraint firstAttribute="bottom" secondItem="DQ8-mD-lDU" secondAttribute="bottom" constant="5" id="WQB-0l-Frd"/>
                                                     <constraint firstItem="DQ8-mD-lDU" firstAttribute="top" secondItem="2uE-OF-dng" secondAttribute="bottom" constant="9" id="erq-bH-FAC"/>
@@ -791,7 +790,6 @@
                                                 <constraints>
                                                     <constraint firstItem="3kv-hl-nTP" firstAttribute="top" secondItem="J2B-fO-36I" secondAttribute="bottom" constant="10" id="01p-uU-wfL"/>
                                                     <constraint firstItem="J2B-fO-36I" firstAttribute="top" secondItem="Cgg-TZ-b2v" secondAttribute="bottom" constant="2" id="0Hh-jA-DUK"/>
-                                                    <constraint firstAttribute="trailing" secondItem="3kv-hl-nTP" secondAttribute="trailing" constant="5" id="7Yr-Xz-7j2"/>
                                                     <constraint firstItem="3kv-hl-nTP" firstAttribute="leading" secondItem="dig-cL-PpW" secondAttribute="leading" constant="5" id="BOJ-Lx-OBk"/>
                                                     <constraint firstItem="Cgg-TZ-b2v" firstAttribute="centerX" secondItem="dig-cL-PpW" secondAttribute="centerX" id="CpV-Hg-jjy"/>
                                                     <constraint firstItem="zKi-o2-nWv" firstAttribute="top" secondItem="3kv-hl-nTP" secondAttribute="bottom" constant="6" id="Hw4-KQ-zfD"/>

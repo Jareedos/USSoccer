@@ -198,9 +198,6 @@ class ReminderService {
      Schedules all local notifications for a given game
      */
     func scheduleAllLocalNotifications(forGame game: SoccerGame) {
-        if let title = game.title, title == "U-20 MNT VS Ghana" {
-//            print("asdf")
-        }
         // print("scheduleAllLocalNotifications forGame: \(game.title ?? "")")
         
         for (i, _) in timeIntervals.enumerated() {

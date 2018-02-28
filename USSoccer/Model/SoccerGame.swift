@@ -104,7 +104,7 @@ public class SoccerGame: NSManagedObject  {
     }
     
     
-    func gameKey() -> String {
+    var gameKey : String {
         return SoccerGame.gameKey(title: title ?? "", date: date ?? "")
     }
     

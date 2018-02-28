@@ -21,7 +21,7 @@ class ApiCaller {
     
     func getFakeResponse() -> [[String: AnyObject]] {
         
-        let fakeGameData : [[String: Any]] = [["Date": "February 26, 2018", "Time": "9:00 AM PT", "Title": "U-17 MNT vs Russia", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"], ["Date": "February 27, 2018", "Time": "10:30 AM PT", "Title": "U-20 MNT VS Norway", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]
+        let fakeGameData : [[String: Any]] = [["Date": "February 28, 2018", "Time": "9:00 AM PT", "Title": "U-17 MNT vs Paru", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"], ["Date": "February 28, 2018", "Time": "10:30 AM PT", "Title": "U-20 MNT VS Sweden", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]
       //let fakeGameData1 = ["Data": [["Date": "February 18, 2018", "Time": "9:30 AM PT", "Title": "U-17 MNT VS Spain", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]]
     //  let fakeGameData2 = ["Data": [["Date": "February 18, 2018", "Time": "10:00 AM PT", "Title": "U-17 MNT VS Canada", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]]
        // let fakeGameData : [[String: Any]] = [["Date": "February 18, 2018", "Time": "11:00 AM PT", "Title": "U-23 MNT vs China", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]
@@ -60,7 +60,7 @@ class ApiCaller {
             
             if let jsonData = response.result.value as? Dictionary<String, AnyObject> {
                 // FIXME: rename data2 to data
-                guard let dat2a = jsonData["Data"] as? [[String: AnyObject]] else {
+                guard let data2 = jsonData["Data"] as? [[String: AnyObject]] else {
                     
                     if ConnectionCheck.isConnectedToNetwork() == false {
                         // No data to sync and not connected to network
@@ -113,10 +113,6 @@ class ApiCaller {
                     for index in 0..<arrayLength {
                         var currentArray = data[index]
                         let title = currentArray["Title"] as! String
-                        
-//                        if title == "MNT vs France" {
-//                            print("")
-//                        }
                         
                         let venue = currentArray["Venue"]
                         let time = currentArray["Time"]
@@ -229,10 +225,13 @@ class ApiCaller {
                     
                     // Check the local database and insert the new ones
                     let localGames = CoreDataService.shared.fetchGames()
-                    let localGameTitles = (localGames as NSArray).mutableArrayValue(forKey: "title")
+                    let localGameKeys = localGames.map({ $0.gameKey })
                     for currentGameSnapshot in currentGameSnapshots {
-                        if let dict = currentGameSnapshot.value as? [String: Any], let title = dict["title"] {
-                            if localGameTitles.contains(title) == false {
+                        
+                        if let dict = currentGameSnapshot.value as? [String: Any] {
+                            
+                            let gameKey = SoccerGame.gameKey(title: dict["title"] as? String ?? "", date: dict["date"] as? String ?? "")
+                            if localGameKeys.contains(gameKey) == false {
                                 // We don't store this game locally yet
                                 // Insert into the local database
                                 SoccerGame.insert(snapShot: currentGameSnapshot)
@@ -255,54 +254,30 @@ class ApiCaller {
     
     func timezoneFromTimeString(timeString: String, dateString: String) -> String {
         
-        let justDateString = (dateString as NSString).components(separatedBy: ",").first ?? ""
+        let timeWithoutTimeZoneString = timeString[..<timeString.index(timeString.endIndex, offsetBy: -2)]
+        let dateAndTimeStringWithProperTimeZone = dateString + " " + timeWithoutTimeZoneString
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMMM dd, yyyy h:mm a "
+        guard let dateFormated = formatter.date(from: dateAndTimeStringWithProperTimeZone) else {
+            return "-0400"
+        }
         
         // Default Eastern Time Zone -0500
-        let timeZoneString = (timeString as NSString).substring(from: timeString.count - 2)
+        var timeZoneString = (timeString as NSString).substring(from: timeString.count - 2)
+        
+        let index = timeZoneString.index(timeZoneString.startIndex, offsetBy: 1)
+        timeZoneString.insert("S", at: index)
         
         // Adjust for Daylight Savings Time
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMMM dd"
-        let date = formatter.date(from: justDateString)
-        
-        let fromDate = formatter.date(from: "March 11")
-        let toDate = formatter.date(from: "November 4")
-        // March 11th November 4th
-        var daylightSavingsTime = false
-        if let date = date, let fromDate = fromDate, let toDate = toDate {
-            if fromDate.timeIntervalSince1970 < date.timeIntervalSince1970 && date.timeIntervalSince1970 < toDate.timeIntervalSince1970 {
-                // Daylight Savings Time
-                daylightSavingsTime = true
-            }
-        }
-        if daylightSavingsTime {
-            
-            switch timeZoneString {
-            case "ET":
-                return "-0400"
-            case "CT":
-                return "-0500"
-            case "MT":
-                return "-0600"
-            case "PT":
-                return "-0700"
-            default:
-                return "-0400"
-            }
+        let zone = TimeZone(identifier: "PST")
+        formatter.dateFormat = "ZZZ"
+        var components = Calendar.current.dateComponents([.day, .month, .year, .hour, .minute, .second], from: dateFormated)
+        components.timeZone = zone
+        if let date = Calendar.current.date(from: components) {
+            return formatter.string(from: date)
         } else {
-            
-            switch timeZoneString {
-            case "ET":
-                return "-0500"
-            case "CT":
-                return "-0600"
-            case "MT":
-                return "-0700"
-            case "PT":
-                return "-0800"
-            default:
-                return "-0500"
-            }
+            return "-0400"
         }
+        
     }
 }

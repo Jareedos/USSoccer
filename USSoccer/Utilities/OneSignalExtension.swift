@@ -33,7 +33,8 @@ extension OneSignal {
     //static var notificationSentToTeams = Set<String>()
     
     static func schedulePushNotification(title: String, text: String, tags: [String], timestamp: Date, data: [String: Any]? = nil) {
-        
+        // FIXME: remove the return here
+//        return
         // FIXME: remove this (only for debug purposes)
         /*
         if notificationSentToTeams.contains(tag) == true {
