@@ -21,7 +21,7 @@ class ApiCaller {
     
     func getFakeResponse() -> [[String: AnyObject]] {
         
-        let fakeGameData : [[String: Any]] = [["Date": "February 28, 2018", "Time": "9:00 AM PT", "Title": "U-17 MNT vs Paru", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"], ["Date": "February 28, 2018", "Time": "10:30 AM PT", "Title": "U-20 MNT VS Sweden", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]
+        let fakeGameData : [[String: Any]] = [["Date": "March 3, 2018", "Time": "9:30 AM PT", "Title": "U-23 MNT vs Germany", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"], ["Date": "March 2, 2018", "Time": "5:00 PM PT", "Title": "WNT VS Norway", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"], ["Date": "March 4, 2018", "Time": "1:30 PM PT", "Title": "U-23 MNT vs Braxil", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"], ["Date": "March 4, 2018", "Time": "8:00 AM PT", "Title": "U-23 WNT VS Costa Rico", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"], ["Date": "March 4, 2018", "Time": "8:30 AM PT", "Title": "U-23 MNT vs Napal", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"], ["Date": "March 4, 2018", "Time": "5:00 PM PT", "Title": "WNT VS Jordan", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"], ["Date": "March 5, 2018", "Time": "2:00 PM PT", "Title": "U-23 MNT vs Iceland", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"], ["Date": "March 5, 2018", "Time": "8:00 AM PT", "Title": "U-23 WNT VS Guam", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"], ["Date": "March 5, 2018", "Time": "7:30 PM PT", "Title": "MNT vs Poland", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"], ["Date": "March 5, 2018", "Time": "8:00 AM PT", "Title": "WNT VS China", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]
       //let fakeGameData1 = ["Data": [["Date": "February 18, 2018", "Time": "9:30 AM PT", "Title": "U-17 MNT VS Spain", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]]
     //  let fakeGameData2 = ["Data": [["Date": "February 18, 2018", "Time": "10:00 AM PT", "Title": "U-17 MNT VS Canada", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]]
        // let fakeGameData : [[String: Any]] = [["Date": "February 18, 2018", "Time": "11:00 AM PT", "Title": "U-23 MNT vs China", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]
@@ -29,17 +29,27 @@ class ApiCaller {
         return fakeGameData as [[String : AnyObject]]
     }
     
+    var isLoadingData: Bool = true {
+        didSet {
+            if isLoadingData == false {
+                timeoutTimer?.invalidate()
+            }
+        }
+    }
+    var timeoutTimer: Timer?
+    @objc func timeoutApiCall(completion: @escaping ()->Void) {
+        if isLoadingData {
+            // We should just let the user in the app
+            completion()
+        }
+    }
     
     func ApiCall(completion: @escaping ()->Void) {
         //real call "https://www.parsehub.com/api/v2/projects/tZQ5VDy6j2JB/last_ready_run/data?api_key=trmNdK43wwBZ" "https://www.parsehub.com/api/v2/runs/t1mY9HfR24H5/data?api_key=trmNdK43wwBZ"
         
-        // TImeout
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 5.0) {
-            if g_isLoadingData {
-                // We should just let the user in the app
-                completion()
-            }
-        }
+        // Timeout
+        timeoutTimer?.invalidate()
+        timeoutTimer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(timeoutApiCall(completion:)), userInfo: nil, repeats: false)
         
         
         Alamofire.request("https://www.parsehub.com/api/v2/projects/tZQ5VDy6j2JB/last_ready_run/data?api_key=trmNdK43wwBZ").responseJSON { response in
@@ -50,10 +60,14 @@ class ApiCaller {
                 // we need to check if some data already exists in the local database
                 let games = CoreDataService.shared.fetchGames()
                 if games.count == 0 {
-                    // Show the alert and possibly try again
-                    let _ = UIAlertController.presentOKAlertWithTitle("No Connection", message: "Cannot load any games, please try again later.", okTapped: {
-                        self.ApiCall(completion: completion)
-                    })
+                    DispatchQueue.main.async {
+                        self.timeoutTimer?.invalidate()
+                        
+                        // Show the alert and possibly try again
+                        let _ = UIAlertController.presentOKAlertWithTitle("No Internet Connection", message: "Cannot load any games, please try again later.", okTapped: {
+                            self.ApiCall(completion: completion)
+                        })
+                    }
                     return
                 }
             }
@@ -86,8 +100,6 @@ class ApiCaller {
                 let arrayLength = data.count
                 let currentDate = Date()
                 
-         //       if its been only 3 days sense the lasttime data was updated then move on and load from coredata, else display alert about network error connection errror and needing to update data.
-                
                 ref.child("LastUpdate").observeSingleEvent(of: .value, with: { (snapShot) in
                     let lastUpdateTimeStamp : Double = snapShot.value as? Double ?? 0.0
                     let lastUpdateDate = Date(timeIntervalSince1970: lastUpdateTimeStamp)
@@ -96,24 +108,14 @@ class ApiCaller {
                     
                     let thresholdTimeInterval : TimeInterval = 24.0 * 3600.0
                     if currentDate.timeIntervalSince(lastUpdateDate) < thresholdTimeInterval {
-                        // It's been less than a day
-                        //messageAlert(title: "Carrier Server Error", message: "Your internet connection is not currently addiquate to update game information, \n\n Game information might be old.", from: nil)
                         self.syncLocalDatabase(completion: completion)
                         return
                     }
                     
-                    
                     let dispatchGroup = DispatchGroup()
-                    
-                    /*
-                     "Date": "March 4, 2018",
-                     "Time": "12:00 PM ET",
-                     */
-                    
                     for index in 0..<arrayLength {
                         var currentArray = data[index]
                         let title = currentArray["Title"] as! String
-                        
                         let venue = currentArray["Venue"]
                         let time = currentArray["Time"]
                         let date = currentArray["Date"] as! String
@@ -123,6 +125,10 @@ class ApiCaller {
                         let team = stringTrimmer(stringToTrim: teamSeperated[0])?.uppercased()
                         let formatter = DateFormatter()
                         var castedTime = time as! String
+                        if team == "WNT" && stations == "ussoccer.com"  || team == "MNT" && stations == "ussoccer.com"{
+                            //Skip this game (the channel hasn't been confirmed yet)
+                            continue
+                        }
                         if castedTime == "TBD" || date == "TBD" {
                             // Skip this game (the time hasn't been confirmed)
                             continue

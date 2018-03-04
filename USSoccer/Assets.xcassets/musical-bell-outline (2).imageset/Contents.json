@@ -2,11 +2,11 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "musical-bell-outline (2).png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
+      "filename" : "musical-bell-outline (2).png",
       "scale" : "2x"
     },
     {

@@ -2,11 +2,11 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "bell-musical-tool.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
+      "filename" : "bell-musical-tool.png",
       "scale" : "2x"
     },
     {

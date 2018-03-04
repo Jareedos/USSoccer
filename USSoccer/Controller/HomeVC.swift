@@ -229,7 +229,7 @@ class HomeVC: UIViewController {
             if self.currentUserSettings?.firstTimeClickingInfo == true {
                 sleep(UInt32(0.5))
                 self.performSegue(withIdentifier: "infoSegue", sender: nil)
-                let _ = UIAlertController.presentOKAlertWithTitle("App Info", message: "This list contains all of the Abriviations & Symbols used in the app and what they mean. \n\n Click on the \"i\" icon top left to open, click the \"X\" to close.", okTapped: {
+                let _ = UIAlertController.presentOKAlertWithTitle("App Info", message: "This list contains all of the Abriviations & Symbols used in the app. \n\n Click the \"i\" icon to reopen this menu.", okTapped: {
                     self.isWaitingForDismissInfoTutorial = true
                     
                     self.currentUserSettings?.setValue(false, forKey: "firstTimeClickingInfo")
@@ -249,12 +249,12 @@ class HomeVC: UIViewController {
             isWaitingForDismissInfoTutorial = false
             
             
-            if self.currentUserSettings?.firstTimeClickingSetting == true {
-                messageAlert(title: "Notifications Menu", message: "Set up when you want to recieve notifications, The default is two hours before a game \n Click on one of the Teams below to recieve notifications for all their games. \n\n To open this Notification Settings Menu press the \"Gear\" icon on the top right corner,\n to close the Menu press the \"X\"  or swipe to the right.", from: nil)
-                self.currentUserSettings?.setValue(false, forKey: "firstTimeClickingSetting")
-                CoreDataService.shared.saveContext()
-                self.openMenu()
-            }
+//            if self.currentUserSettings?.firstTimeClickingSetting == true {
+//                messageAlert(title: "Notifications Menu", message: "Set up when you want to recieve notifications, the default is two hours before a game \n Click on one of the Teams below to recieve notifications for all their games. \n\n To open this Notification Settings Menu press the \"Gear\" icon on the top right corner,\n to close the Menu press the \"X\"  or swipe to the right.", from: nil)
+//                self.currentUserSettings?.setValue(false, forKey: "firstTimeClickingSetting")
+//                CoreDataService.shared.saveContext()
+//                self.openMenu()
+//            }
         }
     }
     
@@ -282,7 +282,14 @@ class HomeVC: UIViewController {
             view.addSubview(notificationMenuView)
             
             let trailingConstraint = NSLayoutConstraint(item: notificationMenuView, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: .trailing, multiplier: 1.0, constant: 0.0)
-            let topConstraint = NSLayoutConstraint(item: notificationMenuView, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: view.safeAreaLayoutGuide, attribute: .top, multiplier: 1.0, constant: -64.0)
+            var topConstraint : NSLayoutConstraint!
+            
+            if #available(iOS 11.0, *) {
+                topConstraint = NSLayoutConstraint(item: notificationMenuView, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: view.safeAreaLayoutGuide, attribute: .top, multiplier: 1.0, constant: -64.0)
+            } else {
+                topConstraint = NSLayoutConstraint(item: notificationMenuView, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: .top, multiplier: 1.0, constant: -64.0)
+            }
+            
             let bottomConstraint = NSLayoutConstraint(item: notificationMenuView, attribute: NSLayoutAttribute.bottom, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: 0.0)
             view.addConstraint(trailingConstraint)
             view.addConstraint(topConstraint)
@@ -329,11 +336,11 @@ class HomeVC: UIViewController {
                     messageAlert(title: "Notifications Permission Required", message: "In order to update notification settings, notification permission is required. \n\n Please go to your setting and turn on notifications for USSoccer.", from: nil)
                 } else {
                     if !ConnectionCheck.isConnectedToNetwork() {
-                        messageAlert(title: "No Internet Connection", message: "Notifications Setting Menu is not available in Offline Mode.", from: nil)
+                        messageAlert(title: "No Internet Connection!", message: "Notifications Setting Menu is not available in Offline Mode.", from: nil)
                     } else {
                         self.openMenu()
                         if self.currentUserSettings?.firstTimeClickingSetting == true {
-                            messageAlert(title: "Notifications Menu", message: "Set up when you want to recieve notifications, The default is two hours before a game \n Click on one of the Teams to recieve notifications for all their games.", from: nil)
+                            messageAlert(title: "Notifications Settings Menu", message: "Set up when you want to recieve notifications, The default is two hours before a game \n\n Click on one of the teams in the list to recieve notifications for all their games.", from: nil)
                             self.currentUserSettings?.setValue(false, forKey: "firstTimeClickingSetting")
                             CoreDataService.shared.saveContext()
                         }
@@ -384,10 +391,6 @@ class HomeVC: UIViewController {
     
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        let gameCellThatWasClicked = sender as! UITableViewCell
-//        let indexPath = self.tableView.indexPath(for: gameCellThatWasClicked)
-//        let soccerGame = soccerGames[(indexPath?.row)!]
-//        if soccerGame.title! != "No Upcoming Games" && soccerGame.title! != "Internet Access Required!" {
             if segue.identifier == "gameDetail" {
                 let soccerGame = sender as! SoccerGame
                 let detailViewController = segue.destination as! GameDetailVC
@@ -396,7 +399,6 @@ class HomeVC: UIViewController {
             if let vc = segue.destination as? InfoVC {
                 vc.presentingVC = self
             }
-//        }
     }
 }
 
@@ -406,7 +408,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
         let game = soccerGames[indexPath.row]
         if game.isPlaceholder() == false {
             NavigationService.shared.navigate(toGame: game)
-            //performSegue(withIdentifier: "gameDetail", sender: game)
         }
     }
     
@@ -466,7 +467,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
                     cell.opponentLbl.text = "\(usSoccerTitle[2].uppercased())"
                 }
             } else {
-//                print("\(usSoccerTitle)")
             }
             
             let currentGame = soccerGames[indexPath.row]
@@ -481,7 +481,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
                 } else {
                     // Notifications OFF
                     // currentGame.notification == false
-                    cell.notificationBtn.setImage(UIImage(named: "canclednotifications"), for: .normal)
+                    cell.notificationBtn.setImage(UIImage(named: "musical-bell-outline (2)"), for: .normal)
                 }
             }
             
@@ -549,13 +549,15 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
     
     
     @objc func notificationButtonClicked(sender: UIButton) {
-        
-        UNUserNotificationCenter.current().getNotificationSettings { (settings) in
-            self.notificationAuthorizationStatus = settings.authorizationStatus
-            
-            DispatchQueue.main.async {
-                self.handleNotifications(sender: sender)
+        if ConnectionCheck.isConnectedToNetwork() {
+            UNUserNotificationCenter.current().getNotificationSettings { (settings) in
+                self.notificationAuthorizationStatus = settings.authorizationStatus
+                DispatchQueue.main.async {
+                    self.handleNotifications(sender: sender)
+                }
             }
+        } else {
+            messageAlert(title: "No Internet Connection!", message: "Internet connection is required to update game notifications.", from: nil)
         }
     }
     
@@ -569,18 +571,22 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
         // Get the notification toggle
         let isSelected = self.isGameSelectedForNotifications(game: game)
         
-        
-        
-        if currentUserSettings?.firstTimeClickingBell == true && isSelected == false {
-            messageAlert(title: "Notification Set", message: "A notification has been set for this game. To update your notificaiton settings press the \"Gear\" icon in the top right corner", from: nil)
-            currentUserSettings?.setValue(false, forKey: "firstTimeClickingBell")
-            CoreDataService.shared.saveContext()
-        }
+//        if currentUserSettings?.firstTimeClickingBell == true && isSelected == false {
+//            messageAlert(title: "Notification Set", message: "A notification has been set for this game. \n\nTo update your notificaiton settings press the \"Gear\" icon in the top right corner", from: nil)
+//            currentUserSettings?.setValue(false, forKey: "firstTimeClickingBell")
+//            CoreDataService.shared.saveContext()
+//        }
             if notificationAuthorizationStatus != .authorized {
                 messageAlert(title: "Notifications Permission Required", message: "In order to send a notificaiton, notification permission is required. \n\n Please go to your setting and turn on notifications for USSoccer.", from: nil)
             } else {
                 
                 if ConnectionCheck.isConnectedToNetwork() {
+                    
+                    if currentUserSettings?.firstTimeClickingBell == true && isSelected == false {
+                        messageAlert(title: "Notification Set", message: "A notification has been set for this game. \n\nTo update your notificaiton settings press the \"Gear\" icon in the top right corner", from: nil)
+                        currentUserSettings?.setValue(false, forKey: "firstTimeClickingBell")
+                        CoreDataService.shared.saveContext()
+                    }
                     
                     // Set the notification toggle
                     let isSelected = !self.isGameSelectedForNotifications(game: game)
@@ -607,15 +613,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
                         } else {
                             // Cancel notifications
                             ReminderService.shared.cancelAllSchduledLocalNotifications(ofGame: game)
-                            
-                            
-                            if currentUserSettings?.firstTimeDisablingNotif == true {
-                                
-                                messageAlert(title: "Notification Disabled", message: "A notification has been set for this game. To update your notificaiton settings press the \"Gear\" icon in the top right corner", from: nil)
-                                
-                                currentUserSettings?.setValue(false, forKey: "firstTimeDisablingNotif")
-                                CoreDataService.shared.saveContext()
-                            }
                         }
                     }
                     
@@ -644,7 +641,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
                     
                     tableView.reloadRows(at: [indexPath], with: .none)
                 } else {
-                    messageAlert(title: "No Internet Connection", message: "Internet connection is required to update game notifications.", from: nil)
+                    messageAlert(title: "No Internet Connection!", message: "Internet connection is required to update game notifications.", from: nil)
                 }
             }
         }

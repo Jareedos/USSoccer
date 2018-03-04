@@ -52,9 +52,10 @@ class GameDetailVC: UIViewController {
         if soccerGame.stations == "ussoccer.com" {
             gameStaionsLbl.text = soccerGame.stations
         } else if (soccerGame.stations?.contains("Tickets"))! {
-            var stationComponents = soccerGame.stations!.components(separatedBy: "Tickets")
-            let removingSlash = stationComponents[1].replacingOccurrences(of: "\n", with: "")
-            gameStaionsLbl.text = removingSlash
+            var stationComponents = soccerGame.stations!.components(separatedBy: "\n")
+//            print(stationComponents)
+//            let removingSlash = stationComponents[1].replacingOccurrences(of: "\n", with: "")
+            gameStaionsLbl.text = stationComponents[1]
         } else {
             gameStaionsLbl.text = soccerGame.stations
         }

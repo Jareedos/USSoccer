@@ -22,7 +22,10 @@ extension UIAlertController {
     
     static func presentOKAlertWithTitle(_ title: String, message: String?, okTapped: (()->Void)? = nil) -> UIAlertController {
         let alertController = UIAlertController.okAlertWithTitle(title, message: message, okTapped: okTapped)
-        UIViewController.topMostController().present(alertController, animated: true, completion: nil)
+        let topVC = UIViewController.topMostController()
+        if topVC.presentedViewController == nil {
+            UIViewController.topMostController().present(alertController, animated: true, completion: nil)
+        }
         return alertController
     }
     

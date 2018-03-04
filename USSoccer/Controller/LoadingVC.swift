@@ -9,8 +9,6 @@
 import UIKit
 import FirebaseDatabase
 
-var g_isLoadingData = true
-
 class LoadingVC: UIViewController {
     
     @IBOutlet weak var soccerBallImage: UIImageView!
@@ -26,8 +24,8 @@ class LoadingVC: UIViewController {
          //if ConnectionCheck.isConnectedToNetwork() {
         // call Api and Parse it
             ApiCaller.shared.ApiCall {
-                if g_isLoadingData {
-                    g_isLoadingData = false
+                if ApiCaller.shared.isLoadingData {
+                    ApiCaller.shared.isLoadingData = false
                     DispatchQueue.main.async {
                         self.finishLoading()
                     }

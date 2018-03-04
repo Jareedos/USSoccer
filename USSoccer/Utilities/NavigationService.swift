@@ -27,7 +27,7 @@ class NavigationService {
     }
     
     func handle(notificationData: [String : Any]) {
-        if g_isLoadingData {
+        if ApiCaller.shared.isLoadingData {
             pendingNotificationsData.append(notificationData)
             return
         }
