@@ -153,11 +153,6 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
     }
     
     @IBAction func twoDaySwitch(_ sender: UISwitch) {
-//        if currentUserSettings?.firstTimeTogglingNotificationSettings == true {
-//            messageAlert(title: "Notifications Setting Updated", message: "You have updated one of your settings. \n If the toggle is blue the setting is on, if the toggle is white the setting is off.", from: nil)
-//            currentUserSettings?.setValue(false, forKey: "firstTimeTogglingNotificationSettings")
-//            CoreDataService.shared.saveContext()
-//        }
         UNUserNotificationCenter.current().getNotificationSettings { (settings) in
             self.notificationAuthorizationStatus = settings.authorizationStatus
             
@@ -182,11 +177,6 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
     
     
     @IBAction func oneDaySwitch(_ sender: UISwitch) {
-//        if currentUserSettings?.firstTimeTogglingNotificationSettings == true {
-//            messageAlert(title: "Notifications Setting Updated", message: "You have updated one of your settings. \n If the toggle is blue the setting is on, if the toggle is white the setting is off.", from: nil)
-//            currentUserSettings?.setValue(false, forKey: "firstTimeTogglingNotificationSettings")
-//            CoreDataService.shared.saveContext()
-//        }
         UNUserNotificationCenter.current().getNotificationSettings { (settings) in
             self.notificationAuthorizationStatus = settings.authorizationStatus
             
@@ -210,11 +200,6 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
     }
     
     @IBAction func twoHourSwitch(_ sender: UISwitch) {
-//        if currentUserSettings?.firstTimeTogglingNotificationSettings == true {
-//            messageAlert(title: "Notifications Setting Updated", message: "You have updated one of your settings. \n If the toggle is blue the setting is on, if the toggle is white the settings is off.", from: nil)
-//            currentUserSettings?.setValue(false, forKey: "firstTimeTogglingNotificationSettings")
-//            CoreDataService.shared.saveContext()
-//        }
         UNUserNotificationCenter.current().getNotificationSettings { (settings) in
             self.notificationAuthorizationStatus = settings.authorizationStatus
             
@@ -238,11 +223,6 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
     }
     
     @IBAction func oneHourSwitch(_ sender: UISwitch) {
-//        if currentUserSettings?.firstTimeTogglingNotificationSettings == true {
-//            messageAlert(title: "Notifications Setting Updated", message: "You have updated one of your settings. \n If the toggle is blue the setting is on, if the toggle is white the setting is off.", from: nil)
-//            currentUserSettings?.setValue(false, forKey: "firstTimeTogglingNotificationSettings")
-//            CoreDataService.shared.saveContext()
-//        }
         UNUserNotificationCenter.current().getNotificationSettings { (settings) in
             self.notificationAuthorizationStatus = settings.authorizationStatus
             
@@ -267,11 +247,6 @@ class NotificationMenuView: UIView, UITableViewDataSource, UITableViewDelegate {
     }
     
     @IBAction func halfHourSwitch(_ sender: UISwitch) {
-//        if currentUserSettings?.firstTimeTogglingNotificationSettings == true {
-//            messageAlert(title: "Notifications Setting Updated", message: "You have updated one of your settings. \n If the toggle is blue the setting is on, if the toggle is white the setting is off.", from: nil)
-//            currentUserSettings?.setValue(false, forKey: "firstTimeTogglingNotificationSettings")
-//            CoreDataService.shared.saveContext()
-//        }
         UNUserNotificationCenter.current().getNotificationSettings { (settings) in
             self.notificationAuthorizationStatus = settings.authorizationStatus
             

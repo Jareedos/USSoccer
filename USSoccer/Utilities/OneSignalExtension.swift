@@ -27,21 +27,11 @@ extension OneSignal {
      How to prevent doubbling of notifications?
      - Everytime the team notificaion is set to ON, all local notifications of games of that team are cancelled
      - When it's ticked off again, the local notifications for the games that are supposed to be followed are schedled again
-     */
-    
-    // FIXME: remove this (only for debug purposes)
-    //static var notificationSentToTeams = Set<String>()
-    
+     */    
     static func schedulePushNotification(title: String, text: String, tags: [String], timestamp: Date, data: [String: Any]? = nil) {
-        // FIXME: remove the return here
-//        return
-        // FIXME: remove this (only for debug purposes)
-        /*
-        if notificationSentToTeams.contains(tag) == true {
-            return
-        }
-        notificationSentToTeams.insert(tag)*/
-        
+        // FIXME: remove the return here, this blocks the app from making notificatins with one signal
+        //return
+       
         let orOperator = ["operator": "OR"]
         
         var filters = [[String : Any]]()
@@ -54,17 +44,12 @@ extension OneSignal {
         // Remove the last OR operator
         filters.removeLast()
         
-        
-//        print("sending to tag \(tag)")
-        
         var params : [String : Any] = [
             //"included_segments" : "All Users",
             
             "filters" : filters,
                       "contents": ["en": text],
                       "headings": ["en": title],
-                      //"subtitle": ["en": subtitle],
-                      //"send_after" : Date().addingTimeInterval(60).description, // Debug - sending the notification one minute from now
                       "send_after" : timestamp.description // The correct schedule time
         ]
         params["data"] = data
@@ -115,27 +100,12 @@ extension OneSignal {
         guard let user = Auth.auth().currentUser else { return }
         
         OneSignal.add(NotificationService.shared)
-        
-        // Recommend moving the below line to prompt for push after informing the user about
-        //   how your app will use them.
+
         OneSignal.promptForPushNotifications(userResponse: { accepted in
             
             let userRef = Database.database().reference().child("users").child(user.uid)
             
-            //if accepted {
-                
                 OneSignal.setSubscription(true)
-            
-//                let hasPrompted = status.permissionStatus.hasPrompted
-//                let userStatus = status.permissionStatus.status
-//                let isSubscribed = status.subscriptionStatus.subscribed
-//                let userSubscriptionSetting = status.subscriptionStatus.userSubscriptionSetting
-
-                // This is your device's identification within OneSignal
-            
-            //}
-            
-            
             
             // Save the default push notification settings
             let dict: [String: Bool] = ["TwoDayNotification": false, "OneDayNotification": false, "TwoHourNotification": true, "OneHourNotification": false, "HalfHourNotification": false]

@@ -44,7 +44,6 @@ class NotificationService: UNNotificationServiceExtension, UNUserNotificationCen
     // MARK: - UNUserNotificationCenterDelegate
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        //
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
@@ -63,9 +62,7 @@ class NotificationService: UNNotificationServiceExtension, UNUserNotificationCen
         
         if let userID = status.subscriptionStatus.userId {
             if let person = CoreDataService.shared.fetchPerson(), person.userID != userID {
-                //                           let pushToken = status.subscriptionStatus.pushToken
                 // Set the one signal id
-                
                 userRef.child("oneSignalIds").child(userID).setValue(true)
             }
         }

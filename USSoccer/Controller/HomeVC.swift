@@ -33,8 +33,8 @@ class HomeVC: UIViewController {
     var pickerTeamsArray = ["U-15 MNT", "U-16 MNT", "U-17 MNT", "U-18 MNT", "U-19 MNT", "U-20 MNT", "U-23 MNT", "MNT", "ALL TEAMS", "WNT", "U-23 WNT", "U-20 WNT", "U-19 WNT", "U-18 WNT", "U-17 WNT", "U-16 WNT", "U-15 WNT"]
     var rotationAngle: CGFloat!
     let notificationVC = NotificationMenuView()
-    let customHeight: CGFloat = 100
-    let customWidth: CGFloat = 100
+    var customHeight: CGFloat = 0.0
+    var customWidth: CGFloat = 0.0
     let formatter = DateFormatter()
     var filterValue: String!
     var sortedGames = [String: [SoccerGame]]()
@@ -64,23 +64,29 @@ class HomeVC: UIViewController {
         NMTableView.dataSource = notificationVC
         tableView.delegate = self
         tableView.dataSource = self
+        let superView = teamPicker.superview!
         tableView.separatorStyle = .none
         teamPicker.transform = CGAffineTransform(rotationAngle: rotationAngle)
-        
-        switch UIScreen.main.nativeBounds.height {
-        /*case 1136:
-            print("iPhone 5 or 5S or 5C")
-        case 1334:
-            print("iPhone 6/6S/7/8")
-        case 2208:
-            print("iPhone 6+/6S+/7+/8+")*/
-        case 2436:
-            print("iPhone X")
-            teamPicker.frame = CGRect(x: -100, y: view.frame.height - 103, width: view.frame.width + 200, height: 68)
-        default:
-            teamPicker.frame = CGRect(x: -100, y: view.frame.height - 73, width: view.frame.width + 200, height: 68)
-        }
-        
+        customWidth = superView.bounds.height
+        customHeight = superView.bounds.height
+//        switch UIScreen.main.nativeBounds.height {
+//        /*case 1136:
+//            print("iPhone 5 or 5S or 5C")
+//        case 1334:
+//            print("iPhone 6/6S/7/8")
+//        case 2208:
+//            print("iPhone 6+/6S+/7+/8+")*/
+//        case 2436:
+//            print("iPhone X")
+//            teamPicker.frame = CGRect(x: -100, y: view.frame.height - 103, width: view.frame.width + 200, height: 68)
+//        default:
+//            teamPicker.frame = CGRect(x: -100, y: view.frame.height - 73, width: view.frame.width + 200, height: 68)
+//        }
+        teamPicker.translatesAutoresizingMaskIntoConstraints = false
+        teamPicker.widthAnchor.constraint(equalToConstant: superView.bounds.height).isActive = true
+        teamPicker.heightAnchor.constraint(equalToConstant: superView.superview!.bounds.width + 300).isActive = true
+        teamPicker.centerXAnchor.constraint(equalTo: superView.centerXAnchor).isActive = true
+        teamPicker.centerYAnchor.constraint(equalTo: superView.centerYAnchor).isActive = true
         
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
@@ -99,8 +105,6 @@ class HomeVC: UIViewController {
                                                  name: NSNotification.Name.UIApplicationDidBecomeActive,
                                                  object: nil)
         
-        // FIXME: remove this line (just to speed up development)
-//        currentUserSettings?.firstTimeInApp = false
         if currentUserSettings?.firstTimeInApp == true {
             let introAlert = UIAlertController(title: "Welcome To US Soccer" , message: "US Soccer shows you a list of all USA National Soccer Teams games. \n\n Swipe left or right on the bottom to sort the list by the team. \n Click on a \"bell\" icon to set a notification for that game. \n\n Please give US Soccer permission to send notifications for the soccer games you select.", preferredStyle: UIAlertControllerStyle.alert)
             
@@ -229,7 +233,7 @@ class HomeVC: UIViewController {
             if self.currentUserSettings?.firstTimeClickingInfo == true {
                 sleep(UInt32(0.5))
                 self.performSegue(withIdentifier: "infoSegue", sender: nil)
-                let _ = UIAlertController.presentOKAlertWithTitle("App Info", message: "This list contains all of the Abriviations & Symbols used in the app. \n\n Click the \"i\" icon to reopen this menu.", okTapped: {
+                let _ = UIAlertController.presentOKAlertWithTitle("App Info", message: "This list contains all of the abbreviantions & symbols used in the app. \n\n Click the \"i\" icon to open this menu.", okTapped: {
                     self.isWaitingForDismissInfoTutorial = true
                     
                     self.currentUserSettings?.setValue(false, forKey: "firstTimeClickingInfo")
@@ -247,14 +251,6 @@ class HomeVC: UIViewController {
         // Check if the
         if isWaitingForDismissInfoTutorial == true {
             isWaitingForDismissInfoTutorial = false
-            
-            
-//            if self.currentUserSettings?.firstTimeClickingSetting == true {
-//                messageAlert(title: "Notifications Menu", message: "Set up when you want to recieve notifications, the default is two hours before a game \n Click on one of the Teams below to recieve notifications for all their games. \n\n To open this Notification Settings Menu press the \"Gear\" icon on the top right corner,\n to close the Menu press the \"X\"  or swipe to the right.", from: nil)
-//                self.currentUserSettings?.setValue(false, forKey: "firstTimeClickingSetting")
-//                CoreDataService.shared.saveContext()
-//                self.openMenu()
-//            }
         }
     }
     
@@ -570,12 +566,6 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
         
         // Get the notification toggle
         let isSelected = self.isGameSelectedForNotifications(game: game)
-        
-//        if currentUserSettings?.firstTimeClickingBell == true && isSelected == false {
-//            messageAlert(title: "Notification Set", message: "A notification has been set for this game. \n\nTo update your notificaiton settings press the \"Gear\" icon in the top right corner", from: nil)
-//            currentUserSettings?.setValue(false, forKey: "firstTimeClickingBell")
-//            CoreDataService.shared.saveContext()
-//        }
             if notificationAuthorizationStatus != .authorized {
                 messageAlert(title: "Notifications Permission Required", message: "In order to send a notificaiton, notification permission is required. \n\n Please go to your setting and turn on notifications for USSoccer.", from: nil)
             } else {
@@ -658,7 +648,11 @@ extension HomeVC: UIPickerViewDelegate, UIPickerViewDataSource {
     }
 
     func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
-        return customHeight
+        return customHeight + 18
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, widthForComponent component: Int) -> CGFloat {
+        return customWidth
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
@@ -674,15 +668,19 @@ extension HomeVC: UIPickerViewDelegate, UIPickerViewDataSource {
     }
     
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
-        let view = UIView(frame: CGRect(x: 0, y: 0, width: customWidth, height: customHeight))
-        let nameLabel = UILabel(frame: CGRect(x: 0, y: 0, width: customWidth, height: customHeight))
+        let nameLabel = UILabel()
+        nameLabel.frame = CGRect(x: 0, y: 0, width: customWidth + 10, height: customHeight)
+//        let view = UIView(frame: CGRect(x: 0, y: 0, width: customWidth, height: customHeight))
+//        let nameLabel = UILabel(frame: CGRect(x: 0, y: 0, width: customWidth, height: customHeight))
         nameLabel.text = pickerTeamsArray[row]
         nameLabel.textAlignment = .center
+        nameLabel.transform = CGAffineTransform(rotationAngle: 150 * (.pi/100))
         nameLabel.textColor = UIColor.white
         nameLabel.font = UIFont(name: "HelveticaNeue-CondensedBold", size: 19.0)
-        view.addSubview(nameLabel)
-        view.transform = CGAffineTransform(rotationAngle: (150 * (.pi/100)))
-        return view
+        
+//        view.addSubview(nameLabel)
+//        view.transform = CGAffineTransform(rotationAngle: (150 * (.pi/100)))
+        return nameLabel
     }
 }
 

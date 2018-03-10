@@ -21,11 +21,7 @@ class ApiCaller {
     
     func getFakeResponse() -> [[String: AnyObject]] {
         
-        let fakeGameData : [[String: Any]] = [["Date": "March 3, 2018", "Time": "9:30 AM PT", "Title": "U-23 MNT vs Germany", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"], ["Date": "March 2, 2018", "Time": "5:00 PM PT", "Title": "WNT VS Norway", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"], ["Date": "March 4, 2018", "Time": "1:30 PM PT", "Title": "U-23 MNT vs Braxil", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"], ["Date": "March 4, 2018", "Time": "8:00 AM PT", "Title": "U-23 WNT VS Costa Rico", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"], ["Date": "March 4, 2018", "Time": "8:30 AM PT", "Title": "U-23 MNT vs Napal", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"], ["Date": "March 4, 2018", "Time": "5:00 PM PT", "Title": "WNT VS Jordan", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"], ["Date": "March 5, 2018", "Time": "2:00 PM PT", "Title": "U-23 MNT vs Iceland", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"], ["Date": "March 5, 2018", "Time": "8:00 AM PT", "Title": "U-23 WNT VS Guam", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"], ["Date": "March 5, 2018", "Time": "7:30 PM PT", "Title": "MNT vs Poland", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"], ["Date": "March 5, 2018", "Time": "8:00 AM PT", "Title": "WNT VS China", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]
-      //let fakeGameData1 = ["Data": [["Date": "February 18, 2018", "Time": "9:30 AM PT", "Title": "U-17 MNT VS Spain", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]]
-    //  let fakeGameData2 = ["Data": [["Date": "February 18, 2018", "Time": "10:00 AM PT", "Title": "U-17 MNT VS Canada", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]]
-       // let fakeGameData : [[String: Any]] = [["Date": "February 18, 2018", "Time": "11:00 AM PT", "Title": "U-23 MNT vs China", "Venue": "MAPFRE Stadium; Columbus, Ohio", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]
-        
+        let fakeGameData : [[String: Any]] = [["Date": "March 11, 2018", "Time": "2:00 PM PT", "Title": "U-23 MNT vs Iceland", "Venue": "MAPFRE Stadium; Columbus, Ohio\nFantasy Camp\nMatch Guide", "Stations": "Ticket Info | Buy Tickets\nESPN2"], ["Date": "March 11, 2018", "Time": "8:00 AM PT", "Title": "U-23 WNT VS Guam", "Venue": "MAPFRE Stadium; Columbus, Ohio\nMatch Guide\nFantasy Camp", "Stations": "Ticket Info | Buy Tickets\nESPN2"], ["Date": "March 11, 2018", "Time": "7:30 PM PT", "Title": "MNT vs Poland", "Venue": "MAPFRE Stadium; Columbus, Ohio\nFantasy Camp", "Stations": "Ticket Info | Buy Tickets\nESPN2"], ["Date": "March 11, 2018", "Time": "8:00 AM PT", "Title": "WNT VS China", "Venue": "MAPFRE Stadium; Columbus, Ohio\nMatch Guide", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]
         return fakeGameData as [[String : AnyObject]]
     }
     
@@ -36,11 +32,12 @@ class ApiCaller {
             }
         }
     }
+    private var completion: (()->Void)?
     var timeoutTimer: Timer?
-    @objc func timeoutApiCall(completion: @escaping ()->Void) {
+    @objc func timeoutApiCall() {
         if isLoadingData {
             // We should just let the user in the app
-            completion()
+            self.completion?()
         }
     }
     
@@ -48,8 +45,9 @@ class ApiCaller {
         //real call "https://www.parsehub.com/api/v2/projects/tZQ5VDy6j2JB/last_ready_run/data?api_key=trmNdK43wwBZ" "https://www.parsehub.com/api/v2/runs/t1mY9HfR24H5/data?api_key=trmNdK43wwBZ"
         
         // Timeout
+        self.completion = completion
         timeoutTimer?.invalidate()
-        timeoutTimer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(timeoutApiCall(completion:)), userInfo: nil, repeats: false)
+        timeoutTimer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(timeoutApiCall), userInfo: nil, repeats: false)
         
         
         Alamofire.request("https://www.parsehub.com/api/v2/projects/tZQ5VDy6j2JB/last_ready_run/data?api_key=trmNdK43wwBZ").responseJSON { response in
@@ -74,7 +72,7 @@ class ApiCaller {
             
             if let jsonData = response.result.value as? Dictionary<String, AnyObject> {
                 // FIXME: rename data2 to data
-                guard let data2 = jsonData["Data"] as? [[String: AnyObject]] else {
+                guard let data = jsonData["Data"] as? [[String: AnyObject]] else {
                     
                     if ConnectionCheck.isConnectedToNetwork() == false {
                         // No data to sync and not connected to network
@@ -95,7 +93,7 @@ class ApiCaller {
                     return
                 }
                 // FIXME: remove this line (only for debugging purposes)
-                let data = self.getFakeResponse()
+                //let data = self.getFakeResponse()
                 
                 let arrayLength = data.count
                 let currentDate = Date()
@@ -268,19 +266,42 @@ class ApiCaller {
             return "-0400"
         }
         
+        
         // Default Eastern Time Zone -0500
         var timeZoneString = (timeString as NSString).substring(from: timeString.count - 2)
         
-        let index = timeZoneString.index(timeZoneString.startIndex, offsetBy: 1)
-        timeZoneString.insert("S", at: index)
+        if timeZoneString == "ET" {
+            print("")
+        }
+        switch timeZoneString {
+        case "ET":
+            timeZoneString = "America/New_York"
+        case "CT":
+            timeZoneString = "America/Chicago"
+        case "MT":
+            timeZoneString = "America/Denver"
+        case "PT":
+            timeZoneString = "America/Los_Angeles"
+        default:
+            break
+        }
         
         // Adjust for Daylight Savings Time
-        let zone = TimeZone(identifier: "PST")
+        guard let zone = TimeZone(identifier: timeZoneString) else {
+            return "-0400"
+        }
         formatter.dateFormat = "ZZZ"
         var components = Calendar.current.dateComponents([.day, .month, .year, .hour, .minute, .second], from: dateFormated)
         components.timeZone = zone
-        if let date = Calendar.current.date(from: components) {
-            return formatter.string(from: date)
+        var calendar = Calendar(identifier: Calendar.current.identifier)
+        calendar.timeZone = zone
+        if let date = calendar.date(from: components) {
+            let numberOfHoursFromGMT = zone.secondsFromGMT(for: date) / 3600
+            if numberOfHoursFromGMT < 0 {
+                return "-0\(-numberOfHoursFromGMT)00"
+            } else {
+                return "+0\(numberOfHoursFromGMT)00"
+            }
         } else {
             return "-0400"
         }

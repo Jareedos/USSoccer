@@ -17,12 +17,6 @@ class GamesTVCell: UITableViewCell {
     @IBOutlet weak var gameDateLbl: UILabel!
     @IBOutlet weak var gameTimeLbl: UILabel!
     
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 

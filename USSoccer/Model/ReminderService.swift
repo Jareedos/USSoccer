@@ -11,12 +11,6 @@ import OneSignal
 
 class ReminderService {
     
-    // TODO: we can represent all these toggles and such in a single nice class array
-    // nice to have
-    /*class ScheduleIntervalToggle {
-        isOn
-    }*/
-    
     // MARK: - Singleton
     static let shared = ReminderService()
     private init() {}
@@ -57,8 +51,6 @@ class ReminderService {
     func updateSubsription(selectedTeams: [String : Bool]) {
         
         UNUserNotificationCenter.current().getPendingNotificationRequests { (requests: [UNNotificationRequest]) in
-        
-//            print("----- |||  updateSubsription selectedTeams: \(selectedTeams)")
             var tags = [String : String]()
             
             for (_, element) in selectedTeams.enumerated() {
@@ -79,10 +71,6 @@ class ReminderService {
                 // We have to prevent duplicity notifications for games
                 // We are cancelling either way, because in case we are scheduling again
                 self.cancelAllScheduledLocalNotifications(ofTeam: team, existingRequests: requests)
-                
-//                if team == "U-20 MNT" {
-//                    print("WNT")
-//                }
                 
                 if isSelected == false {
                     // When the team notification is off, the local notification for each game is enough
@@ -128,7 +116,6 @@ class ReminderService {
      Schedules all notifications for selelected games of a team, it also takes the time intervals into account.
      */
     func scheduleLocalNotificationsForAllSelectedGames(ofTeam team: String) {
-        //print("scheduleLocalNotificationsForAllSelectedGames of team: \(team)")
         let games = CoreDataService.shared.fetchGames().filter { (game) -> Bool in
             game.usTeam == team
         }
@@ -178,8 +165,6 @@ class ReminderService {
         // Cancel these notifications
         if identifiers.count > 0 {
             UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: identifiers)
-            
-//            print("cancelAllScheduledLocalNotifications of games: \(identifiers)")
         }
     }
     
@@ -187,9 +172,6 @@ class ReminderService {
         
         // Get all the scheduled local notifications
         UNUserNotificationCenter.current().getPendingNotificationRequests { (requests: [UNNotificationRequest]) in
-//            print("printAllLocalNotifications   begin")
-//            print(requests.count)
-//            print("printAllLocalNotifications   end")
         }
     }
     
@@ -198,8 +180,6 @@ class ReminderService {
      Schedules all local notifications for a given game
      */
     func scheduleAllLocalNotifications(forGame game: SoccerGame) {
-        // print("scheduleAllLocalNotifications forGame: \(game.title ?? "")")
-        
         for (i, _) in timeIntervals.enumerated() {
             // If enabled
             if intervalToggles[i] {
@@ -223,14 +203,9 @@ class ReminderService {
             "action" : NotificationAction.openGame.rawValue,
             "gameKey" : SoccerGame.gameKey(title: title, date: date)
         ]
-        //
         let reminderTimestamp = timestamp.addingTimeInterval(-timeIntervals[timeIntervalIndex])
-        // FIXME:
-        //let reminderTimestamp = Date().addingTimeInterval(60)
-        
         let components = Calendar.current.dateComponents([.day, .month, .year, .hour, .minute, .second], from: reminderTimestamp)
         let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
-        
         let identifier = self.key(team: game.title!, timeInterval: timeIntervals[timeIntervalIndex])
         let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
         UNUserNotificationCenter.current().add(request, withCompletionHandler: { (error: Error?) in
@@ -247,11 +222,6 @@ class ReminderService {
      */
     func scheduleAllPushNotificationReminders(toGameKey gameKey: String, gameTitle: String, team: String, timestamp: Date) {
         
-        // FIXME: remove this (only for debug purposes)
-        // To fake it you can use this timestamp variable
-        //let timestamp = Date().addingTimeInterval(24 * 3600)
-        //let timestamp = Date().addingTimeInterval(60)
-        
         for (i, timeInterval) in timeIntervals.enumerated() {
             
             // The key here is the team + time interval in seconds that the Reminder should be fired at
@@ -264,10 +234,6 @@ class ReminderService {
                 "action" : NotificationAction.openGame.rawValue,
                 "gameKey" : gameKey
                 ])
-            
-            // FIXME: remove this (only for debug purposes)
-            // To fake it you can use this timestamp variable
-            //OneSignal.schedulePushNotification(title: notificationTitle(), text: text, tag: key(team: team, timeInterval: timeInterval), timestamp: timestamp)
         }
     }
     

@@ -20,7 +20,7 @@ public class SoccerGame: NSManagedObject  {
     @NSManaged public var stations: String?
     @NSManaged public var notification: NSNumber?
     @NSManaged public var timestamp: Date?
-//    var ref: DataReference?
+    
     var usTeam : String! {
         let changedTitle = title!.replacingOccurrences(of: "VS", with: "vs")
         let teamsTitles = changedTitle.components(separatedBy: "vs")

@@ -24,16 +24,4 @@ class InfoVC: UIViewController {
         })
     }
     
-    @IBAction func appKeyBtnPressed(_ sender: Any) {
-        
-        
-    }
-    @IBAction func appFeaturesBtnPressed(_ sender: Any) {
-        
-    }
-
-    @IBAction func backBtnPressed(_ sender: Any) {
-        
-    }
-    
 }
