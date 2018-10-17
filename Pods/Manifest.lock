@@ -1,70 +1,53 @@
 PODS:
-  - Alamofire (4.6.0)
-  - Firebase/Auth (4.7.0):
-    - Firebase/Core
-    - FirebaseAuth (= 4.4.0)
-  - Firebase/Core (4.7.0):
-    - FirebaseAnalytics (= 4.0.5)
-    - FirebaseCore (= 4.0.12)
-  - Firebase/Database (4.7.0):
-    - Firebase/Core
-    - FirebaseDatabase (= 4.1.2)
-  - FirebaseAnalytics (4.0.5):
-    - FirebaseCore (~> 4.0)
-    - FirebaseInstanceID (~> 2.0)
-    - GoogleToolboxForMac/NSData+zlib (~> 2.1)
-    - nanopb (~> 0.3)
-  - FirebaseAuth (4.4.0):
-    - FirebaseAnalytics (~> 4.0)
-    - GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)
+  - Alamofire (4.7.3)
+  - FirebaseAuth (5.0.4):
+    - FirebaseAuthInterop (~> 1.0)
+    - FirebaseCore (~> 5.0)
+    - GoogleUtilities/Environment (~> 5.2)
     - GTMSessionFetcher/Core (~> 1.1)
-  - FirebaseCore (4.0.12):
-    - GoogleToolboxForMac/NSData+zlib (~> 2.1)
-  - FirebaseDatabase (4.1.2):
-    - FirebaseAnalytics (~> 4.0)
-    - FirebaseCore (~> 4.0)
+  - FirebaseAuthInterop (1.0.0)
+  - FirebaseCore (5.1.5):
+    - GoogleUtilities/Logger (~> 5.2)
+  - FirebaseDatabase (5.0.3):
+    - FirebaseCore (~> 5.0)
     - leveldb-library (~> 1.18)
-  - FirebaseInstanceID (2.0.7)
-  - GoogleToolboxForMac/DebugUtils (2.1.3):
-    - GoogleToolboxForMac/Defines (= 2.1.3)
-  - GoogleToolboxForMac/Defines (2.1.3)
-  - GoogleToolboxForMac/NSData+zlib (2.1.3):
-    - GoogleToolboxForMac/Defines (= 2.1.3)
-  - GoogleToolboxForMac/NSDictionary+URLArguments (2.1.3):
-    - GoogleToolboxForMac/DebugUtils (= 2.1.3)
-    - GoogleToolboxForMac/Defines (= 2.1.3)
-    - GoogleToolboxForMac/NSString+URLArguments (= 2.1.3)
-  - GoogleToolboxForMac/NSString+URLArguments (2.1.3)
-  - GTMSessionFetcher/Core (1.1.12)
+  - GoogleUtilities/Environment (5.3.2)
+  - GoogleUtilities/Logger (5.3.2):
+    - GoogleUtilities/Environment
+  - GTMSessionFetcher/Core (1.2.0)
   - leveldb-library (1.20)
-  - nanopb (0.3.8):
-    - nanopb/decode (= 0.3.8)
-    - nanopb/encode (= 0.3.8)
-  - nanopb/decode (0.3.8)
-  - nanopb/encode (0.3.8)
-  - OneSignal (2.5.7)
+  - OneSignal (2.9.0)
 
 DEPENDENCIES:
-  - Alamofire (~> 4.5)
-  - Firebase/Auth
-  - Firebase/Core
-  - Firebase/Database
+  - Alamofire
+  - FirebaseAuth
+  - FirebaseCore
+  - FirebaseDatabase
   - OneSignal (< 3.0, >= 2.5.2)
 
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Alamofire
+    - FirebaseAuth
+    - FirebaseAuthInterop
+    - FirebaseCore
+    - FirebaseDatabase
+    - GoogleUtilities
+    - GTMSessionFetcher
+    - leveldb-library
+    - OneSignal
+
 SPEC CHECKSUMS:
-  Alamofire: f41a599bd63041760b26d393ec1069d9d7b917f4
-  Firebase: dbfb98ccec2dcfcd21ab9cc1b4981a3f3c8c5e26
-  FirebaseAnalytics: 5b02a63ead2c3f0259cfc7f15e053e440587ecf8
-  FirebaseAuth: cdeee95b528958dbb7dcf220ad0fb804d3a284b0
-  FirebaseCore: 6cf108b63997bc08c04a1ffa55a3ac0d71a59ffc
-  FirebaseDatabase: 18ecb23e15c7f58bb0c4527e9cace06897cc40ca
-  FirebaseInstanceID: 148c25c986c8699e67304b114e365713dce467f2
-  GoogleToolboxForMac: 2501e2ad72a52eb3dfe7bd9aee7dad11b858bd20
-  GTMSessionFetcher: ebaa1f79a5366922c1735f1566901f50beba23b7
-  leveldb-library: 4f9eedf84ab46b4fa3b7893bf30714b2a1a74022
-  nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
-  OneSignal: 5be2eb3394e654b7467a190fe4d58147fc46bb78
+  Alamofire: c7287b6e5d7da964a70935e5db17046b7fde6568
+  FirebaseAuth: 504b198ceb3472dca5c65bb95544ea44cfc9439e
+  FirebaseAuthInterop: 0ffa57668be100582bb7643d4fcb7615496c41fc
+  FirebaseCore: c6079de64c1a87000e52e9b408dddcadc901177f
+  FirebaseDatabase: e2bcbc106adc4b11a2da3ec2eb63c0c4a44f2f54
+  GoogleUtilities: 82f04aeff8426309dbdbc75f6c8accd1e584a5da
+  GTMSessionFetcher: 0c4baf0a73acd0041bf9f71ea018deedab5ea84e
+  leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
+  OneSignal: fc816c9dc308ea4f60348a02500db8198b43cf69
 
-PODFILE CHECKSUM: 452951a9c63035ce81861e6f70b348c11e85a467
+PODFILE CHECKSUM: c6655e3e7438a83e7718dda8dbdbecd33459f8b9
 
-COCOAPODS: 1.3.1
+COCOAPODS: 1.5.3

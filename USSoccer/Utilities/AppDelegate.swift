@@ -7,7 +7,8 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseAuth
+import FirebaseCore
 import CoreData
 import OneSignal
 
@@ -17,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         FirebaseApp.configure()
         let onesignalInitSettings = [kOSSettingsKeyAutoPrompt: false]
@@ -37,10 +38,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         OneSignal.inFocusDisplayType = OSNotificationDisplayType.notification;
         
-        Auth.auth().signInAnonymously { (user: User?, error: Error?) in
+        Auth.auth().signInAnonymously { (result: AuthDataResult?, error: Error?) in
             
-            if let user = user {
-                
+            if let user = result?.user {
                 
                 // Create the Person object if one doesn't exist already
                 if CoreDataService.shared.fetchPerson() == nil {

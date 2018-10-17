@@ -31,7 +31,7 @@ class GameDetailVC: UIViewController {
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationController?.navigationBar.isTranslucent = true
         self.navigationController?.view.backgroundColor = UIColor.clear
-        self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedStringKey.font: UIFont(name: "HelveticaNeue-CondensedBold", size: 28.0)!,NSAttributedStringKey.foregroundColor: UIColor.white]
+        self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-CondensedBold", size: 28.0)!,NSAttributedString.Key.foregroundColor: UIColor.white]
         
         gameTitleLbl.text = soccerGame.title!.uppercased()
         gameDateLbl.text = soccerGame.date!.uppercased()

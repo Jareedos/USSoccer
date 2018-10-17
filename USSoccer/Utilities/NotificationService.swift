@@ -8,7 +8,8 @@
 
 import Foundation
 import OneSignal
-import Firebase
+import FirebaseDatabase
+import FirebaseAuth
 
 class NotificationService: UNNotificationServiceExtension, UNUserNotificationCenterDelegate, OSSubscriptionObserver {
     static let shared = NotificationService()

@@ -109,7 +109,7 @@ public class SoccerGame: NSManagedObject  {
     }
     
     static func gameKey(title: String, date: String) -> String {
-        return stringTrimmer(stringToTrim: title + date)!
+        return firebaseCompatibleString(fromString: title + date)!
     }
     
     

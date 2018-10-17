@@ -6,10 +6,10 @@ target 'USSoccer' do
   use_frameworks!
 
   # Pods for USSoccer
-pod 'Alamofire', '~> 4.5'
-pod 'OneSignal', '>= 2.5.2', '< 3.0'
-pod 'Firebase/Core'
-pod 'Firebase/Auth'
-pod 'Firebase/Database'
+  pod 'Alamofire'
+  pod 'OneSignal', '>= 2.5.2', '< 3.0'
+  pod 'FirebaseCore'
+  pod 'FirebaseAuth'
+  pod 'FirebaseDatabase'
 end
 

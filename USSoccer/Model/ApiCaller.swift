@@ -9,7 +9,8 @@
 import Foundation
 import UIKit
 import Alamofire
-import Firebase
+import FirebaseDatabase
+import FirebaseAuth
 import CoreData
 import OneSignal
 
@@ -21,7 +22,7 @@ class ApiCaller {
     
     func getFakeResponse() -> [[String: AnyObject]] {
         
-        let fakeGameData : [[String: Any]] = [["Date": "March 11, 2018", "Time": "2:00 PM PT", "Title": "U-23 MNT vs Iceland", "Venue": "MAPFRE Stadium; Columbus, Ohio\nFantasy Camp\nMatch Guide", "Stations": "Ticket Info | Buy Tickets\nESPN2"], ["Date": "March 11, 2018", "Time": "8:00 AM PT", "Title": "U-23 WNT VS Guam", "Venue": "MAPFRE Stadium; Columbus, Ohio\nMatch Guide\nFantasy Camp", "Stations": "Ticket Info | Buy Tickets\nESPN2"], ["Date": "March 11, 2018", "Time": "7:30 PM PT", "Title": "MNT vs Poland", "Venue": "MAPFRE Stadium; Columbus, Ohio\nFantasy Camp", "Stations": "Ticket Info | Buy Tickets\nESPN2"], ["Date": "March 11, 2018", "Time": "8:00 AM PT", "Title": "WNT VS China", "Venue": "MAPFRE Stadium; Columbus, Ohio\nMatch Guide", "Stations": "Ticket Info | Buy Tickets\nESPN2"]]
+        let fakeGameData : [[String: Any]] = [["Date": "March 19, 2018", "Time": "2:00 PM PT", "Title": "U-15 MNT vs Iceland", "Venue": "MAPFRE Stadium; Columbus, Ohio\nFantasy Camp\nMatch Guide", "Stations": "Ticket Info"]]
         return fakeGameData as [[String : AnyObject]]
     }
     
@@ -47,7 +48,7 @@ class ApiCaller {
         // Timeout
         self.completion = completion
         timeoutTimer?.invalidate()
-        timeoutTimer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(timeoutApiCall), userInfo: nil, repeats: false)
+        timeoutTimer = Timer.scheduledTimer(timeInterval: 4.0, target: self, selector: #selector(timeoutApiCall), userInfo: nil, repeats: false)
         
         
         Alamofire.request("https://www.parsehub.com/api/v2/projects/tZQ5VDy6j2JB/last_ready_run/data?api_key=trmNdK43wwBZ").responseJSON { response in
@@ -98,17 +99,18 @@ class ApiCaller {
                 let arrayLength = data.count
                 let currentDate = Date()
                 
-                ref.child("LastUpdate").observeSingleEvent(of: .value, with: { (snapShot) in
-                    let lastUpdateTimeStamp : Double = snapShot.value as? Double ?? 0.0
-                    let lastUpdateDate = Date(timeIntervalSince1970: lastUpdateTimeStamp)
+                ref.child("LastAPIUpdate").observeSingleEvent(of: .value, with: { (snapShot) in
+                    //let lastUpdateTimeStamp : Double = snapShot.value as? Double ?? 0.0
+                    //let lastUpdateDate = Date(timeIntervalSince1970: lastUpdateTimeStamp)
                     
-                    ref.child("LastUpdate").setValue(currentDate.timeIntervalSince1970)
-                    
-                    let thresholdTimeInterval : TimeInterval = 24.0 * 3600.0
-                    if currentDate.timeIntervalSince(lastUpdateDate) < thresholdTimeInterval {
+                    //let thresholdTimeInterval : TimeInterval = 24.0 * 3600.0
+//                    if currentDate.timeIntervalSince(lastUpdateDate) < thresholdTimeInterval {
                         self.syncLocalDatabase(completion: completion)
-                        return
-                    }
+//                        return
+//                    }
+                    //keep "LastUpdate" for older version of app
+                    ref.child("LastUpdate").setValue(currentDate.timeIntervalSince1970)
+                    ref.child("LastAPIUpdate").setValue(currentDate.timeIntervalSince1970)
                     
                     let dispatchGroup = DispatchGroup()
                     for index in 0..<arrayLength {
@@ -117,12 +119,31 @@ class ApiCaller {
                         let venue = currentArray["Venue"]
                         let time = currentArray["Time"]
                         let date = currentArray["Date"] as! String
-                        let stations = (currentArray["Stations"] as? String) ?? "ussoccer.com"
+                        var stations = (currentArray["Stations"] as? String) ?? "ussoccer.com"
                         let fixedTitle = title.replacingOccurrences(of: "VS", with: "vs")
                         let teamSeperated = fixedTitle.components(separatedBy: "vs")
                         let team = stringTrimmer(stringToTrim: teamSeperated[0])?.uppercased()
                         let formatter = DateFormatter()
                         var castedTime = time as! String
+                        
+                        if stations.contains("Ticket Info | Buy Tickets\n") {
+                           stations = stations.replacingOccurrences(of: "Ticket Info | Buy Tickets\n", with: "")
+                            if stations.isEmpty {
+                                stations = "Not Yet Determined"
+                            }
+                        } else if stations.contains("Ticket Info") {
+                            stations = stations.replacingOccurrences(of: "Ticket Info", with: "")
+                            if stations.isEmpty {
+                                stations = "Not Yet Determined"
+                            }
+                        } else if stations.contains("Buy Tickets") {
+                            stations = stations.replacingOccurrences(of: "Buy Tickets", with: "")
+                            if stations.isEmpty {
+                                stations = "Not Yet Determined"
+                            }
+                        }
+                        
+                       
                         if team == "WNT" && stations == "ussoccer.com"  || team == "MNT" && stations == "ussoccer.com"{
                             //Skip this game (the channel hasn't been confirmed yet)
                             continue
@@ -147,17 +168,19 @@ class ApiCaller {
                         
                         dispatchGroup.enter()
                         let gameKey = SoccerGame.gameKey(title: title, date: date)
-                        
-                        // Schedule a notification
-                        if let team = team, let dateFormated = dateFormated {
-                            ReminderService.shared.scheduleAllPushNotificationReminders(toGameKey: gameKey, gameTitle: title, team: team, timestamp: dateFormated)
-                        }
                        
                         // Save the game to the Firebase
                         gamesRef.child(gameKey).observeSingleEvent(of: .value, with: { (snapshot: DataSnapshot) in
                             
                             if let dict = snapshot.value as? [String: Any] {
                                 self.currentGamesInFirebaseArray.append(dict)
+                            } else {
+                                // The game doesn't exist in Firebase yet
+                                
+                                // Schedule a notification
+                                if let team = team, let dateFormated = dateFormated {
+                                    ReminderService.shared.scheduleAllPushNotificationReminders(toGameKey: gameKey, gameTitle: title, team: team, timestamp: dateFormated)
+                                }
                             }
                             dispatchGroup.leave()
                         })
@@ -166,17 +189,18 @@ class ApiCaller {
                     
                     // Checking incoming game titles against current games to ensure only new games are written to Firebase & CoreData
                     dispatchGroup.notify(queue: .main) {
-                        let titles = (self.currentGamesInFirebaseArray as NSArray).mutableArrayValue(forKey: "title").flatMap({return $0 as? String})
+                        //let titles = (self.currentGamesInFirebaseArray as NSArray).mutableArrayValue(forKey: "title").flatMap({return $0 as? String})
                         // Sync Firebase (add missing f)
                         for dict in self.updatedGamesFromAPIArray {
                             
                             let title = dict["title"] as! String
                             let date = dict["date"] as! String
-                            if !titles.contains(title) {
+                            //if !titles.contains(title) {
                                 
                                 let gameKey = SoccerGame.gameKey(title: title, date: date)
-                                gamesRef.child(gameKey).setValue(dict)
-                            }
+                                gamesRef.child(gameKey).updateChildValues(dict)
+                            //}
+                            
                         }
                         
                         
@@ -223,19 +247,29 @@ class ApiCaller {
             
             gamesRef.observeSingleEvent(of: .value) { snapshot in
                 
+                // TODO: update the local games
+                
                 DispatchQueue.main.async {
                     
                     let currentGameSnapshots = snapshot.children.allObjects as! [DataSnapshot]
                     
                     // Check the local database and insert the new ones
                     let localGames = CoreDataService.shared.fetchGames()
-                    let localGameKeys = localGames.map({ $0.gameKey })
+                    var localGamesByKey = [String : SoccerGame]()
+                    for game in localGames {
+                        localGamesByKey[game.gameKey] = game
+                    }
                     for currentGameSnapshot in currentGameSnapshots {
                         
                         if let dict = currentGameSnapshot.value as? [String: Any] {
                             
                             let gameKey = SoccerGame.gameKey(title: dict["title"] as? String ?? "", date: dict["date"] as? String ?? "")
-                            if localGameKeys.contains(gameKey) == false {
+                            if let game = localGamesByKey[gameKey] {
+                                // Update the existing game
+                                game.stations = dict["stations"] as? String
+                                game.venue = dict["venue"] as? String
+                                CoreDataService.shared.saveContext()
+                            } else {
                                 // We don't store this game locally yet
                                 // Insert into the local database
                                 SoccerGame.insert(snapShot: currentGameSnapshot)

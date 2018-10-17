@@ -92,7 +92,7 @@ class HomeVC: UIViewController {
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationController?.navigationBar.isTranslucent = true
         self.navigationController?.view.backgroundColor = UIColor.clear
-        self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedStringKey.font: UIFont(name: "HelveticaNeue-CondensedBold", size: 28.0)!,NSAttributedStringKey.foregroundColor: UIColor.white]
+        self.navigationController?.navigationBar.titleTextAttributes = [ NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-CondensedBold", size: 28.0)!,NSAttributedString.Key.foregroundColor: UIColor.white]
         
         twoDaySwitch.onTintColor = blueColor
         oneDaySwitch.onTintColor = blueColor
@@ -102,11 +102,11 @@ class HomeVC: UIViewController {
         
         NotificationCenter.default.addObserver(self,
                                                  selector: #selector(HomeVC.appWillBecomeActive(_:)),
-                                                 name: NSNotification.Name.UIApplicationDidBecomeActive,
+                                                 name: UIApplication.didBecomeActiveNotification,
                                                  object: nil)
         
         if currentUserSettings?.firstTimeInApp == true {
-            let introAlert = UIAlertController(title: "Welcome To US Soccer" , message: "US Soccer shows you a list of all USA National Soccer Teams games. \n\n Swipe left or right on the bottom to sort the list by the team. \n Click on a \"bell\" icon to set a notification for that game. \n\n Please give US Soccer permission to send notifications for the soccer games you select.", preferredStyle: UIAlertControllerStyle.alert)
+            let introAlert = UIAlertController(title: "Welcome To US Soccer" , message: "US Soccer shows you a list of all USA National Soccer Teams games. \n\n Swipe left or right on the bottom to sort the list by the team. \n Click on a \"bell\" icon to set a notification for that game. \n\n Please give US Soccer permission to send notifications for the soccer games you select.", preferredStyle: UIAlertController.Style.alert)
             
             introAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: { (error) in
                 self.currentUserSettings?.setValue(false, forKey: "firstTimeInApp")
@@ -155,7 +155,7 @@ class HomeVC: UIViewController {
         //Checking to see if the Teams are set up in CoreData, Setting them up if they are not
         let teams = CoreDataService.shared.fetchTeams()
         
-        let existingTeamTitles = teams.flatMap { (team: Team) -> String? in
+        let existingTeamTitles = teams.compactMap { (team: Team) -> String? in
             return team.title
         }
         for teamTitle in pickerTeamsArray {
@@ -263,10 +263,10 @@ class HomeVC: UIViewController {
         if let view = navigationController?.view {
             view.addSubview(menuShaddowView)
             if 1 == 1 { // 1==1 create a new scope for free basically
-                let trailingConstraint = NSLayoutConstraint(item: menuShaddowView, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: .trailing, multiplier: 1.0, constant: 0.0)
-                let topConstraint = NSLayoutConstraint(item: menuShaddowView, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: .top, multiplier: 1.0, constant: 0.0)
-                let bottomConstraint = NSLayoutConstraint(item: menuShaddowView, attribute: NSLayoutAttribute.bottom, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: 0.0)
-                let leadingConstraint = NSLayoutConstraint(item: menuShaddowView, attribute: NSLayoutAttribute.leading, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: .leading, multiplier: 1.0, constant: 0.0)
+                let trailingConstraint = NSLayoutConstraint(item: menuShaddowView, attribute: NSLayoutConstraint.Attribute.trailing, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: .trailing, multiplier: 1.0, constant: 0.0)
+                let topConstraint = NSLayoutConstraint(item: menuShaddowView, attribute: NSLayoutConstraint.Attribute.top, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: .top, multiplier: 1.0, constant: 0.0)
+                let bottomConstraint = NSLayoutConstraint(item: menuShaddowView, attribute: NSLayoutConstraint.Attribute.bottom, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: 0.0)
+                let leadingConstraint = NSLayoutConstraint(item: menuShaddowView, attribute: NSLayoutConstraint.Attribute.leading, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: .leading, multiplier: 1.0, constant: 0.0)
                 view.addConstraint(trailingConstraint)
                 view.addConstraint(topConstraint)
                 view.addConstraint(bottomConstraint)
@@ -277,16 +277,16 @@ class HomeVC: UIViewController {
             
             view.addSubview(notificationMenuView)
             
-            let trailingConstraint = NSLayoutConstraint(item: notificationMenuView, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: .trailing, multiplier: 1.0, constant: 0.0)
+            let trailingConstraint = NSLayoutConstraint(item: notificationMenuView, attribute: NSLayoutConstraint.Attribute.trailing, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: .trailing, multiplier: 1.0, constant: 0.0)
             var topConstraint : NSLayoutConstraint!
             
             if #available(iOS 11.0, *) {
-                topConstraint = NSLayoutConstraint(item: notificationMenuView, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: view.safeAreaLayoutGuide, attribute: .top, multiplier: 1.0, constant: -64.0)
+                topConstraint = NSLayoutConstraint(item: notificationMenuView, attribute: NSLayoutConstraint.Attribute.top, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view.safeAreaLayoutGuide, attribute: .top, multiplier: 1.0, constant: -64.0)
             } else {
-                topConstraint = NSLayoutConstraint(item: notificationMenuView, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: .top, multiplier: 1.0, constant: -64.0)
+                topConstraint = NSLayoutConstraint(item: notificationMenuView, attribute: NSLayoutConstraint.Attribute.top, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: .top, multiplier: 1.0, constant: -64.0)
             }
             
-            let bottomConstraint = NSLayoutConstraint(item: notificationMenuView, attribute: NSLayoutAttribute.bottom, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: 0.0)
+            let bottomConstraint = NSLayoutConstraint(item: notificationMenuView, attribute: NSLayoutConstraint.Attribute.bottom, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: .bottom, multiplier: 1.0, constant: 0.0)
             view.addConstraint(trailingConstraint)
             view.addConstraint(topConstraint)
             view.addConstraint(bottomConstraint)
@@ -298,9 +298,9 @@ class HomeVC: UIViewController {
             
             view.addSubview(notificationView)
             
-            let trailingConstraint2 = NSLayoutConstraint(item: notificationView, attribute: NSLayoutAttribute.trailing, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: .trailing, multiplier: 1.0, constant: 0.0)
-            let topConstraint2 = NSLayoutConstraint(item: notificationView, attribute: NSLayoutAttribute.top, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: .top, multiplier: 1.0, constant: 0.0)
-            let leadingConstraint2 = NSLayoutConstraint(item: notificationView, attribute: NSLayoutAttribute.leading, relatedBy: NSLayoutRelation.equal, toItem: view, attribute: .leading, multiplier: 1.0, constant: 0.0)
+            let trailingConstraint2 = NSLayoutConstraint(item: notificationView, attribute: NSLayoutConstraint.Attribute.trailing, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: .trailing, multiplier: 1.0, constant: 0.0)
+            let topConstraint2 = NSLayoutConstraint(item: notificationView, attribute: NSLayoutConstraint.Attribute.top, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: .top, multiplier: 1.0, constant: 0.0)
+            let leadingConstraint2 = NSLayoutConstraint(item: notificationView, attribute: NSLayoutConstraint.Attribute.leading, relatedBy: NSLayoutConstraint.Relation.equal, toItem: view, attribute: .leading, multiplier: 1.0, constant: 0.0)
             view.addConstraint(trailingConstraint2)
             view.addConstraint(topConstraint2)
             view.addConstraint(leadingConstraint2)

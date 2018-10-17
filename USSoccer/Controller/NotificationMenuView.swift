@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseAuth
 import FirebaseDatabase
 import UserNotifications
 import OneSignal

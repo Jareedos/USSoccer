@@ -21,10 +21,16 @@ func stringTrimmer(stringToTrim string: String?) -> String? {
     return trimmedString
 }
 
+func firebaseCompatibleString(fromString string: String?) -> String? {
+    var trimmedString = stringTrimmer(stringToTrim: string)
+    trimmedString = trimmedString?.replacingOccurrences(of: ".", with: "")
+    return trimmedString
+}
+
 // func creates alerts with no action other than ok
 func loginAuthAlertMaker(alertTitle: String, alertMessage: String) -> UIAlertController {
-    let alert = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: UIAlertControllerStyle.alert)
-    alert.addAction(UIAlertAction(title: "ok", style: UIAlertActionStyle.default, handler: nil))
+    let alert = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: UIAlertController.Style.alert)
+    alert.addAction(UIAlertAction(title: "ok", style: UIAlertAction.Style.default, handler: nil))
     return alert
 }
 
@@ -42,10 +48,10 @@ func trimmedAndUnwrappedUserPass(email: String?, password: String?) -> (String,S
 func messageAlert(title: String, message: String?, from: UIViewController?) {
     
     // Create the Alert Controller
-    let alertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+    let alertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
     // add the button actions - Left to right
     //    OK Button
-    alertController.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+    alertController.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
     
     // Present the Alert
     
