@@ -233,7 +233,7 @@ class HomeVC: UIViewController {
             if self.currentUserSettings?.firstTimeClickingInfo == true {
                 sleep(UInt32(0.5))
                 self.performSegue(withIdentifier: "infoSegue", sender: nil)
-                let _ = UIAlertController.presentOKAlertWithTitle("App Info", message: "This list contains all of the abbreviantions & symbols used in the app. \n\n Click the \"i\" icon to open this menu.", okTapped: {
+                let _ = UIAlertController.presentOKAlertWithTitle("App Info", message: "This list contains all of the abbreviations & symbols used in the app. \n\n Click the \"i\" icon to open this menu.", okTapped: {
                     self.isWaitingForDismissInfoTutorial = true
                     
                     self.currentUserSettings?.setValue(false, forKey: "firstTimeClickingInfo")
