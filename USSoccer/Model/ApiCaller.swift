@@ -42,7 +42,13 @@ class ApiCaller {
         }
     }
     
+    let validTeamsArray = ["U-15 MNT", "U-16 MNT", "U-17 MNT", "U-18 MNT", "U-19 MNT", "U-20 MNT", "U-23 MNT", "MNT", "ALL TEAMS", "WNT", "U-23 WNT", "U-20 WNT", "U-19 WNT", "U-18 WNT", "U-17 WNT", "U-16 WNT", "U-15 WNT"]
+    func isTeamValid(_ team: String?) -> Bool {
+        return team != nil && validTeamsArray.contains(team!)
+    }
+    
     func ApiCall(completion: @escaping ()->Void) {
+        
         //real call "https://www.parsehub.com/api/v2/projects/tZQ5VDy6j2JB/last_ready_run/data?api_key=trmNdK43wwBZ" "https://www.parsehub.com/api/v2/runs/t1mY9HfR24H5/data?api_key=trmNdK43wwBZ"
         
         // Timeout
@@ -148,8 +154,17 @@ class ApiCaller {
                             //Skip this game (the channel hasn't been confirmed yet)
                             continue
                         }
-                        if castedTime == "TBD" || date == "TBD" {
+                        
+                        let titleWithoutSpaces = fixedTitle.replacingOccurrences(of: " ", with: "")
+                        if castedTime == "TBD" || date == "TBD" ||  castedTime == "TBA" || date == "TBA"
+                           || titleWithoutSpaces.suffix(3) == "TBA" || titleWithoutSpaces.suffix(3) == "TBD"
+                        {
                             // Skip this game (the time hasn't been confirmed)
+                            continue
+                        }
+                        
+                        // Skip the games with invalid team names
+                        if self.isTeamValid(team) == false {
                             continue
                         }
                         

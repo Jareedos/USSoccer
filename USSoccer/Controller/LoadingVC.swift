@@ -62,9 +62,13 @@ class LoadingVC: UIViewController {
             
             let dateFormated = Date()
             let dayInSeconds: TimeInterval = 24.0 * 3600.0
-            if let timestamp = game.timestamp, timestamp.timeIntervalSince1970 < (dateFormated.timeIntervalSince1970 - (dayInSeconds * 2.0)) {
+            
+            let gameIsTooOld = game.timestamp != nil && game.timestamp!.timeIntervalSince1970 < (dateFormated.timeIntervalSince1970 - (dayInSeconds * 2.0))
+            let gamesTeamIsInvalid = ApiCaller.shared.isTeamValid(game.usTeam) == false
+            
+            if gameIsTooOld || gamesTeamIsInvalid {
                 allGames.remove(at: index)
-                gamesRef.child("\(game.title!)\(game.date!)").removeValue()
+                gamesRef.child(game.gameKey).removeValue()
                 CoreDataService.shared.delete(object: game)
                 continue
             }
